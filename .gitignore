@@ -1,13 +1,15 @@
+.cache
 *.class
 *.log
-
-# sbt specific
+.settings
+.project
+components/base/target
+components/test/target
+project/target
+target
 dist/*
-target/
 lib_managed/
 src_managed/
 project/boot/
 project/plugins/project/
 
-# Scala-IDE specific
-.scala_dependencies
