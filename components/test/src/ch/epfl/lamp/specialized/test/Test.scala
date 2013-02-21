@@ -12,15 +12,15 @@ object Test extends App {
    println("Test expr 0")
    println(v.testExpr0)
    println
-   
+
    println("Test expr 1")
    println(v.testExpr1)
    println
-   
+
    println("Test expr 2")
    println(v.testExpr2)
    println
-   
+
    //println( v.testExpr3 )
 
    class C[T: Manifest] {
@@ -28,30 +28,29 @@ object Test extends App {
 
       // original:
       def testExpr0 = {
-         specializedUnit[T] {
-            val tup = (arr(0),arr(2)) 
-            println("testExpr0 message: " + tup )
+         specialized[T] {
+            val tup = (arr(0), arr(2))
+            val tupII = (5, 7)
+            println("testExpr0 message: " + tup)
          }
       }
 
       def testExpr1 = {
-         specialized[T,Int] {
+         specialized[T] {
             arr.length
-         } + specialized/*[T,Int]*/ {
+         } + specialized { // TODO this should fail
             arr.length
-         } + specialized/*[T]*/ {
-            arr.length
-         } + 1
+         } + 1000;
       }
 
       def testExpr2 = {
-         arr(0) = specialized[T,T] {
+         arr(0) = specialized[T] {
             arr(0)
          }
       }
 
       def testExpr3 = {
-         specialized[T,Any] {
+         specialized[T] {
             List(arr(0))
          } match {
             case List(x: T) => println(x)
