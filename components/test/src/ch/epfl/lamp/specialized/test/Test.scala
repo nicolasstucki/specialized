@@ -5,102 +5,37 @@ import java.util.Arrays
 
 object Test extends App {
 
-   val v = new C[Long, Double]
-   v.arr(0) = 1
-   v.arr(1) = 2
-   v.arr(2) = 3
-   println("Test expr 0")
-   println(v.testExpr0)
-   println
+   val b = new B[Long]
+   b.arr(0) = 1 
+   b.arr(1) = 2
+   b.arr(2) = 3
 
-   println("Test expr 1")
-   println(v.testExpr1)
-   println
+//   println("Test expr 1\n" + "-" * 40 + "\n")
+//   println("Result: "+b.testExpr1)
+//   println("\n" + "=" * 40 + "\n")
 
-   println("Test expr 2")
-   println(v.testExpr2)
-   println
+//   println("Test expr 2\n" + "-" * 40 + "\n")
+//   println("Result: "+b.testExpr2)
+//   println("\n" + "=" * 40 + "\n")
 
-   val v2 = new D[List[Long]]
-   v2.arr(0) = 1 :: Nil
-   v2.arr(1) = 2 :: Nil
-   v2.arr(2) = 3 :: Nil
-   println("Test expr A")
-   println(v2.testExprA)
-   println
+//   println("Test expr 3")
+//   println("Result: "+b.testExpr3)
+//   println("\n" + "=" * 40 + "\n")
 
-   class D[T: Manifest] {
-      val arr = new Array[T](3)
-      def testExprA = {
-         specialized[T] {
-            arr.length
-         } + specialized {
-            arr.length
-         } + 1000;
-      }
-   }
+//   println("Test expr 4\n" + "-" * 40 + "\n")
+//   println("Result: "+b.testExpr4)
+//   println("\n" + "=" * 40 + "\n")
 
-   class C[T: Manifest, U: Manifest] {
-      val arr = new Array[T](3)
+//   println("Test expr 5")
+//   println("Result: "+b.testExpr5)
+//   println("\n" + "=" * 40 + "\n")
 
-      // original:
-      def testExpr0 = {
-         specialized[T] {
-            val tup = (arr(0), arr(2))
-            val tupII: Tuple2[Int, Int] = (5, 7)
-            println("testExpr0 message: " + tup)
-         }
-      }
+   println("Test expr 6\n" + "-" * 40 + "\n")
+   println("Result: "+b.testExpr6)
+   println("\n" + "=" * 40 + "\n")
+   
+   //   println("Test expr 7\n" + "-" * 40 + "\n")
+//   println("Result: "+b.testExpr7)
+//   println("\n" + "=" * 40 + "\n")
 
-      def testExpr1 = {
-         specialized[T] {
-            arr.length
-         } + 1000;
-
-         //  this should fail
-         //         specialized { 
-         //            arr.length
-         //         }
-      }
-
-      def testExpr2 = {
-         arr(0) = specialized[U] {
-            arr(0)
-         }
-      }
-
-      def testExpr3 = {
-         specialized[T] {
-            List(arr(0))
-         } match {
-            case List(x: T) => println(x)
-            case _          => ???
-         }
-      }
-
-      // blind
-      def testExpr1unroll1 = {
-         arr.length + 1
-      }
-
-      def testExpr2unroll1 = {
-         arr(0) = arr(0)
-      }
-
-      def testExpr3unroll1 = {
-         List(arr(0)) match {
-            case List(x: T) => println(x)
-            case _          => ???
-         }
-      }
-
-      // with manifests
-      def testExpr2unroll2 = {
-         arr(0) =
-            if (manifest[T] == manifest[Int])
-               arr.asInstanceOf[Array[Int]](0).asInstanceOf[T]
-            else
-               ???
-      }
-   }
 }
