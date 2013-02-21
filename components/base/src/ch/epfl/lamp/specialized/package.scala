@@ -5,27 +5,50 @@ import scala.language.experimental.macros
 
 object `package` {
 
-   @deprecated
-   def specializedUnit[T](f: => Unit): Unit = macro impl_specializedUnit[T]
+   def specialized[T](f: => Any)(implicit mf: Manifest[T]): Any = macro impl_specialized[T]
 
-   @deprecated
-   def impl_specializedUnit[T: c.WeakTypeTag](c: Context)(f: c.Expr[Any]): c.Expr[Unit] = {
+   def impl_specialized[T: c.WeakTypeTag](c: Context)(f: c.Expr[Any])(mf: c.Expr[Manifest[T]]): c.Expr[Any] = {
       import c.universe._
-      val newAST = f.tree
-      c.Expr[Unit](Block(List(printlnTree(c)(showRaw(newAST)), printlnTree(c)(show(newAST))), f.tree))
-   }
 
-   //TODO add manifest to T
-   def specialized[T](f: => Any): Any = macro impl_specialized[T]
+      val Select(_, mfTermName) = mf.tree
+      if (mfTermName == newTermName("Nothing")) c.error(mf.tree.pos, "specify type parameter using: sepezialized[T] {...}")
 
-   def impl_specialized[T: c.WeakTypeTag](c: Context)(f: c.Expr[Any]): c.Expr[Any] = {
-      import c.universe._
-      
-      //val typeOfOutput = f.actualType.toString()
-      
-      val newAST = f.tree
+      val newExp = reify {
+         if (mf.splice == manifest[Int]) {
+            println("executing => Int")
+            f.splice
+         } else if (mf.splice == manifest[Long]) {
+            println("executing => Long")
+            f.splice
+         } else if (mf.splice == manifest[Double]) {
+            println("executing => Double")
+            f.splice
+         } else if (mf.splice == manifest[Float]) {
+            println("executing => Float")
+            f.splice
+         } else if (mf.splice == manifest[Short]) {
+            println("executing => Short")
+            f.splice
+         } else if (mf.splice == manifest[Byte]) {
+            println("executing => Byte")
+            f.splice
+         } else if (mf.splice == manifest[Char]) {
+            println("executing => Char")
+            f.splice
+         } else if (mf.splice == manifest[Unit]) {
+            println("executing => Unit")
+            f.splice
+         } else if (mf.splice == manifest[Boolean]) {
+            println("executing => Boolean")
+            f.splice
+         } else {
+            println("executing => Gen")
+            f.splice
+         }
+      }
 
-      c.Expr[Any](Block(List(printlnTree(c)(showRaw(newAST)), printlnTree(c)(show(newAST))), f.tree))
+      c.Expr[Any](Block(List(printlnTree(c)(showRaw(newExp)), printlnTree(c)(show(newExp))), newExp.tree))
+      //newExp
    }
 
    private def printlnTree(c: Context)(str: String) = {
