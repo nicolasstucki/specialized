@@ -13,36 +13,37 @@ object `package` {
       val Select(_, mfTermName) = mf.tree
       if (mfTermName == newTermName("Nothing")) c.error(mf.tree.pos, "specify type parameter using: sepezialized[T] {...}")
 
+      // val newExp = c.Expr[Any](f.tree)
       val newExp = reify {
          if (mf.splice == manifest[Int]) {
-            println("executing => Int")
+            println("executing Int branch")
             f.splice
          } else if (mf.splice == manifest[Long]) {
-            println("executing => Long")
+            println("executing Long branch")
             f.splice
          } else if (mf.splice == manifest[Double]) {
-            println("executing => Double")
+            println("executing Double branch")
             f.splice
-         } else if (mf.splice == manifest[Float]) {
-            println("executing => Float")
-            f.splice
-         } else if (mf.splice == manifest[Short]) {
-            println("executing => Short")
-            f.splice
-         } else if (mf.splice == manifest[Byte]) {
-            println("executing => Byte")
-            f.splice
-         } else if (mf.splice == manifest[Char]) {
-            println("executing => Char")
-            f.splice
-         } else if (mf.splice == manifest[Unit]) {
-            println("executing => Unit")
-            f.splice
-         } else if (mf.splice == manifest[Boolean]) {
-            println("executing => Boolean")
-            f.splice
-         } else {
-            println("executing => Gen")
+         } /* else if (mf.splice == manifest[Float]) {
+                  println("executing Float branch")
+                  f.splice
+               } else if (mf.splice == manifest[Short]) {
+                  println("executing Short branch")
+                  f.splice
+               } else if (mf.splice == manifest[Byte]) {
+                  println("executing Byte branch")
+                  f.splice
+               } else if (mf.splice == manifest[Char]) {
+                  println("executing Char branch")
+                  f.splice
+               } else if (mf.splice == manifest[Unit]) {
+                  println("executing Unit branch")
+                  f.splice
+               } else if (mf.splice == manifest[Boolean]) {
+                  println("executing Boolean branch")
+                  f.splice
+               }*/ else {
+            println("executing Gen branch")
             f.splice
          }
       }
