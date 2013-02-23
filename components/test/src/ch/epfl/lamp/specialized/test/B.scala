@@ -48,11 +48,11 @@ class B[T: Manifest] {
       }
    }
 
-   def testExpr4 = {
-      arr(0) = specialized[T] {
-         arr(1)
-      }
-   }
+   //   def testExpr4 = {
+   //      arr(0) = specialized[T] {
+   //         arr(1)
+   //      }
+   //   }
    def testExpr4unrolled = {
       if (manifest[T] == manifest[Manifest[Int]]) {
          arr.asInstanceOf[Array[Int]](0) = arr.asInstanceOf[Array[Int]](1)
@@ -85,7 +85,7 @@ class B[T: Manifest] {
    }
    def testExpr6unrolled = {
       if (manifest[T] == manifest[Manifest[Int]]) {
-         val tup: (Int, Int) = (arr.asInstanceOf[Array[Int]](1), 4)
+         val tup = (arr.asInstanceOf[Array[Int]](1), 4)
          tup
       } else {
          val tup: (T, Int) = (arr(1), 4)
