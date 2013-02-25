@@ -38,7 +38,7 @@ class B[T: Manifest] {
    def testExpr3 = {
       specialized[T] {
          arr(0)
-      } // + 1 // should fail
+      } //+ 1 // should fail
    }
    def testExpr3unrolled = {
       if (manifest[T] == manifest[Manifest[Int]]) {
@@ -119,7 +119,7 @@ class B[T: Manifest] {
       if (manifest[T] == manifest[Manifest[Int]]) {
          List(arr.asInstanceOf[Array[Int]](2)) match {
             case (x: Int) :: tail => println("matched: (x: T) :: tail")
-            case head :: tail     => println("matched: head :: tail") // unreachable code, compiler will be able to eliminate later on
+           // case head :: tail     => println("matched: head :: tail") // unreachable code, compiler will be able to eliminate later on
             case Nil              => println("match: Nil")
          }
       } else {
