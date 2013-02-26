@@ -7,32 +7,23 @@ class B[T: Manifest] {
    val arr = new Array[T](3)
 
    def testExpr1 = {
-      specialized[T] {
+      specialized[T] { // should warn and ignore
          arr.length
          ()
       }
    }
    def testExpr1unrolled = {
-      if (manifest[T] == manifest[Manifest[Int]]) {
-         arr.asInstanceOf[Array[Int]].length
-         ()
-      } else {
-         arr.length
-         ()
-      }
+      arr.length
+      ()
    }
 
    def testExpr2 = {
-      specialized[T] {
+      specialized[T] { // should warn and ignore
          arr.length
       } + 1
    }
    def testExpr2unrolled = {
-      if (manifest[T] == manifest[Manifest[Int]]) {
-         arr.asInstanceOf[Array[Int]].length + 1
-      } else {
-         arr.length + 1
-      }
+      arr.length + 1
    }
 
    def testExpr3 = {
@@ -48,11 +39,11 @@ class B[T: Manifest] {
       }
    }
 
-   //   def testExpr4 = {
-   //      arr(0) = specialized[T] {
-   //         arr(1)
-   //      }
-   //   }
+   def testExpr4 = {
+      arr(0) = specialized[T] {
+         arr(1)
+      }
+   }
    def testExpr4unrolled = {
       if (manifest[T] == manifest[Manifest[Int]]) {
          arr.asInstanceOf[Array[Int]](0) = arr.asInstanceOf[Array[Int]](1)
@@ -95,14 +86,14 @@ class B[T: Manifest] {
 
    def testExpr7 = {
       specialized[T] {
-         List(arr(2))
+         (arr(0), 11)
       }
    }
    def testExpr7unrolled = {
       if (manifest[T] == manifest[Manifest[Int]]) {
-         List(arr.asInstanceOf[Array[Int]](2))
+         (arr.asInstanceOf[Array[Int]](0), arr.asInstanceOf[Array[Int]](1))
       } else {
-         List(arr(2))
+         (arr(0), arr(1))
       }
    }
 
@@ -119,7 +110,7 @@ class B[T: Manifest] {
       if (manifest[T] == manifest[Manifest[Int]]) {
          List(arr.asInstanceOf[Array[Int]](2)) match {
             case (x: Int) :: tail => println("matched: (x: T) :: tail")
-           // case head :: tail     => println("matched: head :: tail") // unreachable code, compiler will be able to eliminate later on
+            // case head :: tail     => println("matched: head :: tail") // unreachable code, compiler will be able to eliminate later on
             case Nil              => println("match: Nil")
          }
       } else {
@@ -129,5 +120,16 @@ class B[T: Manifest] {
             case Nil            => println("match: Nil")
          }
       }
+   }
+
+   def testExpr9 = {
+      specialized[T] { // should warn and ignore
+         val n = 3
+         n + 2
+      }
+   }
+   def testExpr9unroled = {
+      val n = 3
+      n + 2
    }
 }

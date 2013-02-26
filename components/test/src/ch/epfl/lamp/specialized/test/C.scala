@@ -11,3 +11,14 @@ class C[T: Manifest, U: Manifest] {
 //   }
 
 }
+
+class D[T: Manifest, U] {
+   val arr = new Array[T](3)
+
+   def testExpr0 = {
+      specialized {
+         arr
+      }
+   }
+
+}
