@@ -5,44 +5,23 @@ import java.util.Arrays
 
 object Test extends App {
 
-   val b = new B[Any]
-   b.arr(0) = 0
-   b.arr(1) = 7
-   b.arr(2) = 2
+   val b = new B[Int]
+   for (i <- 1 until b.arr.length) b.arr(i) = i
 
-   println("Test expr 1\n" + "-" * 40 + "\n")
-   println("Result: " + b.testExpr1)
-   println("\n" + "=" * 40 + "\n")
+   printresult(1, b.testExpr1)
+   printresult(2, b.testExpr2)
+   printresult(3, b.testExpr3)
+   printresult(4, b.testExpr4)
+   printresult(5, b.testExpr5)
+   printresult(6, b.testExpr6)
+   printresult(7, b.testExpr7)
+   printresult(8, b.testExpr8)
+   printresult(9, b.testExpr9)
+   printresult(10, b.testExpr10)
 
-   println("Test expr 2\n" + "-" * 40 + "\n")
-   println("Result: " + b.testExpr2)
-   println("\n" + "=" * 40 + "\n")
-
-   println("Test expr 3")
-   println("Result: " + b.testExpr3)
-   println("\ns" + "=" * 40 + "\n")
-
-   println("Test expr 4\n" + "-" * 40 + "\n")
-   println("Result: " + b.testExpr4)
-   println("\n" + "=" * 40 + "\n")
-
-   println("Test expr 5")
-   println("Results: " + b.testExpr5)
-   println("\n" + "=" * 40 + "\n")
-
-   println("Test expr 6\n" + "-" * 40 + "\n")
-   println("Result: " + b.testExpr6)
-   println("\n" + "=" * 40 + "\n")
-
-   println("Test expr 7\n" + "-" * 40 + "\n")
-   println("Result: " + b.testExpr7)
-   println("\n" + "=" * 40 + "\n")
-
-   println("Test expr 8\n" + "-" * 40 + "\n")
-   println("Result: " + b.testExpr8)
-   println("\n" + "=" * 40 + "\n")
-
-   println("Test expr 9\n" + "-" * 40 + "\n")
-   println("Result: " + b.testExpr9)
-   println("\n" + "=" * 40 + "\n")
+   def printresult(n: Int, result: => Any) = {
+      println("\n" + ("=" * 150 + "\n") * 3)
+      println("Test expr " + n + "\n" + ("-" * 13) + "\n")
+      println("Result: " + result)
+   }
 }

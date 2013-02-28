@@ -4,13 +4,14 @@ import ch.epfl.lamp.specialized._
 import scala.unchecked
 
 class B[T: Manifest] {
-   val arr = new Array[T](3)
+   val size = 5
+   val arr = new Array[T](size)
 
    def testExpr1 = {
-      specialized[T] { // should warn and ignore
-         arr.length
-         ()
-      }
+//      specialized[T] { // should warn and ignore
+//         arr.length
+//         ()
+//      }
    }
    def testExpr1unrolled = {
       arr.length
@@ -18,25 +19,25 @@ class B[T: Manifest] {
    }
 
    def testExpr2 = {
-      specialized[T] { // should warn and ignore
-         arr.length
-      } + 1
+//      specialized[T] { // should warn and ignore
+//         arr.length
+//      } + 1
    }
    def testExpr2unrolled = {
       arr.length + 1
    }
 
    def testExpr3 = {
-      specialized[T] {
+      specialized[T] { // should fail with +1 the after it
          arr(0)
-      } //+ 1 // should fail
+      } // + 1 
    }
    def testExpr3unrolled = {
       if (manifest[T] == manifest[Manifest[Int]]) {
          arr.asInstanceOf[Array[Int]](0)
       } else {
          arr(0)
-      }
+      }.asInstanceOf[T]
    }
 
    def testExpr4 = {
@@ -49,23 +50,26 @@ class B[T: Manifest] {
          arr.asInstanceOf[Array[Int]](0) = arr.asInstanceOf[Array[Int]](1)
       } else {
          arr(0) = arr(1)
-      }
+      }.asInstanceOf[Unit]
    }
 
    def testExpr5 = {
       specialized[T] {
          val arr2 = new Array[T](4)
+         arr2(0) = arr(0)
          arr2
       }
    }
    def testExpr5unrolled = {
       if (manifest[T] == manifest[Manifest[Int]]) {
-         val arr2 = new Array[Int](4)
+         val arr2: Array[Int] = new Array[Int](4)
+         arr2(0) = arr.asInstanceOf[Array[Int]](1)
          arr2
       } else {
-         val arr2 = new Array[T](4)
+         val arr2: Array[T] = new Array[T](4)
+         arr2(0) = arr(0)
          arr2
-      }
+      }.asInstanceOf[Array[T]]
    }
 
    def testExpr6 = {
@@ -76,12 +80,12 @@ class B[T: Manifest] {
    }
    def testExpr6unrolled = {
       if (manifest[T] == manifest[Manifest[Int]]) {
-         val tup = (arr.asInstanceOf[Array[Int]](1), 4)
+         val tup: Tuple2[Int, Int] = (arr.asInstanceOf[Array[Int]](1), 4)
          tup
       } else {
-         val tup: (T, Int) = (arr(1), 4)
+         val tup: Tuple2[T, Int] = (arr(1), 4)
          tup
-      }
+      }.asInstanceOf[Tuple2[T, Int]]
    }
 
    def testExpr7 = {
@@ -99,7 +103,7 @@ class B[T: Manifest] {
 
    def testExpr8 = {
       specialized[T] {
-         arr(2) :: Nil match {
+         List(arr(2)) match {
             case (x: T) :: tail => println("matched: (x: T) :: tail")
             case head :: tail   => println("matched: head :: tail")
             case Nil            => println("match: Nil")
@@ -123,13 +127,23 @@ class B[T: Manifest] {
    }
 
    def testExpr9 = {
-      specialized[T] { // should warn and ignore
-         val n = 3
-         n + 2
-      }
+//      specialized[T] { // should warn and ignore
+//         val n = 3
+//         n + 2
+//      }
    }
    def testExpr9unroled = {
-      val n = 3
+      val n: Int = 3
       n + 2
+   }
+
+   def testExpr10 = {
+//      specialized {
+//                   for (index <- 0 until (arr.length/2)) { // FIXME: this should work
+//                     val temp = arr(index)
+//                     arr(index) = arr(arr.length - index - 1)
+//                     arr(arr.length - index - 1) = temp
+//                  }
+//      }
    }
 }

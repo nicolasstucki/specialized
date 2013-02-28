@@ -22,17 +22,23 @@ object SpecializeBuild extends Build {
     libraryDependencies <<= scalaVersion(ver => Seq(
       "org.scala-lang" % "scala-library" % ver,
       "org.scala-lang" % "scala-reflect" % ver, 
-      "org.scala-lang" % "scala-compiler" % ver
+      "org.scala-lang" % "scala-compiler" % ver,
+      "com.github.axel22" %% "scalameter" % "0.2"
     )),
+    resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
+    testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework"),
     parallelExecution in Test := false,
     //http://stackoverflow.com/questions/10472840/how-to-attach-sources-to-sbt-managed-dependencies-in-scala-ide#answer-11683728
-    com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseKeys.withSource := true
+    com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseKeys.withSource := true,
+    // debugging
+    scalacOptions ++= Seq("-uniqid", "-Yshow-syms")
   )
 
   // we might need this later
   // val testSettings = Seq(libraryDependencies ++= sMeter, testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework"))
 
-  lazy val _specialize  = Project(id = "specialize",      base = file(".")) aggregate (_spec_base, _spec_test)
-  lazy val _spec_base   = Project(id = "specialize-base", base = file("components/base"), settings = defaults)
-  lazy val _spec_test   = Project(id = "specialize-test", base = file("components/test"), settings = defaults) dependsOn(_spec_base)
+  lazy val _specialize  = Project(id = "specialize",       base = file(".")) aggregate (_spec_base, _spec_test, _spec_bench)
+  lazy val _spec_base   = Project(id = "specialize-base",  base = file("components/base"), settings = defaults)
+  lazy val _spec_test   = Project(id = "specialize-test",  base = file("components/test"), settings = defaults) dependsOn(_spec_base)
+  lazy val _spec_bench  = Project(id = "specialize-bench", base = file("components/bench"), settings = defaults) dependsOn(_spec_base)
 }
