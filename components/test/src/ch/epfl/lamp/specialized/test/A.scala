@@ -9,23 +9,23 @@ class A[T] {
 //         arr
 //      }
 //   }
-//
-////         def testExpr2 = {
-////            specialized[T] { // should fail
-////               arr
-////            }
-////         }
-//
-//   def testExpr3 = {
-//      specialized[Int] { // should warn and ignore
-//         arr
-//      }
-//   }
-//   def testExpr4 = {
-//      specialized[Long] { // should warn and ignore
-//         arr
-//      }
-//   }
+
+//         def testExpr2 = {
+//            specialized[T] { // should fail
+//               arr
+//            }
+//         }
+
+   def testExpr3 = {
+      specialized[Int] { // should warn and ignore
+         arr
+      }
+   }
+   def testExpr4 = {
+      specialized[Long] { // should warn and ignore
+         arr
+      }
+   }
 //   def testExpr5 = {
 //      specialized[Any] { // should warn and ignore
 //         arr
@@ -36,16 +36,16 @@ class A[T] {
 //         arr
 //      }
 //   }
-//   def testExpr7 = {
-//      specialized[Unit] { // should warn and ignore
-//         arr
-//      }
-//   }
-//   def testExpr8 = {
-//      specialized[BigInt] { // should warn and ignore
-//         arr
-//      }
-//   }
+   def testExpr7 = {
+      specialized[Unit] { // should warn and ignore
+         arr
+      }
+   }
+   def testExpr8 = {
+      specialized[BigInt] { // should warn and ignore
+         arr
+      }
+   }
 //   def testExpr9 = {
 //      specialized[List[Int]] { // should warn and ignore
 //         arr
@@ -63,10 +63,10 @@ class C[T: Manifest, U: Manifest] {
 //   }
    
      def testExpr1 = {
-//      specialized[Array[T]] { // TODO define what to do with this
-//         val x = arr(0)
-//         x
-//      }
+      specialized[Array[T]] { // TODO define what to do with this
+         val x = arr(0)
+         x
+      }
    }
 
 }
@@ -74,9 +74,9 @@ class C[T: Manifest, U: Manifest] {
 class D[T: Manifest, U] {
    val arr = new Array[T](3)
 
-   def testExpr0 = {
-      specialized {
-         arr
-      }
-   }
+//   def testExpr0 = {
+//      specialized {
+//         arr
+//      }
+//   }
 }

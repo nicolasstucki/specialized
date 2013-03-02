@@ -31,7 +31,7 @@ object SpecializeBuild extends Build {
     //http://stackoverflow.com/questions/10472840/how-to-attach-sources-to-sbt-managed-dependencies-in-scala-ide#answer-11683728
     com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseKeys.withSource := true,
     // debugging
-    scalacOptions ++= Seq("-uniqid", "-Yshow-syms")
+    scalacOptions ++= Seq("-uniqid")
   )
 
   // we might need this later
