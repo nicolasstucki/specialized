@@ -1,10 +1,11 @@
 package ch.epfl.specialize.banchmark.tests
 
 import scala.util.control.Exception
+import scala.reflect.ClassTag
 
-class Test1[T](val size: Int)(implicit mf: Manifest[T]) {
+class Test1[T](val size: Int)(implicit mf: ClassTag[T]) extends TestApi {
    val arr = new Array[T](size)
-   
+
    def test = {
       //specialized[T] { 
       for (i <- 0 until arr.length / 2) {
@@ -66,21 +67,22 @@ class Test1[T](val size: Int)(implicit mf: Manifest[T]) {
          }
       } else {
          for (i <- 0 until arr.length / 2) {
+            val temp = arr.asInstanceOf[Array[Any]](arr.asInstanceOf[Array[Any]].length - i - 1)
+            arr(arr.asInstanceOf[Array[Any]].length - i - 1) = arr(i)
+            arr.asInstanceOf[Array[Any]](i) = temp
+         }
+      }
+   }
+
+   def testSpecialized = {
+      def spec[@specialized U](arr: Array[U]) = {
+         for (i <- 0 until arr.length / 2) {
             val temp = arr(arr.length - i - 1)
             arr(arr.length - i - 1) = arr(i)
             arr(i) = temp
          }
-      }.asInstanceOf[Unit]
-   }
-
-   def testSpecialized = {
+      }
       spec(arr)
    }
-   private def spec[@specialized U](arr: Array[U]) = {
-      for (i <- 0 until arr.length / 2) {
-         val temp = arr(arr.length - i - 1)
-         arr(arr.length - i - 1) = arr(i)
-         arr(i) = temp
-      }
-   }
+
 }

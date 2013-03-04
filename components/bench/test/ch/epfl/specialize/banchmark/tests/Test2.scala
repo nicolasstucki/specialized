@@ -2,8 +2,9 @@ package ch.epfl.specialize.banchmark.tests
 
 import scala.util.control.Exception
 
-class Test2[T](val size: Int)(implicit mf: Manifest[T]) {
+class Test2[T](val size: Int)(implicit mf: Manifest[T]) extends TestApi {
    val arr = new Array[(T, T)](size)
+   // Fill array with non null values
    for (i <- 0 until size) arr(i) = if (mf == manifest[Boolean]) {
       (true, false).asInstanceOf[(T, T)]
    } else if (mf == manifest[Char]) {
@@ -73,21 +74,21 @@ class Test2[T](val size: Int)(implicit mf: Manifest[T]) {
             arr.asInstanceOf[Array[(Short, Short)]](i) = (b, a).asInstanceOf[(Short, Short)]
          }
       } else {
-         for (i <- 0 until arr.length) {
-            val tup = arr(i)
-            arr(i) = (tup._2, tup._1)
+         for (i <- 0 until arr.asInstanceOf[Array[(Short, Short)]].length) {
+            val tup: (Any, Any) = arr.asInstanceOf[Array[(Any, Any)]](i)
+            arr.asInstanceOf[Array[(Any, Any)]](i) = (tup._2, tup._1)
          }
-      }.asInstanceOf[Unit]
+      }
    }
 
    def testSpecialized = {
-      spec(arr)
-   }
-   def spec[@specialized U](arr: Array[(U, U)]) = {
-      for (i <- 0 until arr.length) {
-         val (a, b) = arr(i)
-         arr(i) = (b, a)
+      def spec[@specialized U](arr: Array[(U, U)]) = {
+         for (i <- 0 until arr.length) {
+            val (a, b) = arr(i)
+            arr(i) = (b, a)
+         }
       }
+      spec(arr)
    }
 
 }

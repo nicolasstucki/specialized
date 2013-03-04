@@ -7,9 +7,6 @@ import scala.reflect.ClassTag
 
 object `package` {
 
-   val warnTypeParameterNeeded = "specify type parameter using: specialized[T] {...}, T must have a manifest"
-   val warnSecializedIgnored = "specialized[T] {...} will be ignored (otherwise only generic code will be avalible)"
-   val warnTypeParameterNotUsed = "code has no reference to type parameter being specialized"
 
    def specialized[T](expr_f: => Any)(implicit mf: ClassTag[T]): Any = macro impl_specialized[T]
 
@@ -20,30 +17,20 @@ object `package` {
       val typeOf_T = typetagT.tpe
       val typeOf_f = expr_f.actualType
 
-      if (typeOf_T == typeOf[Nothing]) {
-         // This happens when:
-         // 1. specialized {...} is used and there is no type parameter with a manifest in scope 
-         // 2. or there is more than one type parameter have manifests and therefore the type could not be inferred.
-         c.warning(mf.tree.pos, warnTypeParameterNeeded)
-         c.warning(mf.tree.pos, warnSecializedIgnored)
-         return c.Expr[Any](Block(List( // TODO remove this return
-            printblockTree(c)("expr_f: " + showRaw(expr_f)),
-            printblockTree(c)(show(expr_f))),
-            expr_f.tree))
-         // return expr_f
-      } 
-      else if (typeOf_T == typeOf[Any]) {// TODO add anythin that is not T
-         c.warning(mf.tree.pos, warnTypeParameterNotUsed)
-         c.warning(mf.tree.pos, warnSecializedIgnored)
-         return c.Expr[Any](Block(List( // TODO remove this return
-            printblockTree(c)("expr_f: " + showRaw(expr_f)),
-            printblockTree(c)(show(expr_f))),
-            expr_f.tree))
-         // return expr_f
+      // Check if T is a valid type parameter
+      typeOf_T match {
+         case TypeRef(NoPrefix, _, _) => // Do nothing, typeOf_T is OK
+         case TypeRef(_, _, _) => {
+            // This happens when:
+            // 1. specialized {...} is used and there is no type parameter with a ClassTag in scope 
+            // 2. or there is more than one type parameter have manifests and therefore the type could not be inferred.
+            // 3. The type parameter is not a type parameter of the enclosing context, examples: specialized[Int] {...}, specialized[Any] {...}, specialized[Array[Int]] {...}, specialized[T] {...}, ...   
+            c.warning(mf.tree.pos, "Specify type parameter using: specialized[T] {...}, T must be a type parameter of the enclosing context and it must have a ClassTag. Type patameter must be on top level, example: if you want to specialize an Array[T] use specialize[T] {...}.")
+            return expr_f
+         }
       }
 
-      
-     // CREATE SPECIFIC VARIANTS OF TREE
+      // CREATE SPECIFIC VARIANTS OF TREE
       def reTypeTree(from: Type, to: Type, in: Type): Tree = TypeTree().setType(in.substituteTypes(List(from.typeSymbol), List(to)))
       def cast(tree: Tree, tpe: Type): Tree = TypeApply(Select(tree, newTermName("asInstanceOf")), List(TypeTree().setType(tpe)))
       def subs(tree0: Tree, newType: Type): Tree = {
