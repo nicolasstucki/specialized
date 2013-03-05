@@ -74,9 +74,9 @@ class Test2[T](val size: Int)(implicit mf: Manifest[T]) extends TestApi {
             arr.asInstanceOf[Array[(Short, Short)]](i) = (b, a).asInstanceOf[(Short, Short)]
          }
       } else {
-         for (i <- 0 until arr.asInstanceOf[Array[(Short, Short)]].length) {
-            val tup: (Any, Any) = arr.asInstanceOf[Array[(Any, Any)]](i)
-            arr.asInstanceOf[Array[(Any, Any)]](i) = (tup._2, tup._1)
+         for (i <- 0 until arr.length) {
+            val tup= arr(i)
+            arr(i) = (tup._2, tup._1)
          }
       }
    }

@@ -39,6 +39,35 @@ object RangeBenchmark
 //   bench("Test3", "Long", Gen.range("Test3[Long]")(start, end, step).map(new Test3[Long](_)))
 //   bench("Test3", "Short", Gen.range("Test3[Short]")(start, end, step).map(new Test3[Short](_)))
 
+//   bench("Test4", "Any", Gen.range("Test4[Any]")(start, end, step).map(new Test4[Any](_)))
+//   bench("Test4", "Boolean", Gen.range("Test4[Boolean]")(start, end, step).map(new Test4[Boolean](_)))
+//   bench("Test4", "Char", Gen.range("Test4[Char]")(start, end, step).map(new Test4[Char](_)))
+//   bench("Test4", "Byte", Gen.range("Test4[Byte]")(start, end, step).map(new Test4[Byte](_)))
+//   bench("Test4", "Double", Gen.range("Test4[Double]")(start, end, step).map(new Test4[Double](_)))
+//   bench("Test4", "Float", Gen.range("Test4[Float]")(start, end, step).map(new Test4[Float](_)))
+//   bench("Test4", "Int", Gen.range("Test4[Int]")(start, end, step).map(new Test4[Int } ](_)))
+//   bench("Test4", "Long", Gen.range("Test4[Long]")(start, end, step).map(new Test4[Long](_)))
+//   bench("Test4", "Short", Gen.range("Test4[Short]")(start, end, step).map(new Test4[Short](_)))
+
+//   bench("Test5", "Any", Gen.range("Test5[Any]")(start, end, step).map(new Test5[Any](_)( (x: Any) => x )))
+//   bench("Test5", "Boolean", Gen.range("Test5[Boolean]")(start, end, step).map(new Test5[Boolean](_)( (x: Boolean) => x )))
+//   bench("Test5", "Char", Gen.range("Test5[Char]")(start, end, step).map(new Test5[Char](_)( (x: Char) => x )))
+//   bench("Test5", "Byte", Gen.range("Test5[Byte]")(start, end, step).map(new Test5[Byte](_)( (x: Byte) => x )))
+//   bench("Test5", "Double", Gen.range("Test5[Double]")(start, end, step).map(new Test5[Double](_)( (x: Double) => x )))
+//   bench("Test5", "Float", Gen.range("Test5[Float]")(start, end, step).map(new Test5[Float](_)( (x: Float) => x )))
+//   bench("Test5", "Int", Gen.range("Test5[Int]")(start, end, step).map(new Test5[Int](_)( (x: Int) => x )))
+//   bench("Test5", "Long", Gen.range("Test5[Long]")(start, end, step).map(new Test5[Long](_)( (x: Long) => x )))
+//   bench("Test5", "Short", Gen.range("Test5[Short]")(start, end, step).map(new Test5[Short](_)( (x: Short) => x )))
+   
+//   bench("Test6", "Any", Gen.range("Test6[Any]")(start, end, step).map(new Test6[Any](_)("f",  (x: Any) => x )))
+//   bench("Test6", "Boolean", Gen.range("Test6[Boolean]")(start, end, step).map(new Test6[Boolean](_)( false, (x: Boolean) => !x )))
+//   bench("Test6", "Char", Gen.range("Test6[Char]")(start, end, step).map(new Test6[Char](_)(1, (x: Char) => x )))
+//   bench("Test6", "Byte", Gen.range("Test6[Byte]")(start, end, step).map(new Test6[Byte](_)(2, (x: Byte) => -x )))
+//   bench("Test6", "Double", Gen.range("Test6[Double]")(start, end, step).map(new Test6[Double](_)(2.3, (x: Double) => -x )))
+//   bench("Test6", "Float", Gen.range("Test6[Float]")(start, end, step).map(new Test6[Float](_)(4.3, (x: Float) => x )))
+//   bench("Test6", "Int", Gen.range("Test6[Int]")(start, end, step).map(new Test6[Int](_)(7, (x: Int) => x+1 )))
+//   bench("Test6", "Long", Gen.range("Test6[Long]")(start, end, step).map(new Test6[Long](_)(423, (x: Long) => -x )))
+//   bench("Test6", "Short", Gen.range("Test6[Short]")(start, end, step).map(new Test6[Short](_)(42, (x: Short) => -x )))
    
    
    def bench(name: String, tpe: String, test: Gen[TestApi]): Unit = {

@@ -67,9 +67,9 @@ class Test1[T](val size: Int)(implicit mf: ClassTag[T]) extends TestApi {
          }
       } else {
          for (i <- 0 until arr.length / 2) {
-            val temp = arr.asInstanceOf[Array[Any]](arr.asInstanceOf[Array[Any]].length - i - 1)
-            arr(arr.asInstanceOf[Array[Any]].length - i - 1) = arr(i)
-            arr.asInstanceOf[Array[Any]](i) = temp
+            val temp = arr(arr.length - i - 1)
+            arr(arr.length - i - 1) = arr(i)
+            arr(i) = temp
          }
       }
    }

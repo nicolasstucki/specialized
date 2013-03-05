@@ -83,11 +83,11 @@ class Test3[T](val size: Int)(implicit mf: ClassTag[T]) extends TestApi {
          }
          return arr2.asInstanceOf[Array[T]]
       } else {
-         val arr2: Array[Any] = new Array[T](size).asInstanceOf[Array[Any]]
-         for (i <- 0 until arr.asInstanceOf[Array[Any]].length) {
-            arr2(i) = arr.asInstanceOf[Array[Any]](i)
+         val arr2 = new Array[T](size)
+         for (i <- 0 until arr.length) {
+            arr2(i) = arr(i)
          }
-         return arr2.asInstanceOf[Array[T]]
+         return arr2
       }
    }
 
