@@ -24,7 +24,7 @@ object SpecializeBuild extends Build {
       "org.scala-lang" % "scala-reflect" % ver, 
       "org.scala-lang" % "scala-compiler" % ver,
       "com.github.axel22" %% "scalameter" % "0.2",
-      "org.scala-lang" % "scala-partest" % "2.9.1.RC4"
+      "org.scala-lang" % "scala-partest" % "2.10.0"
     )),
     resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
     testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework"),
