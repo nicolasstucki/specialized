@@ -64,8 +64,9 @@ object `package` {
                case lit: Literal => lit
                case ths: This    => ths
                case ident: Ident => {
-                  val tpe = ident.tpe.substituteSymbols(List(typeOf_T.typeSymbol), List(newType.typeSymbol))
+                  val tpe = ident.tpe.widen.substituteSymbols(List(typeOf_T.typeSymbol), List(newType.typeSymbol))
                   val newIdent = cast(Ident(ident.name), tpe)
+                  c.warning(ct.tree.pos, "*****" + showRaw(tpe.normalize) )
                   printw("ident", ident)
                   printw("newIdent", newIdent)
 

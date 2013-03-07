@@ -15,9 +15,17 @@ import io.Directory
  *  And then the generated output will be the icode for everything
  *  in that file.  See source for possible customizations.
  */
-object SpecializedDirectTest extends IcodeTest {
-   override val printIcodeAfterPhase = "specialize"
-   override val testPath = io.File("test/in")
-   override val testOutput = io.Directory("test/out")
+object SpecializedDirectTest extends DirectTest {
+
+   override lazy val testPath = io.File("tmp/")
+   override lazy val testOutput = io.Directory("tmp/")
+
+   override def extraSettings = "-uniqid"
+   
+   def code = """object A { println("fjadsl") }"""
+      
+   def show: Unit = {
+      compile()
+   }
 }
 
