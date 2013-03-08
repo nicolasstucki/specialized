@@ -17,61 +17,37 @@ class Test6[T](val times: Int)(val init: T, val func: T => T)(implicit mf: Class
    }
 
    def testUnrolled = {
-      if (mf == manifest[Boolean]) {
+      (if (mf == manifest[Boolean]) {
+         val spec_init = init.asInstanceOf[Boolean]
+         val spec_func = func.asInstanceOf[Function1[Boolean, Boolean]]
          @tailrec def rec(n: Int, last: Boolean): Boolean = {
             if (n == 0) last
-            else rec(n - 1, func.asInstanceOf[Function1[Boolean, Boolean]](last))
+            else rec(n - 1, spec_func(last))
          }
-         rec(times, init.asInstanceOf[Boolean])
-      } else if (mf == manifest[Char]) {
-         @tailrec def rec(n: Int, last: Char): Char = {
-            if (n == 0) last
-            else rec(n - 1, func.asInstanceOf[Function1[Char, Char]](last))
-         }
-         rec(times, init.asInstanceOf[Char])
-      } else if (mf == manifest[Byte]) {
-         @tailrec def rec(n: Int, last: Byte): Byte = {
-            if (n == 0) last
-            else rec(n - 1, func.asInstanceOf[Function1[Byte, Byte]](last))
-         }
-         rec(times, init.asInstanceOf[Byte])
+         rec(times, spec_init)
       } else if (mf == manifest[Double]) {
+         val spec_init = init.asInstanceOf[Double]
+         val spec_func = func.asInstanceOf[Function1[Double, Double]]
          @tailrec def rec(n: Int, last: Double): Double = {
             if (n == 0) last
-            else rec(n - 1, func.asInstanceOf[Function1[Double, Double]](last))
+            else rec(n - 1, spec_func(last))
          }
-         rec(times, init.asInstanceOf[Double])
-      } else if (mf == manifest[Float]) {
-         @tailrec def rec(n: Int, last: Float): Float = {
-            if (n == 0) last
-            else rec(n - 1, func.asInstanceOf[Function1[Float, Float]](last))
-         }
-         rec(times, init.asInstanceOf[Float])
+         rec(times, spec_init)
       } else if (mf == manifest[Int]) {
+         val spec_init = init.asInstanceOf[Int]
+         val spec_func = func.asInstanceOf[Function1[Int, Int]]
          @tailrec def rec(n: Int, last: Int): Int = {
             if (n == 0) last
-            else rec(n - 1, func.asInstanceOf[Function1[Int, Int]](last))
+            else rec(n - 1, spec_func(last))
          }
-         rec(times, init.asInstanceOf[Int])
-      } else if (mf == manifest[Long]) {
-         @tailrec def rec(n: Int, last: Long): Long = {
-            if (n == 0) last
-            else rec(n - 1, func.asInstanceOf[Function1[Long, Long]](last))
-         }
-         rec(times, init.asInstanceOf[Long])
-      } else if (mf == manifest[Short]) {
-         @tailrec def rec(n: Int, last: Short): Short = {
-            if (n == 0) last
-            else rec(n - 1, func.asInstanceOf[Function1[Short, Short]](last))
-         }
-         rec(times, init.asInstanceOf[Short])
+         rec(times, spec_init)
       } else {
          @tailrec def rec(n: Int, last: T): T = {
             if (n == 0) last
             else rec(n - 1, func(last))
          }
          rec(times, init)
-      }
+      }).asInstanceOf[T]
    }
 
    def testSpecialized = {
@@ -82,7 +58,15 @@ class Test6[T](val times: Int)(val init: T, val func: T => T)(implicit mf: Class
          }
          rec(times, init)
       }
-      spec(init, func)
+      (if (mf == manifest[Boolean]) {
+         spec[Boolean](init.asInstanceOf[Boolean], func.asInstanceOf[Boolean => Boolean])
+      } else if (mf == manifest[Double]) {
+         spec[Double](init.asInstanceOf[Double], func.asInstanceOf[Double => Double])
+      } else if (mf == manifest[Int]) {
+         spec[Int](init.asInstanceOf[Int], func.asInstanceOf[Int => Int])
+      } else {
+         spec[T](init, func)
+      }).asInstanceOf[T]
    }
 
 }
