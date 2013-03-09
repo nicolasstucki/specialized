@@ -1,12 +1,20 @@
 package ch.epfl.lamp.specialized.test
 
-import ch.epfl.lamp.specialized._
-import scala.unchecked
 import scala.reflect.ClassTag
 
-class B[T: ClassTag] {
+import ch.epfl.lamp.specialized._
+import scala.unchecked
+
+class B[T](implicit ct: ClassTag[T]) {
    val size = 5
-   val arr = new Array[T](size)
+   var arr = new Array[T](size)
+   val k: T = (if (ct == manifest[Boolean]) {
+      (true).asInstanceOf[T]
+   } else if (ct == manifest[Double]) {
+      (54.3d).asInstanceOf[T]
+   } else if (ct == manifest[Int]) {
+      (53).asInstanceOf[T]
+   } else { (new { def g = "h" }) }).asInstanceOf[T]
 
    def testExpr1 = {
       specialized[T] { // should warn and ignore
@@ -43,6 +51,7 @@ class B[T: ClassTag] {
 
    def testExpr4 = {
       arr(0) = specialized[T] {
+         val x = 1
          arr(1)
       }
    }
@@ -150,13 +159,30 @@ class B[T: ClassTag] {
 
    def testExpr11(x: T) = {
       specialized[T] {
-    	  arr(0) = x
+         arr(0) = x
       }
    }
-   
+
    def testExpr12(arr2: Array[T]) = {
       specialized[T] {
-    	  arr(0) = arr2(0)
+         arr(0) = arr2(0)
+      }
+   }
+
+   def testExpr12(arr2: Array[T], x: Int) = {
+      val z = arr(0)
+      val w = arr(0)
+      val arrx = arr
+      def f2 = w
+      specialized[T] {
+         def f1 = z
+         def f3(arg0: T, arg1: Int) = 3
+         val y = arr(0)
+         arr(0) = arr2(0)
+         arr(0) = y
+         arr(0) = z
+         arr(0) = arrx(0)
+         x == k
       }
    }
 }
