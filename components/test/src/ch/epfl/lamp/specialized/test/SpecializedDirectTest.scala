@@ -4,7 +4,7 @@ import scala.tools.partest._
 
 import scala.tools.nsc._
 import nest.FileUtil._
-import io.Directory
+import scala.reflect.io._
 
 /**
  * A trait for testing icode.  All you need is this in a
@@ -21,11 +21,12 @@ object SpecializedDirectTest extends DirectTest {
    override lazy val testOutput = io.Directory("tmp/")
 
    override def extraSettings = "-uniqid"
-   
+
    def code = """object A { println("fjadsl") }"""
-      
+
    def show: Unit = {
-      compile()
+    compile()
+    println("ok")
    }
 }
 

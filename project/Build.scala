@@ -6,6 +6,13 @@ object SpecializeBuild extends Build {
 
   val scala = "2.10.1-SNAPSHOT"
 
+  // http://stackoverflow.com/questions/6506377/how-to-get-list-of-dependency-jars-from-an-sbt-0-10-0-project
+  val getJars = TaskKey[Unit]("get-jars")
+  val getJarsTask = getJars <<= (target, fullClasspath in Runtime) map { (target, cp) =>
+    println("Target path is: "+target)
+    println("Full classpath is: "+cp.map(_.data).mkString(":"))
+  }
+
   val defaults = Defaults.defaultSettings ++ Seq(
     // scala version + resolver
     scalaVersion := scala,
@@ -24,11 +31,22 @@ object SpecializeBuild extends Build {
       "org.scala-lang" % "scala-reflect" % ver, 
       "org.scala-lang" % "scala-compiler" % ver,
       "com.github.axel22" %% "scalameter" % "0.2",
-      "org.scala-lang" % "scala-partest" % "2.10.0"
+      "org.scala-lang" % "scala-partest" % ver
     )),
     resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
     testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework"),
     parallelExecution in Test := false,
+    // Running tests requires that we put scala-library in the bootclasspath, 
+    // else the compiler mirror won't pick up the dependencies. So we'll need
+    // to fork compile-run and pass the scala-library in the bootclasspath 
+    // instead of the normal classlpath. See this thread for a discussion:
+    // https://groups.google.com/forum/#!msg/simple-build-tool/9OTd1DPNFqk/3RM-AXWhxosJ
+    getJarsTask,
+    fork in (Compile,run) := true,
+    javaOptions in (Compile,run) <+= (dependencyClasspath in Runtime) map { path =>
+      "-Xbootclasspath/a:"+path.map(_.data).filter(_.getName() == "scala-library.jar").mkString(":")
+    },
+    fullClasspath in Runtime ~= { path => path.filterNot(_.data.getName() == "scala-library.jar") },
     //http://stackoverflow.com/questions/10472840/how-to-attach-sources-to-sbt-managed-dependencies-in-scala-ide#answer-11683728
     com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseKeys.withSource := true,
     // debugging
