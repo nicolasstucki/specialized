@@ -164,24 +164,34 @@ class B[T](implicit ct: ClassTag[T]) {
    }
 
    def testExpr12(arr2: Array[T]) = {
+      val y = arr(0)
       specialized[T] {
          arr(0) = arr2(0)
+      }
+      
+      specialized[T] {
+         arr2(0) = arr(0)
       }
    }
 
    def testExpr12(arr2: Array[T], x: Int) = {
+      val arr3 = new Array[T](3)
       val z = arr(0)
       val w = arr(0)
       val arrx = arr
       def f2 = w
+      def g(x: T) = x
       specialized[T] {
+         val arr4 = new Array[T](3)
          def f1 = z
          def f3(arg0: T, arg1: Int) = 3
+         def g2(x: T) = x
          val y = arr(0)
          arr(0) = arr2(0)
          arr(0) = y
          arr(0) = z
          arr(0) = arrx(0)
+         arr3(0) = arr(0)
          x == k
       }
    }
