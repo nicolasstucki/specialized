@@ -1,9 +1,19 @@
-package ch.epfl.specialize.banchmark
+package ch.epfl.specialize.benchmark
 import org.scalameter.api._
 import ch.epfl.specialize.banchmark.tests._
 
 object RangeBenchmark
-      extends PerformanceTest.Microbenchmark {
+      extends PerformanceTest {
+
+  // PerformanceTest defs
+  // TODO: Not sure this is supposed to be transient, but it complains class is not serializable due to it
+  @transient lazy val executor = SeparateJvmsExecutor(
+    Executor.Warmer.Default(),
+    Aggregator.complete(Aggregator.average),
+    new Executor.Measurer.Default
+  )
+  def persistor = Persistor.None
+  def reporter = new LoggingReporter
 
    val start = 200000;
    val end = 300000;
@@ -40,22 +50,30 @@ object RangeBenchmark
    //      bench("Test6", "Boolean", Gen.range("Test6[Boolean]")(start, end, step).map(new Test6[Boolean](_)( false, (x: Boolean) => !x )))
 
    def bench(name: String, tpe: String, test: Gen[TestApi]): Unit = {
-      measure method "%s[%s].test".format(name, tpe) in {
-         using(test) curve ("Range") in {
-            _.test
-         }
-      }
+     val interpFlags = ""
+     val c1Flags = ""
+     val c2Flags = ""
+     val samples = 1
 
-      measure method "%s[%s].testUnrolled".format(name, tpe) in {
-         using(test) curve ("Range") in {
-            _.testUnrolled
-         }
-      }
+     for (flags <- List(interpFlags, c1Flags, c2Flags)) {
 
-      measure method "%s[%s].testSpecialized".format(name, tpe) in {
-         using(test) curve ("Range") in {
-            _.testSpecialized
-         }
-      }
+       measure method "%s[%s].test".format(name, tpe) in {
+           using(test) curve ("Range") config (exec.jvmflags -> flags, exec.independentSamples -> samples) in {
+              _.test
+           }
+        }
+
+        measure method "%s[%s].testUnrolled".format(name, tpe) in {
+           using(test) curve ("Range") config (exec.jvmflags -> flags, exec.independentSamples -> samples) in {
+              _.testUnrolled
+           }
+        }
+
+        measure method "%s[%s].testSpecialized".format(name, tpe) in {
+           using(test) curve ("Range") config (exec.jvmflags -> flags, exec.independentSamples -> samples) in {
+              _.testSpecialized
+           }
+        }
+     }
    }
 }
