@@ -30,7 +30,7 @@ object SpecializeBuild extends Build {
       "org.scala-lang" % "scala-library" % ver,
       "org.scala-lang" % "scala-reflect" % ver, 
       "org.scala-lang" % "scala-compiler" % ver,
-      "com.github.axel22" %% "scalameter" % "0.2",
+      "com.github.axel22" %% "scalameter" % "0.3",
       "org.scala-lang" % "scala-partest" % ver
     )),
     resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",

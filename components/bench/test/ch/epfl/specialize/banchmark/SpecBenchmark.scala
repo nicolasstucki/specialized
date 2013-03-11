@@ -1,6 +1,7 @@
 package ch.epfl.specialize.benchmark
 import org.scalameter.api._
 import ch.epfl.specialize.banchmark.tests._
+import org.scalameter.CurveData
 
 object RangeBenchmark
       extends PerformanceTest {
@@ -13,11 +14,19 @@ object RangeBenchmark
     new Executor.Measurer.Default
   )
   def persistor = Persistor.None
-  def reporter = new LoggingReporter
+  def reporter = new LoggingReporter {
+    override def report(result: CurveData, persistor: Persistor) {
+      var output = f"${result.context.scope}%40s:  "
+      for (measurement <- result.measurements) {
+        output += f"${measurement.params}: ${measurement.time}% 10.5f  "
+      }
+      println(output)
+    }
+  }
 
    val start = 200000;
    val end = 300000;
-   val step = 20000;
+   val step = 100000;
 
 //   bench("Test1", "Any", Gen.range("Test1[Any]")(start, end, step).map(new Test1[Any](_)))
    bench("Test1", "Int", Gen.range("Test1[Int]")(start, end, step).map(new Test1[Int](_)))
@@ -50,26 +59,26 @@ object RangeBenchmark
    //      bench("Test6", "Boolean", Gen.range("Test6[Boolean]")(start, end, step).map(new Test6[Boolean](_)( false, (x: Boolean) => !x )))
 
    def bench(name: String, tpe: String, test: Gen[TestApi]): Unit = {
-     val interpFlags = "-Xint"
-     val c1Flags = "-XX:-TieredCompilation -XX:CompileThreshold=0 -client -XX:+PrintCompilation"
-     val c2Flags = "-XX:-TieredCompilation -XX:CompileThreshold=0 -server -XX:+PrintCompilation"
+     val interpFlags = ("int", "-Xint")
+     val c1Flags = ("c1", "-XX:-TieredCompilation -XX:CompileThreshold=0 -client -XX:+PrintCompilation")
+     val c2Flags = ("c2", "-XX:-TieredCompilation -XX:CompileThreshold=0 -server -XX:+PrintCompilation")
      val samples = 1
 
-     for (flags <- List(interpFlags, c1Flags, c2Flags)) {
+     for ((flagtype, flags) <- List(interpFlags, c1Flags, c2Flags)) {
 
-       measure method "%s[%s].test %s".format(name, tpe, flags) in {
+       measure method "%s[%s].test %s".format(name, tpe, flagtype) in {
            using(test) curve ("Range") config (exec.jvmflags -> flags, exec.independentSamples -> samples) in {
               _.test
            }
         }
 
-        measure method "%s[%s].testUnrolled %s".format(name, tpe, flags) in {
+        measure method "%s[%s].testUnrolled %s".format(name, tpe, flagtype) in {
            using(test) curve ("Range") config (exec.jvmflags -> flags, exec.independentSamples -> samples) in {
               _.testUnrolled
            }
         }
 
-        measure method "%s[%s].testSpecialized %s".format(name, tpe, flags) in {
+        measure method "%s[%s].testSpecialized %s".format(name, tpe, flagtype) in {
            using(test) curve ("Range") config (exec.jvmflags -> flags, exec.independentSamples -> samples) in {
               _.testSpecialized
            }

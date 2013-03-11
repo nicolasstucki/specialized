@@ -7,13 +7,13 @@ class Test1[T](val size: Int)(implicit classTag: ClassTag[T]) extends TestApi {
    val arr = new Array[T](size)
 
    def test = {
-      //specialized[T] { 
+      //specialized[T] {
       for (i <- 0 until arr.length / 2) {
          val temp = arr(arr.length - i - 1)
          arr(arr.length - i - 1) = arr(i)
          arr(i) = temp
       }
-      // } 
+      // }
    }
 
    def testUnrolled = {
@@ -47,14 +47,15 @@ class Test1[T](val size: Int)(implicit classTag: ClassTag[T]) extends TestApi {
       }
    }
 
+   def spec[@specialized U](arr: Array[U]) = {
+     for (i <- 0 until arr.length / 2) {
+       val temp = arr(arr.length - i - 1)
+           arr(arr.length - i - 1) = arr(i)
+           arr(i) = temp
+     }
+   }
+
    def testSpecialized = {
-      def spec[@specialized U](arr: Array[U]) = {
-         for (i <- 0 until arr.length / 2) {
-            val temp = arr(arr.length - i - 1)
-            arr(arr.length - i - 1) = arr(i)
-            arr(i) = temp
-         }
-      }
       (if (classTag == manifest[Boolean]) {
          spec[Boolean](arr.asInstanceOf[Array[Boolean]])
       } else if (classTag == manifest[Double]) {
