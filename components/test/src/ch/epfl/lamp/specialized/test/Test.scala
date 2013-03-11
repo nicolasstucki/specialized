@@ -4,9 +4,9 @@ import ch.epfl.lamp.specialized._
 import java.util.Arrays
 import scala.tools.partest.IcodeTest
 
-object Test extends App {
+object Test2 extends App {
 
-   
+
    val b = new B[Int]
    val in = 42
    val arr2 = new Array[Int](1)
@@ -25,7 +25,7 @@ object Test extends App {
    printresult(10, b.testExpr10)
    printresult(11, b.testExpr11(in))
    printresult(12, b.testExpr12(arr2))
-   
+
    def printresult(n: Int, result: => Any) = {
       println("\n" + ("=" * 150 + "\n") * 3)
       println("Test expr " + n + "\n" + ("-" * 13) + "\n")

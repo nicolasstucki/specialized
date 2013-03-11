@@ -28,29 +28,41 @@ object SpecializeBuild extends Build {
     // add the library, reflect and the compiler as libraries
     libraryDependencies <<= scalaVersion(ver => Seq(
       "org.scala-lang" % "scala-library" % ver,
-      "org.scala-lang" % "scala-reflect" % ver, 
+      //"org.scala-lang" % "scala-reflect" % ver, 
       "org.scala-lang" % "scala-compiler" % ver,
-      "com.github.axel22" %% "scalameter" % "0.3",
-      "org.scala-lang" % "scala-partest" % ver
+      "org.scala-lang" % "scala-partest" % ver,
+      "com.novocode" % "junit-interface" % "0.10-M2" % "test"
     )),
     resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
-    testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework"),
-    parallelExecution in Test := false,
-    // Running tests requires that we put scala-library in the bootclasspath, 
-    // else the compiler mirror won't pick up the dependencies. So we'll need
-    // to fork compile-run and pass the scala-library in the bootclasspath 
-    // instead of the normal classlpath. See this thread for a discussion:
-    // https://groups.google.com/forum/#!msg/simple-build-tool/9OTd1DPNFqk/3RM-AXWhxosJ
-    getJarsTask,
-    fork in (Compile,run) := true,
-    javaOptions in (Compile,run) <+= (dependencyClasspath in Runtime) map { path =>
-      "-Xbootclasspath/a:"+path.map(_.data).filter(_.getName() == "scala-library.jar").mkString(":")
-    },
-    fullClasspath in Runtime ~= { path => path.filterNot(_.data.getName() == "scala-library.jar") },
+    testOptions += Tests.Argument(TestFrameworks.JUnit, "-q", "-v"),
     //http://stackoverflow.com/questions/10472840/how-to-attach-sources-to-sbt-managed-dependencies-in-scala-ide#answer-11683728
-    com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseKeys.withSource := true,
+    com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseKeys.withSource := true
     // debugging
-    scalacOptions ++= Seq("-uniqid")
+    // scalacOptions ++= Seq("-uniqid")
+  )
+
+  val benchDeps = Seq(
+    libraryDependencies += "com.github.axel22" %% "scalameter" % "0.3",
+    testFrameworks += new TestFramework("org.scalameter.ScalaMeterFramework"),
+    parallelExecution in Test := false
+  )
+
+  // Running tests requires that we put scala-library in the bootclasspath, 
+  // else the compiler mirror won't pick up the dependencies. So we'll need
+  // to fork compile-run and pass the scala-library in the bootclasspath 
+  // instead of the normal classlpath. See this thread for a discussion:
+  // https://groups.google.com/forum/#!msg/simple-build-tool/9OTd1DPNFqk/3RM-AXWhxosJ
+  def isScalaLib(file: java.io.File) = (file.getName() startsWith "scala-") && (file.getName() endsWith ".jar")
+  val compilerDeps = Seq(
+    getJarsTask,
+    fork in Test := true,
+    javaOptions in Test <+= (dependencyClasspath in Runtime) map { path =>
+      val cp = "-Xbootclasspath/a:"+path.map(_.data).filter(isScalaLib).mkString(":")
+      println(cp)
+      cp
+    },
+    fullClasspath in Runtime ~= { path => println("classpath: " + path); path }
+    //fullClasspath in Runtime ~= { path => path.filterNot(x => isScalaLib(x.data)) }
   )
 
   // we might need this later
@@ -58,6 +70,6 @@ object SpecializeBuild extends Build {
 
   lazy val _specialize  = Project(id = "specialize",       base = file(".")) aggregate (_spec_base, _spec_test, _spec_bench)
   lazy val _spec_base   = Project(id = "specialize-base",  base = file("components/base"), settings = defaults)
-  lazy val _spec_test   = Project(id = "specialize-test",  base = file("components/test"), settings = defaults) dependsOn(_spec_base)
-  lazy val _spec_bench  = Project(id = "specialize-bench", base = file("components/bench"), settings = defaults) dependsOn(_spec_base)
+  lazy val _spec_test   = Project(id = "specialize-test",  base = file("components/test"), settings = defaults ++ compilerDeps) dependsOn(_spec_base)
+  lazy val _spec_bench  = Project(id = "specialize-bench", base = file("components/bench"), settings = defaults ++ benchDeps) dependsOn(_spec_base)
 }

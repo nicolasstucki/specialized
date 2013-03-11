@@ -1,0 +1,10 @@
+[[syntax trees at end of                    parser]] // newSource1
+package <empty> {
+  object Example extends scala.AnyRef {
+    def <init>() = {
+      super.<init>();
+      ()
+    };
+    println("Example test")
+  }
+}
