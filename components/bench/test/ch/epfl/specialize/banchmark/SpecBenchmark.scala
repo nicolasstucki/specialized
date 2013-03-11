@@ -26,7 +26,7 @@ object RangeBenchmark
 
    val start = 200000;
    val end = 300000;
-   val step = 100000;
+   val step = 50000;
 
 //   bench("Test1", "Any", Gen.range("Test1[Any]")(start, end, step).map(new Test1[Any](_)))
    bench("Test1", "Int", Gen.range("Test1[Int]")(start, end, step).map(new Test1[Int](_)))
@@ -60,8 +60,8 @@ object RangeBenchmark
 
    def bench(name: String, tpe: String, test: Gen[TestApi]): Unit = {
      val interpFlags = ("int", "-Xint")
-     val c1Flags = ("c1", "-XX:-TieredCompilation -XX:CompileThreshold=0 -client -XX:+PrintCompilation")
-     val c2Flags = ("c2", "-XX:-TieredCompilation -XX:CompileThreshold=0 -server -XX:+PrintCompilation")
+     val c1Flags = ("c1", "-XX:-TieredCompilation -XX:CompileThreshold=1 -client") //-XX:+PrintCompilation")
+     val c2Flags = ("c2", "-XX:-TieredCompilation -XX:CompileThreshold=1 -server")//-XX:+PrintCompilation")
      val samples = 1
 
      for ((flagtype, flags) <- List(interpFlags, c1Flags, c2Flags)) {
