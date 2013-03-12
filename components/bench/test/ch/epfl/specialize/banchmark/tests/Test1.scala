@@ -6,6 +6,10 @@ import scala.reflect.ClassTag
 class Test1[T](val size: Int)(implicit classTag: ClassTag[T]) extends TestApi {
    val arr = new Array[T](size)
 
+   /**
+    * Algorithm that reverses an array
+    * Tests get and update operations of an array
+    */
    def test = {
       //specialized[T] {
       for (i <- 0 until arr.length / 2) {
@@ -18,25 +22,25 @@ class Test1[T](val size: Int)(implicit classTag: ClassTag[T]) extends TestApi {
 
    def testUnrolled = {
       if (classTag == manifest[Boolean]) {
-         val arr: Array[Boolean] = this.arr.asInstanceOf[Array[Boolean]]
-         for (i <- 0 until arr.length / 2) {
-            val temp: Boolean = arr(arr.length - i - 1)
-            arr(arr.length - i - 1) = arr(i)
-            arr(i) = temp
+         val spec_arr: Array[Boolean] = arr.asInstanceOf[Array[Boolean]]
+         for (i <- 0 until spec_arr.length / 2) {
+            val temp: Boolean = spec_arr(spec_arr.length - i - 1)
+            spec_arr(spec_arr.length - i - 1) = spec_arr(i)
+            spec_arr(i) = temp
          }
       } else if (classTag == manifest[Int]) {
-         val arr: Array[Int] = this.arr.asInstanceOf[Array[Int]]
-         for (i <- 0 until arr.length / 2) {
-            val temp: Int = arr(arr.length - i - 1)
-            arr(arr.length - i - 1) = arr(i)
-            arr(i) = temp
+         val spec_arr: Array[Int] = arr.asInstanceOf[Array[Int]]
+         for (i <- 0 until spec_arr.length / 2) {
+            val temp: Int = spec_arr(spec_arr.length - i - 1)
+            spec_arr(spec_arr.length - i - 1) = spec_arr(i)
+            spec_arr(i) = temp
          }
       } else if (classTag == manifest[Double]) {
-         val arr: Array[Double] = this.arr.asInstanceOf[Array[Double]]
-         for (i <- 0 until arr.length / 2) {
-            val temp: Double = arr(arr.length - i - 1)
-            arr(arr.length - i - 1) = arr(i)
-            arr(i) = temp
+         val spec_arr: Array[Double] = arr.asInstanceOf[Array[Double]]
+         for (i <- 0 until spec_arr.length / 2) {
+            val temp: Double = spec_arr(spec_arr.length - i - 1)
+            spec_arr(spec_arr.length - i - 1) = spec_arr(i)
+            spec_arr(i) = temp
          }
       } else {
          for (i <- 0 until arr.length / 2) {
@@ -45,14 +49,6 @@ class Test1[T](val size: Int)(implicit classTag: ClassTag[T]) extends TestApi {
             arr(i) = temp
          }
       }
-   }
-
-   def spec[@specialized U](arr: Array[U]) = {
-     for (i <- 0 until arr.length / 2) {
-       val temp = arr(arr.length - i - 1)
-           arr(arr.length - i - 1) = arr(i)
-           arr(i) = temp
-     }
    }
 
    def testSpecialized = {
@@ -67,4 +63,11 @@ class Test1[T](val size: Int)(implicit classTag: ClassTag[T]) extends TestApi {
       }).asInstanceOf[Unit]
    }
 
+   private def spec[@specialized U](arr: Array[U]) = {
+      for (i <- 0 until arr.length / 2) {
+         val temp = arr(arr.length - i - 1)
+         arr(arr.length - i - 1) = arr(i)
+         arr(i) = temp
+      }
+   }
 }

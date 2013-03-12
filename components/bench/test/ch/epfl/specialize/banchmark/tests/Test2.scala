@@ -13,11 +13,15 @@ class Test2[T](val size: Int)(implicit mf: Manifest[T]) extends TestApi {
       (5, 3).asInstanceOf[(T, T)]
    } else { (new {}, new {}).asInstanceOf[(T, T)] }
 
+   /**
+    * Algorithm that inverses the order of all tuples in an array of tuples
+    * Tests get and update operations of an array
+    * and tests swap operation of tuples
+    */
    def test = {
       //specialized[T] { 
       for (i <- 0 until arr.length) {
-         val (a, b) = arr(i)
-         arr(i) = (b, a)
+         arr(i) = arr(i).swap
       }
       // } 
    }
@@ -26,36 +30,27 @@ class Test2[T](val size: Int)(implicit mf: Manifest[T]) extends TestApi {
       (if (mf == manifest[Boolean]) {
          val spec_arr: Array[(Boolean, Boolean)] = arr.asInstanceOf[Array[(Boolean, Boolean)]]
          for (i <- 0 until spec_arr.length) {
-            val (a, b): (Boolean, Boolean) = spec_arr(i)
-            spec_arr(i) = (b, a)
+            spec_arr(i) = spec_arr(i).swap
          }
       } else if (mf == manifest[Double]) {
          val spec_arr: Array[(Double, Double)] = arr.asInstanceOf[Array[(Double, Double)]]
          for (i <- 0 until spec_arr.length) {
-            val (a, b): (Double, Double) = spec_arr(i)
-            spec_arr(i) = (b, a)
+            spec_arr(i) = spec_arr(i).swap
          }
       } else if (mf == manifest[Int]) {
          val spec_arr: Array[(Int, Int)] = arr.asInstanceOf[Array[(Int, Int)]]
          for (i <- 0 until spec_arr.length) {
-            val (a, b): (Int, Int) = spec_arr(i)
-            spec_arr(i) = (b, a)
+            spec_arr(i) = spec_arr(i).swap
          }
       } else {
          for (i <- 0 until arr.length) {
-            val tup = arr(i)
-            arr(i) = (tup._2, tup._1)
+            arr(i) = arr(i).swap
          }
       }).asInstanceOf[Unit]
    }
 
    def testSpecialized = {
-      def spec[@specialized U](arr: Array[(U, U)]) = {
-         for (i <- 0 until arr.length) {
-            val (a, b) = arr(i)
-            arr(i) = (b, a)
-         }
-      }
+
       (if (mf == manifest[Boolean]) {
          spec[Boolean](arr.asInstanceOf[Array[(Boolean, Boolean)]])
       } else if (mf == manifest[Double]) {
@@ -67,4 +62,9 @@ class Test2[T](val size: Int)(implicit mf: Manifest[T]) extends TestApi {
       }).asInstanceOf[Unit]
    }
 
+   private def spec[@specialized U](arr: Array[(U, U)]) = {
+      for (i <- 0 until arr.length) {
+         arr(i) = arr(i).swap
+      }
+   }
 }
