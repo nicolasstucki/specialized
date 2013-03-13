@@ -2,7 +2,7 @@ package ch.epfl.specialize.banchmark.tests
 
 import scala.util.control.Exception
 
-class Test2[T](val size: Int)(implicit mf: Manifest[T]) extends TestApi {
+class TestArrayOfTuplesSwap[T](val size: Int)(implicit mf: Manifest[T]) extends TestApi {
    val arr = new Array[(T, T)](size)
    // Fill array with non null values
    for (i <- 0 until size) arr(i) = if (mf == manifest[Boolean]) {

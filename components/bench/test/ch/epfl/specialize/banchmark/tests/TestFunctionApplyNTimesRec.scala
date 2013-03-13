@@ -4,7 +4,7 @@ import scala.util.control.Exception
 import scala.reflect.ClassTag
 import scala.annotation.tailrec
 
-class Test4[T](val times: Int)(val init: T, val func: T => T)(implicit mf: ClassTag[T]) extends TestApi {
+class TestFunctionApplyNTimesRec[T](val times: Int)(val init: T, val func: T => T)(implicit mf: ClassTag[T]) extends TestApi {
 
    def test = {
       //specialized[T] {
@@ -52,11 +52,11 @@ class Test4[T](val times: Int)(val init: T, val func: T => T)(implicit mf: Class
 
    def testSpecialized = {
       (if (mf == manifest[Boolean]) {
-         spec[Boolean](init.asInstanceOf[Boolean], func.asInstanceOf[Boolean => Boolean])
+         spec[Boolean](init.asInstanceOf[Boolean], func.asInstanceOf[Function1[Boolean, Boolean]])
       } else if (mf == manifest[Double]) {
-         spec[Double](init.asInstanceOf[Double], func.asInstanceOf[Double => Double])
+         spec[Double](init.asInstanceOf[Double], func.asInstanceOf[Function1[Double, Double]])
       } else if (mf == manifest[Int]) {
-         spec[Int](init.asInstanceOf[Int], func.asInstanceOf[Int => Int])
+         spec[Int](init.asInstanceOf[Int], func.asInstanceOf[Function1[Int, Int]])
       } else {
          spec[T](init, func)
       }).asInstanceOf[T]

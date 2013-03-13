@@ -3,7 +3,7 @@ package ch.epfl.specialize.banchmark.tests
 import scala.util.control.Exception
 import scala.reflect.ClassTag
 
-class Test1[T](val size: Int)(implicit classTag: ClassTag[T]) extends TestApi {
+class TestArrayReverse[T](val size: Int)(implicit classTag: ClassTag[T]) extends TestApi {
    val arr = new Array[T](size)
 
    /**
@@ -69,5 +69,5 @@ class Test1[T](val size: Int)(implicit classTag: ClassTag[T]) extends TestApi {
          arr(arr.length - i - 1) = arr(i)
          arr(i) = temp
       }
-   }
+   } 
 }

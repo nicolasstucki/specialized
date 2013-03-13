@@ -30,7 +30,8 @@ object RangeBenchmark
             val t1 = "test"
             val t2 = "testUnroled"
             val t3 = "testSpecialized"
-            output += f"${result.measurements.head.params.axisData.head}%25s"
+            output += f"  ${result.measurements.head.params.axisData.head._1} -> ${result.measurements.head.params.axisData.head._2}\n"
+            output += f"${""}%6s"
             output += f"${t1}%20s"
             output += f"${t2}%20s"
             output += f"${t3}%20s\n"
@@ -38,7 +39,7 @@ object RangeBenchmark
 
          if (count % 3 == 0) {
             val n = result.context.scope.length
-            output += f"${result.context.scope.substring(n - 3, n)}%24s:"
+            output += f"${result.context.scope}%5s:"
          }
 
          output += f"${result.measurements.head.time}% 20f"
@@ -52,56 +53,66 @@ object RangeBenchmark
       }
    }
 
-   for (n <- Seq(200000, 500000, 1000000)) {
-      bench("Test1", "Int", Gen.range("Test1[Int]")(n, n, 1).map(new Test1[Int](_)))
-      bench("Test1", "Double", Gen.range("Test1[Double]")(n, n, 1).map(new Test1[Double](_)))
-      bench("Test1", "Boolean", Gen.range("Test1[Boolean]")(n, n, 1).map(new Test1[Boolean](_)))
-      bench("Test1", "Any", Gen.range("Test1[Any]")(n, n, 1).map(new Test1[Any](_)))
+   for (n <- Seq(500000, 1000000, 2000000)) {
+      bench(Gen.single("TestArrayReverse[Int]")(n).map(new TestArrayReverse[Int](_)))
+      bench(Gen.single("TestArrayReverse[Double]")(n).map(new TestArrayReverse[Double](_)))
+      bench(Gen.single("TestArrayReverse[Boolean]")(n).map(new TestArrayReverse[Boolean](_)))
+      bench(Gen.single("TestArrayReverse[Any]")(n).map(new TestArrayReverse[Any](_)))
 
-      bench("Test2", "Int", Gen.range("Test2[Int]")(n, n, 1).map(new Test2[Int](_)))
-      bench("Test2", "Double", Gen.range("Test2[Double]")(n, n, 1).map(new Test2[Double](_)))
-      bench("Test2", "Boolean", Gen.range("Test2[Boolean]")(n, n, 1).map(new Test2[Boolean](_)))
-      bench("Test2", "Any", Gen.range("Test2[Any]")(n, n, 1).map(new Test2[Any](_)))
+      bench(Gen.single("TestArrayDulicate[Int]")(n).map(new TestArrayDulicate[Int](_)))
+      bench(Gen.single("TestArrayDulicate[Double]")(n).map(new TestArrayDulicate[Double](_)))
+      bench(Gen.single("TestArrayDulicate[Boolean]")(n).map(new TestArrayDulicate[Boolean](_)))
+      bench(Gen.single("TestArrayDulicate[Any]")(n).map(new TestArrayDulicate[Any](_)))
 
-      bench("Test3", "Int", Gen.range("Test3[Int]")(n, n, 1).map(new Test3[Int](_)))
-      bench("Test3", "Double", Gen.range("Test3[Double]")(n, n, 1).map(new Test3[Double](_)))
-      bench("Test3", "Boolean", Gen.range("Test3[Boolean]")(n, n, 1).map(new Test3[Boolean](_)))
-      bench("Test3", "Any", Gen.range("Test3[Any]")(n, n, 1).map(new Test3[Any](_)))
+      bench(Gen.single("TestFunctionApplyNTimesRec[Int]")(n).map(new TestFunctionApplyNTimesRec[Int](_)(7, (x: Int) => x * 5)))
+      bench(Gen.single("TestFunctionApplyNTimesRec[Double]")(n).map(new TestFunctionApplyNTimesRec[Double](_)(2.3, (x: Double) => x * 2.3d)))
+      bench(Gen.single("TestFunctionApplyNTimesRec[Boolean]")(n).map(new TestFunctionApplyNTimesRec[Boolean](_)(false, (x: Boolean) => !x)))
+      bench(Gen.single("TestFunctionApplyNTimesRec[Any]")(n).map(new TestFunctionApplyNTimesRec[Any](_)("f", (x: Any) => x)))
 
-      bench("Test4", "Int", Gen.range("Test4[Int]")(n, n, 1).map(new Test4[Int](_)(7, (x: Int) => x + 1)))
-      bench("Test4", "Double", Gen.range("Test4[Double]")(n, n, 1).map(new Test4[Double](_)(2.3, (x: Double) => x + 1.0d)))
-      bench("Test4", "Boolean", Gen.range("Test4[Boolean]")(n, n, 1).map(new Test4[Boolean](_)(false, (x: Boolean) => !x)))
-      bench("Test4", "Any", Gen.range("Test4[Any]")(n, n, 1).map(new Test4[Any](_)("f", (x: Any) => x)))
+      bench(Gen.single("TestArrayMapOverFunction[Int]")(n).map(new TestArrayMapOverFunction[Int](_)((x: Int) => x)))
+      bench(Gen.single("TestArrayMapOverFunction[Double]")(n).map(new TestArrayMapOverFunction[Double](_)((x: Double) => x)))
+      bench(Gen.single("TestArrayMapOverFunction[Boolean]")(n).map(new TestArrayMapOverFunction[Boolean](_)((x: Boolean) => x)))
+      bench(Gen.single("TestArrayMapOverFunction[Any]")(n).map(new TestArrayMapOverFunction[Any](_)((x: Any) => x)))
+      //
+      bench(Gen.single("TestFunctionApplyNTimesRecOverTuples[Int]")(n).map(new TestFunctionApplyNTimesRecOverTuples[Int](_)((7, 4), (x: Int) => x * 5)))
+      bench(Gen.single("TestFunctionApplyNTimesRecOverTuples[Double]")(n).map(new TestFunctionApplyNTimesRecOverTuples[Double](_)((2.3, 3.5), (x: Double) => x * 2.3d)))
+      bench(Gen.single("TestFunctionApplyNTimesRecOverTuples[Boolean]")(n).map(new TestFunctionApplyNTimesRecOverTuples[Boolean](_)((false, true), (x: Boolean) => !x)))
+      bench(Gen.single("TestFunctionApplyNTimesRecOverTuples[Any]")(n).map(new TestFunctionApplyNTimesRecOverTuples[Any](_)(("f", BigInt("3")), (x: Any) => x.hashCode)))
 
-      bench("Test5", "Int", Gen.range("Test5[Int]")(n, n, 1).map(new Test5[Int](_)((x: Int) => x)))
-      bench("Test5", "Double", Gen.range("Test5[Double]")(n, n, 1).map(new Test5[Double](_)((x: Double) => x)))
-      bench("Test5", "Boolean", Gen.range("Test5[Boolean]")(n, n, 1).map(new Test5[Boolean](_)((x: Boolean) => x)))
-      bench("Test5", "Any", Gen.range("Test5[Any]")(n, n, 1).map(new Test5[Any](_)((x: Any) => x)))
+      bench(Gen.single("TestArrayCount[Int]")(n).map(new TestArrayCount[Int](_)(1)))
+      bench(Gen.single("TestArrayCount[Double]")(n).map(new TestArrayCount[Double](_)(2.0)))
+      bench(Gen.single("TestArrayCount[Boolean]")(n).map(new TestArrayCount[Boolean](_)(false)))
+      bench(Gen.single("TestArrayCount[Any]")(n).map(new TestArrayCount[Any](_)("2")))
+
+      bench(Gen.single("TestArrayOfTuplesSwap[Int]")(n).map(new TestArrayOfTuplesSwap[Int](_)))
+      bench(Gen.single("TestArrayOfTuplesSwap[Double]")(n).map(new TestArrayOfTuplesSwap[Double](_)))
+      bench(Gen.single("TestArrayOfTuplesSwap[Boolean]")(n).map(new TestArrayOfTuplesSwap[Boolean](_)))
+      bench(Gen.single("TestArrayOfTuplesSwap[Any]")(n).map(new TestArrayOfTuplesSwap[Any](_)))
    }
 
-   def bench(name: String, tpe: String, test: Gen[TestApi]): Unit = {
+   def bench(test: Gen[TestApi]): Unit = {
       val interpFlags = ("int", "-Xint")
-      val c1Flags = ("c1", "-XX:-TieredCompilation -XX:CompileThreshold=1 -client") // -XX:+PrintCompilation")
-      val c2Flags = ("c2", "-XX:-TieredCompilation -XX:CompileThreshold=1 -server") // -XX:+PrintCompilation")
+      val c1Flags = ("c1 ", "-XX:-TieredCompilation -XX:CompileThreshold=1 -client") // -XX:+PrintCompilation")
+      val c2Flags = ("c2 ", "-XX:-TieredCompilation -XX:CompileThreshold=1 -server") // -XX:+PrintCompilation")
       val samples = 1
       val minWarmupRuns = 1000
 
-      for ((flagtype, flags) <- List(interpFlags, c1Flags, c2Flags)) {
+      for ((flagtype, flags) <- Seq(interpFlags, c1Flags, c2Flags)) {
 
          // The three measures are needed for the formating of the reporter
-         measure method "%s[%s] %s".format(name, tpe, flagtype) in {
+         measure method "%s".format(flagtype) in {
             using(test) curve ("Range") config (exec.jvmflags -> flags, exec.minWarmupRuns -> minWarmupRuns, exec.independentSamples -> samples) in {
                _.test
             }
          }
 
-         measure method "%s[%s] %s".format(name, tpe, flagtype) in {
+         measure method "%s".format(flagtype) in {
             using(test) curve ("Range") config (exec.jvmflags -> flags, exec.minWarmupRuns -> minWarmupRuns, exec.independentSamples -> samples) in {
                _.testUnrolled
             }
          }
 
-         measure method "%s[%s] %s".format(name, tpe, flagtype) in {
+         measure method "%s".format(flagtype) in {
             using(test) curve ("Range") config (exec.jvmflags -> flags, exec.minWarmupRuns -> minWarmupRuns, exec.independentSamples -> samples) in {
                _.testSpecialized
             }

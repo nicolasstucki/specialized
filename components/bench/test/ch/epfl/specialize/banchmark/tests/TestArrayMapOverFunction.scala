@@ -3,7 +3,7 @@ package ch.epfl.specialize.banchmark.tests
 import scala.util.control.Exception
 import scala.reflect.ClassTag
 
-class Test5[T](val size: Int)(val func: T => T)(implicit mf: ClassTag[T]) extends TestApi {
+class TestArrayMapOverFunction[T](val size: Int)(val func: T => T)(implicit mf: ClassTag[T]) extends TestApi {
    val arr = new Array[T](size)
 
    for (i <- 0 until size) arr(i) = if (mf == manifest[Boolean]) {
