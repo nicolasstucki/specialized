@@ -3,7 +3,7 @@ package ch.epfl.specialize.banchmark.tests
 import scala.util.control.Exception
 import scala.reflect.ClassTag
 
-class TestArrayDulicate[T](val size: Int)(implicit mf: ClassTag[T]) extends TestApi {
+class TestArrayDuplicate[T](val size: Int)(implicit mf: ClassTag[T]) extends TestApi {
    val arr = new Array[T](size)
    for (i <- 0 until size) arr(i) = if (mf == manifest[Boolean]) {
       (true).asInstanceOf[T]
@@ -34,9 +34,14 @@ class TestArrayDulicate[T](val size: Int)(implicit mf: ClassTag[T]) extends Test
       } else if (mf == manifest[Double]) {
          val spec_arr: Array[Double] = arr.asInstanceOf[Array[Double]]
          val arr2 = new Array[Double](size)
-         for (i <- 0 until size) {
-            arr2(i) = spec_arr(i)
-         }
+//         for (i <- 0 until size) {
+//            arr2(i) = spec_arr(i)
+//         }
+         var i=0
+         while (i < size) {
+         arr2(i) = spec_arr(i)
+         i += 1
+      }
          return arr2.asInstanceOf[Array[T]]
       } else if (mf == manifest[Int]) {
          val spec_arr: Array[Int] = arr.asInstanceOf[Array[Int]]
@@ -67,10 +72,15 @@ class TestArrayDulicate[T](val size: Int)(implicit mf: ClassTag[T]) extends Test
       }).asInstanceOf[Array[T]]
    }
 
-   private def spec[@specialized U](arr: Array[U])(implicit ct: ClassTag[U]): Array[U] = {
+   def spec[@specialized U](arr: Array[U])(implicit ct: ClassTag[U]): Array[U] = {
       val arr2 = new Array[U](size)
-      for (i <- 0 until size) {
+      //      for (i <- 0 until size) {
+      //         arr2(i) = arr(i)
+      //      }
+      var i = 0
+      while (i < size) {
          arr2(i) = arr(i)
+         i += 1
       }
       return arr2
    }

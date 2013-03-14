@@ -4,7 +4,7 @@ import Process._
 
 object SpecializeBuild extends Build {
 
-  val scala = "2.10.1-SNAPSHOT"
+  val scala = "2.10.2-SNAPSHOT"
 
   // http://stackoverflow.com/questions/6506377/how-to-get-list-of-dependency-jars-from-an-sbt-0-10-0-project
   val getJars = TaskKey[Unit]("get-jars")
