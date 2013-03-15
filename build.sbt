@@ -1,3 +1,4 @@
+
 name := "specialize"
 
 organization := "ch.epfl.lamp"

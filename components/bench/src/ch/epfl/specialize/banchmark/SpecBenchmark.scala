@@ -53,7 +53,7 @@ object RangeBenchmark
       }
    }
 
-   for (n <- Seq(500000, 1000000, 2000000)) {
+   for (n <- Seq(1000000) /* Seq(500000, 1000000, 2000000)*/) {
 //      bench(Gen.single("TestArrayReverse[Int]")(n).map(new TestArrayReverse[Int](_)))
 //      bench(Gen.single("TestArrayReverse[Double]")(n).map(new TestArrayReverse[Double](_)))
 //      bench(Gen.single("TestArrayReverse[Boolean]")(n).map(new TestArrayReverse[Boolean](_)))
@@ -91,31 +91,33 @@ object RangeBenchmark
    }
 
    def bench(test: Gen[TestApi]): Unit = {
-      val interpFlags = ("int", "-Xint")
-      val c1Flags = ("c1 ", "-XX:+PrintInlining -XX:-TieredCompilation -XX:CompileThreshold=1 -client") // -XX:+PrintCompilation")
-      val c2Flags = ("c2 ", "-XX:+PrintInlining -XX:-TieredCompilation -XX:CompileThreshold=1 -server") // -XX:+PrintCompilation")
+//      val interpFlags = ("int", "-Xint")
+//      val c1Flags = ("c1 ", "-XX:+PrintInlining -XX:+PrintCompilation -XX:-TieredCompilation -XX:CompileThreshold=1 -client") // -XX:+PrintCompilation")
+      val c2Flags = ("c2 ", " -XX:+PrintInlining -XX:+PrintCompilation -XX:+TraceDeoptimization " + " -XX:-TieredCompilation -XX:CompileThreshold=1 -server") // -XX:+PrintCompilation")
       val samples = 1
-      val minWarmupRuns = 1000
+      val minWarmupRuns = 10
 
-      for ((flagtype, flags) <- Seq(interpFlags, c1Flags, c2Flags)) {
+      for ((flagtype, flags) <- Seq(/*interpFlags, c1Flags,*/ c2Flags)) {
 
          // The three measures are needed for the formating of the reporter
-         measure method "%s".format(flagtype) in {
-            using(test) curve ("Range") config (exec.jvmflags -> flags, exec.minWarmupRuns -> minWarmupRuns, exec.independentSamples -> samples) in {
+
+        measure method "%s".format(flagtype) in {
+            using(test) curve ("Range") config (exec.jvmflags -> flags /*, exec.minWarmupRuns -> minWarmupRuns*/, exec.independentSamples -> samples) in {
                _.test
             }
          }
 
+
          measure method "%s".format(flagtype) in {
-            using(test) curve ("Range") config (exec.jvmflags -> flags, exec.minWarmupRuns -> minWarmupRuns, exec.independentSamples -> samples) in {
+            using(test) curve ("Range") config (exec.jvmflags -> flags /*, exec.minWarmupRuns -> minWarmupRuns*/, exec.independentSamples -> samples) in {
                _.testUnrolled
             }
          }
 
          measure method "%s".format(flagtype) in {
-            using(test) curve ("Range") config (exec.jvmflags -> flags, exec.minWarmupRuns -> minWarmupRuns, exec.independentSamples -> samples) in {
-               _.testSpecialized
-            }
+           using(test) curve ("Range") config (exec.jvmflags -> flags /*, exec.minWarmupRuns -> minWarmupRuns*/, exec.independentSamples -> samples) in {
+             _.testSpecialized
+           }
          }
       }
    }

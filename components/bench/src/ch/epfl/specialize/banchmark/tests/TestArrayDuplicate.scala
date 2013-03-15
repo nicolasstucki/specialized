@@ -20,7 +20,7 @@ class TestArrayDuplicate[T](val size: Int)(implicit mf: ClassTag[T]) extends Tes
          arr2(i) = arr(i)
       }
       return arr2
-      // } 
+      // }
    }
 
    def testUnrolled: Array[T] = {
@@ -34,14 +34,14 @@ class TestArrayDuplicate[T](val size: Int)(implicit mf: ClassTag[T]) extends Tes
       } else if (mf == manifest[Double]) {
          val spec_arr: Array[Double] = arr.asInstanceOf[Array[Double]]
          val arr2 = new Array[Double](size)
-//         for (i <- 0 until size) {
-//            arr2(i) = spec_arr(i)
-//         }
-         var i=0
-         while (i < size) {
-         arr2(i) = spec_arr(i)
-         i += 1
-      }
+         for (i <- 0 until size) {
+            arr2(i) = spec_arr(i)
+         }
+//         var i=0
+//         while (i < size) {
+//         arr2(i) = spec_arr(i)
+//         i += 1
+//      }
          return arr2.asInstanceOf[Array[T]]
       } else if (mf == manifest[Int]) {
          val spec_arr: Array[Int] = arr.asInstanceOf[Array[Int]]
@@ -74,14 +74,14 @@ class TestArrayDuplicate[T](val size: Int)(implicit mf: ClassTag[T]) extends Tes
 
    def spec[@specialized U](arr: Array[U])(implicit ct: ClassTag[U]): Array[U] = {
       val arr2 = new Array[U](size)
-      //      for (i <- 0 until size) {
-      //         arr2(i) = arr(i)
-      //      }
-      var i = 0
-      while (i < size) {
+      for (i <- 0 until size) {
          arr2(i) = arr(i)
-         i += 1
       }
+//      var i = 0
+//      while (i < size) {
+//         arr2(i) = arr(i)
+//         i += 1
+//      }
       return arr2
    }
 }

@@ -1,6 +1,8 @@
 import sbt._
 import Keys._
 import Process._
+import sbtassembly.Plugin._
+import AssemblyKeys._
 
 object SpecializeBuild extends Build {
 
@@ -13,7 +15,7 @@ object SpecializeBuild extends Build {
     println("Full classpath is: "+cp.map(_.data).mkString(":"))
   }
 
-  val defaults = Defaults.defaultSettings ++ Seq(
+  val defaults = Defaults.defaultSettings ++ assemblySettings ++ Seq(
     // scala version + resolver
     scalaVersion := scala,
     scalaBinaryVersion := "2.10",
@@ -36,9 +38,11 @@ object SpecializeBuild extends Build {
     resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-q", "-v"),
     //http://stackoverflow.com/questions/10472840/how-to-attach-sources-to-sbt-managed-dependencies-in-scala-ide#answer-11683728
-    com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseKeys.withSource := true
+    com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseKeys.withSource := true,
     // debugging
     // scalacOptions ++= Seq("-uniqid")
+    // don't run tests before assembly:
+    test in assembly := {}
   )
 
   val benchDeps = Seq(
