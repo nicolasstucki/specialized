@@ -1,0 +1,27 @@
+[[syntax trees at end of                    parser]] // newSource1
+package <empty> {
+  import scala.reflect.ClassTag;
+  class TestArray2Reverse[T >: _root_.scala.Nothing <: _root_.scala.Any] extends scala.AnyRef {
+    implicit <paramaccessor> private[this] val classTag: ClassTag[T] = _;
+    def <init>(size: Int)(implicit classTag: ClassTag[T]) = {
+      super.<init>();
+      ()
+    };
+    val arr = new Array[T](2);
+    def reverse = if (classTag.$eq$eq(manifest[Boolean]))
+  spec[Boolean](arr.asInstanceOf[Array[Boolean]])
+else
+  if (classTag.$eq$eq(manifest[Double]))
+    spec[Double](arr.asInstanceOf[Array[Double]])
+  else
+    if (classTag.$eq$eq(manifest[Int]))
+      spec[Int](arr.asInstanceOf[Array[Int]])
+    else
+      spec[T](arr).asInstanceOf[Unit];
+    private def spec[@new specialized() U >: _root_.scala.Nothing <: _root_.scala.Any](arr: Array[U]) = 
+      val temp = arr(0);
+      arr.update(0, arr(1));
+      arr.update(1, temp)
+    ))
+  }
+}

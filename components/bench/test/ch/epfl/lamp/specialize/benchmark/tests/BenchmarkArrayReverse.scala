@@ -1,9 +1,9 @@
-package ch.epfl.specialize.banchmark.tests
+package ch.epfl.lamp.specialize.benchmark.tests
 
 import scala.util.control.Exception
 import scala.reflect.ClassTag
 
-class TestArrayReverse[T](val size: Int)(implicit classTag: ClassTag[T]) extends TestApi {
+class BenchmarkArrayReverse[T](val size: Int)(implicit classTag: ClassTag[T]) extends TestApi {
    val arr = new Array[T](size)
 
    /**

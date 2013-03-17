@@ -42,7 +42,8 @@ object `package` {
             // 1. specialized {...} is used and there is no type parameter with a ClassTag in scope 
             // 2. or there is more than one type parameter have manifests and therefore the type could not be inferred.
             // 3. The type parameter is not a type parameter of the enclosing context, examples: specialized[Int] {...}, specialized[Any] {...}, specialized[Array[Int]] {...}, specialized[T] {...}, ...   
-            c.warning(classTag.tree.pos, "Specify type parameter using: specialized[T] {...}, T must be a type parameter of the enclosing context and it must have a ClassTag. Type patameter must be on top level, example: if you want to specialize an Array[T] use specialize[T] {...}.")
+            c.warning(classTag.tree.pos, "Specify type parameter using: specialized[T] {...}, T must be a type parameter of the enclosing context and it must have a ClassTag." +
+               " Type patameter must be on top level, example: if you want to specialize an Array[T] use specialize[T] {...}.")
             return expr_f
          }
       }
@@ -126,16 +127,16 @@ object `package` {
       }
 
       // Find definition and uses inside the specialized block
-      traverser_f.traverse(expr_f.tree)
+      //      traverser_f.traverse(expr_f.tree)
 
       // Find definition and uses inside the enclosing function and outside the specialized
-      traverser_enclosingMethod.traverse(c.enclosingMethod match { case DefDef(_, _, _, _, _, rhs) => rhs })
-      traverser_enclosingMethod.valdefs ++= (c.enclosingMethod match { case DefDef(_, _, _, vparamss, _, _) => for (vparams <- vparamss; vparam <- vparams) yield vparam; case _ => Set.empty[ValDef] })
+      //      traverser_enclosingMethod.traverse(c.enclosingMethod match { case DefDef(_, _, _, _, _, rhs) => rhs })
+      //      traverser_enclosingMethod.valdefs ++= (c.enclosingMethod match { case DefDef(_, _, _, vparamss, _, _) => for (vparams <- vparamss; vparam <- vparams) yield vparam; case _ => Set.empty[ValDef] })
 
       // Find definition and uses inside the enclosing class
-      c.enclosingClass match { case ClassDef(_, _, _, Template(_, _, body)) => for (tree <- body) traverser_enclosingClass.traverse(tree) }
+      //      c.enclosingClass match { case ClassDef(_, _, _, Template(_, _, body)) => for (tree <- body) traverser_enclosingClass.traverse(tree) }
 
-      val traverser_debug = traverser_enclosingClass
+      //      val traverser_debug = traverser_enclosingClass
       // Debug
       //      c.warning(classTag.tree.pos, "defdefs ::>>> " + traverser_debug.defdefs.map(showRaw(_)))
       //      c.warning(classTag.tree.pos, "idents ::>>> " + traverser_debug.idents.map(showRaw(_)))
@@ -143,10 +144,22 @@ object `package` {
       //      c.warning(classTag.tree.pos, "valdefs ::>>> " + traverser_debug.valdefs.map(showRaw(_)))
 
       // Debug
-      c.warning(classTag.tree.pos, "defdefNames ::>>> " + traverser_debug.defdefNames.map(showRaw(_)))
-      c.warning(classTag.tree.pos, "identNames ::>>> " + traverser_debug.identNames.map(showRaw(_)))
-      c.warning(classTag.tree.pos, "selectsTypeRefName ::>>> " + traverser_debug.selectTypeRefNames.map(showRaw(_)))
-      c.warning(classTag.tree.pos, "valdefNames ::>>> " + traverser_debug.valdefNames.map(showRaw(_)))
+      //      c.warning(classTag.tree.pos, "defdefNames ::>>> " + traverser_debug.defdefNames.map(showRaw(_)))
+      //      c.warning(classTag.tree.pos, "identNames ::>>> " + traverser_debug.identNames.map(showRaw(_)))
+      //      c.warning(classTag.tree.pos, "selectsTypeRefName ::>>> " + traverser_debug.selectTypeRefNames.map(showRaw(_)))
+      //      c.warning(classTag.tree.pos, "valdefNames ::>>> " + traverser_debug.valdefNames.map(showRaw(_)))
+
+      // CREATE SPECIALIZED METHOD
+//      val vparams = List.empty[ValDef]
+//      val enclMethod = c.enclosingMethod
+//      val ddef = build.newNestedSymbol(enclMethod.symbol, newTermName(c.fresh("spec")), enclMethod.pos, /*Flag.PRIVATE |*/ Flag.DEFERRED /*| METHOD*/, isClass = false)
+//      val params = vparams map { vd =>
+//         val sym = build.newNestedSymbol(ddef, vd.name, ddef.pos, Flag.PARAM, isClass = false)
+//         build.setTypeSignature(sym, vd.tpt.tpe)
+//         vd setSymbol sym
+//         sym
+//      }
+//      build.setTypeSignature(ddef, MethodType(params, typeOf_f)).asMethod
 
       // CREATE SPECIFIC VARIANTS OF TREE
       def reTypeTree(from: Type, to: Type, in: Type): Tree = TypeTree().setType(in.substituteTypes(List(from.typeSymbol), List(to)))
@@ -169,7 +182,6 @@ object `package` {
                }
                case select @ Select(term, name) => {
                   printw("select", select)
-                  //TODO: if 
                   Select(rec(term), name)
                }
                case typeTree: TypeTree => {
@@ -183,14 +195,11 @@ object `package` {
                case lit: Literal => lit
                case ths: This    => ths
                case ident: Ident => {
-                  val tpe = ident.tpe.widen.substituteSymbols(List(typeOf_T.typeSymbol), List(newType.typeSymbol))
-                  val newIdent = cast(Ident(ident.name), tpe)
-                  // c.warning(ct.tree.pos, "*****" + showRaw(tpe.normalize) )
+                  //                  val tpe = ident.tpe.widen.substituteSymbols(List(typeOf_T.typeSymbol), List(newType.typeSymbol))
+                  //                  val newIdent = cast(Ident(ident.name), tpe)
                   printw("ident", ident)
-                  printw("newIdent", newIdent)
-
-                  //Ident(ident.name)
-                  newIdent
+                  //                  printw("newIdent", newIdent)
+                  Ident(ident.name)
                }
                case mtch @ Match(param, classes) => {
                   printw("mtch", mtch)
@@ -214,30 +223,19 @@ object `package` {
       val newExpr =
          c.Expr(cast(reify {
             if (classTag.splice == manifest[Int]) {
-               println("executing Int branch") // Debug
                expr_f_Int.splice
             } else if (classTag.splice == manifest[Double]) {
-               println("executing Double branch") // Debug
                expr_f_Double.splice
             } else if (classTag.splice == manifest[Boolean]) {
-               println("executing Boolean branch") // Debug
                expr_f_Boolean.splice
             } else {
-               println("executing Generic branch") // Debug
                expr_f.splice
             }
          }.tree, typeOf_f))
 
-      // RETURN THE TREE
-      //return newExpr
-      // Debug
-      return c.Expr(Block(List( // TODO remove this return
-         printblockTree(c)("expr_f: " + showRaw(expr_f.tree)),
-         printblockTree(c)(show(expr_f.tree)),
-         printblockTree(c)("\n" + "newExprWithCast: " + showRaw(newExpr.tree, printTypes = true)),
-         printblockTree(c)(show(newExpr.tree) + "\n")),
-         //newExpr.tree))
-         expr_f.tree))
+      // RETURN THE NEW TREE
+      c.warning(classTag.tree.pos, show(newExpr))
+      newExpr
    }
 
    private def printblockTree(c: Context)(str: String) = {

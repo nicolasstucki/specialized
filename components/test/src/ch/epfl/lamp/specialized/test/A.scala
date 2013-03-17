@@ -2,6 +2,7 @@ package ch.epfl.lamp.specialized.test
 import ch.epfl.lamp.specialized._
 import scala.reflect.ClassTag
 
+@deprecated
 class A[T] {
    val arr = new Array[Any](3)
 
@@ -72,12 +73,12 @@ class C[T: ClassTag, U: ClassTag] {
 
 }
 
-class D[T: ClassTag, U] {
-   val arr = new Array[T](3)
-
-   def testExpr0 = {
-      specialized {
-         arr
-      }
-   }
-}
+//class D[T: ClassTag, U] {
+//   val arr = new Array[T](3)
+//
+//   def testExpr0 = {
+//      specialized {
+//         arr
+//      }
+//   }
+//}

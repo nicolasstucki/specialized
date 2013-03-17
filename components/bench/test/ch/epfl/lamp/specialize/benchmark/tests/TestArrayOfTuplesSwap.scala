@@ -1,4 +1,4 @@
-package ch.epfl.specialize.banchmark.tests
+package ch.epfl.lamp.specialize.benchmark.tests
 
 import scala.util.control.Exception
 

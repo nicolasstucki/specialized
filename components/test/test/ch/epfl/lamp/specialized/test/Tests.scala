@@ -11,7 +11,7 @@ class Tests {
   def test = {
     // for each file in resources/ do:
     val cwd = sys.props.get("user.dir").getOrElse(".")
-    val res = File(new JFile(cwd)) / "components" / "test" / "resources"
+    val res = File(new JFile(cwd)) / "components" / "test" / "res"
     System.err.println("res: " + res)
 
     def new_extension(source: JFile, ext: String) = source.toString.replaceAll("\\.scala", "." + ext)

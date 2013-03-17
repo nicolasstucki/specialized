@@ -5,6 +5,7 @@ import scala.reflect.ClassTag
 import ch.epfl.lamp.specialized._
 import scala.unchecked
 
+@deprecated
 class B[T](implicit ct: ClassTag[T]) {
    val size = 5
    var arr = new Array[T](size)
@@ -17,10 +18,10 @@ class B[T](implicit ct: ClassTag[T]) {
    } else { (new { def g = "h" }) }).asInstanceOf[T]
 
    def testExpr1 = {
-      specialized[T] { // should warn and ignore
-         arr.length
-         ()
-      }
+//      specialized[T] { // should warn and ignore
+//         arr.length
+//         ()
+//      }
    }
    def testExpr1unrolled = {
       arr.length
@@ -28,18 +29,18 @@ class B[T](implicit ct: ClassTag[T]) {
    }
 
    def testExpr2 = {
-      specialized[T] { // should warn and ignore
-         arr.length
-      } + 1
+//      specialized[T] { // should warn and ignore
+//         arr.length
+//      } + 1
    }
    def testExpr2unrolled = {
       arr.length + 1
    }
 
    def testExpr3 = {
-      specialized[T] { // should fail with +1 the after it
-         arr(0)
-      } // + 1 
+//      specialized[T] { // should fail with +1 the after it
+//         arr(0)
+//      } // + 1 
    }
    //   def testExpr3unrolled = {
    //      if (ClassTag[T] == manifest[Manifest[Int]]) {
@@ -50,10 +51,10 @@ class B[T](implicit ct: ClassTag[T]) {
    //   }
 
    def testExpr4 = {
-      arr(0) = specialized[T] {
-         val x = 1
-         arr(1)
-      }
+//      arr(0) = specialized[T] {
+//         val x = 1
+//         arr(1)
+//      }
    }
    //   def testExpr4unrolled = {
    //      if (manifest[T] == manifest[Manifest[Int]]) {
@@ -64,11 +65,11 @@ class B[T](implicit ct: ClassTag[T]) {
    //   }
 
    def testExpr5 = {
-      specialized[T] {
-         val arr2 = new Array[T](4)
-         arr2(0) = arr(0)
-         arr2
-      }
+//      specialized[T] {
+//         val arr2 = new Array[T](4)
+//         arr2(0) = arr(0)
+//         arr2
+//      }
    }
    //   def testExpr5unrolled = {
    //      if (manifest[T] == manifest[Manifest[Int]]) {
@@ -83,10 +84,10 @@ class B[T](implicit ct: ClassTag[T]) {
    //   }
 
    def testExpr6 = {
-      specialized[T] {
-         val tup = (arr(1), 4)
-         tup
-      }
+//      specialized[T] {
+//         val tup = (arr(1), 4)
+//         tup
+//      }
    }
    //   def testExpr6unrolled = {
    //      if (manifest[T] == manifest[Manifest[Int]]) {
@@ -99,9 +100,9 @@ class B[T](implicit ct: ClassTag[T]) {
    //   }
 
    def testExpr7 = {
-      specialized[T] {
-         (arr(0), 11)
-      }
+//      specialized[T] {
+//         (arr(0), 11)
+//      }
    }
    //   def testExpr7unrolled = {
    //      if (manifest[T] == manifest[Manifest[Int]]) {
@@ -158,41 +159,41 @@ class B[T](implicit ct: ClassTag[T]) {
    }
 
    def testExpr11(x: T) = {
-      specialized[T] {
-         arr(0) = x
-      }
+//      specialized[T] {
+//         arr(0) = x
+//      }
    }
 
    def testExpr12(arr2: Array[T]) = {
-      val y = arr(0)
-      specialized[T] {
-         arr(0) = arr2(0)
-      }
-      
-      specialized[T] {
-         arr2(0) = arr(0)
-      }
+//      val y = arr(0)
+//      specialized[T] {
+//         arr(0) = arr2(0)
+//      }
+//      
+//      specialized[T] {
+//         arr2(0) = arr(0)
+//      }
    }
 
    def testExpr12(arr2: Array[T], x: Int) = {
-      val arr3 = new Array[T](3)
-      val z = arr(0)
-      val w = arr(0)
-      val arrx = arr
-      def f2 = w
-      def g(x: T) = x
-      specialized[T] {
-         val arr4 = new Array[T](3)
-         def f1 = z
-         def f3(arg0: T, arg1: Int) = 3
-         def g2(x: T) = x
-         val y = arr(0)
-         arr(0) = arr2(0)
-         arr(0) = y
-         arr(0) = z
-         arr(0) = arrx(0)
-         arr3(0) = arr(0)
-         x == k
-      }
+//      val arr3 = new Array[T](3)
+//      val z = arr(0)
+//      val w = arr(0)
+//      val arrx = arr
+//      def f2 = w
+//      def g(x: T) = x
+//      specialized[T] {
+//         val arr4 = new Array[T](3)
+//        // def f1 = z
+//        // def f3(arg0: T, arg1: Int) = 3
+//        // def g2(x: T) = x
+//         val y = arr(0)
+//         arr(0) = arr2(0)
+//         arr(0) = y
+//         arr(0) = z
+//         arr(0) = arrx(0)
+//         arr3(0) = arr(0)
+//         x == k
+//      }
    }
 }
