@@ -113,13 +113,13 @@ class B[T](implicit ct: ClassTag[T]) {
    //   }
 
    def testExpr8 = {
-      specialized[T] {
-         List(arr(2)) match {
-            case (x: T) :: tail => println("matched: (x: T) :: tail")
-            case head :: tail   => println("matched: head :: tail")
-            case Nil            => println("match: Nil")
-         }
-      }
+//      specialized[T] {
+//         List(arr(2)) match {
+//            case (x: T) :: tail => println("matched: (x: T) :: tail")
+//            case head :: tail   => println("matched: head :: tail")
+//            case Nil            => println("match: Nil")
+//         }
+//      }
    }
    //   def testExpr8unrolled = {
    //      if (manifest[T] == manifest[Manifest[Int]]) {

@@ -1,27 +1,29 @@
-[[syntax trees at end of                    parser]] // newSource1
+[[syntax trees at end of                     typer]] // newSource1
 package <empty> {
   import scala.reflect.ClassTag;
-  class TestArray2Reverse[T >: _root_.scala.Nothing <: _root_.scala.Any] extends scala.AnyRef {
-    implicit <paramaccessor> private[this] val classTag: ClassTag[T] = _;
-    def <init>(size: Int)(implicit classTag: ClassTag[T]) = {
-      super.<init>();
+  import ch.epfl.lamp.specialized._;
+  class TestArray2Reverse[T >: Nothing <: Any] extends scala.AnyRef {
+    implicit <paramaccessor> private[this] val classTag: scala.reflect.ClassTag[T] = _;
+    def <init>()(implicit classTag: scala.reflect.ClassTag[T]): TestArray2Reverse[T] = {
+      TestArray2Reverse.super.<init>();
       ()
     };
-    val arr = new Array[T](2);
-    def reverse = if (classTag.$eq$eq(manifest[Boolean]))
-  spec[Boolean](arr.asInstanceOf[Array[Boolean]])
+    private[this] val arr: Array[T] = TestArray2Reverse.this.classTag.newArray(2);
+    <stable> <accessor> def arr: Array[T] = TestArray2Reverse.this.arr;
+    def reverse: Unit = if (TestArray2Reverse.this.classTag.==(Predef.manifest[Int](ManifestFactory.Int)))
+  TestArray2Reverse.this.spec[Int](TestArray2Reverse.this.arr.asInstanceOf[Array[Int]])
 else
-  if (classTag.$eq$eq(manifest[Double]))
-    spec[Double](arr.asInstanceOf[Array[Double]])
+  if (TestArray2Reverse.this.classTag.==(Predef.manifest[Double](ManifestFactory.Double)))
+    TestArray2Reverse.this.spec[Double](TestArray2Reverse.this.arr.asInstanceOf[Array[Double]])
   else
-    if (classTag.$eq$eq(manifest[Int]))
-      spec[Int](arr.asInstanceOf[Array[Int]])
+    if (TestArray2Reverse.this.classTag.==(Predef.manifest[Boolean](ManifestFactory.Boolean)))
+      TestArray2Reverse.this.spec[Boolean](TestArray2Reverse.this.arr.asInstanceOf[Array[Boolean]])
     else
-      spec[T](arr).asInstanceOf[Unit];
-    private def spec[@new specialized() U >: _root_.scala.Nothing <: _root_.scala.Any](arr: Array[U]) = 
-      val temp = arr(0);
-      arr.update(0, arr(1));
+      TestArray2Reverse.this.spec[T](TestArray2Reverse.this.arr).asInstanceOf[Unit];
+    def spec[@specialized U >: Nothing <: Any](arr: Array[U]): Unit = {
+      val temp: U = arr.apply(0);
+      arr.update(0, arr.apply(1));
       arr.update(1, temp)
-    ))
+    }
   }
 }

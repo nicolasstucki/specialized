@@ -48,121 +48,7 @@ object `package` {
          }
       }
 
-      // IDENTIFY VALs, VARs, DEFs DEFINITIONS AND USES IN BLOCK 
-      @inline def checkTpe(tree: Tree): Boolean = if (tree.tpe == null) false else tree.tpe.widen.exists(_ == typeOf_T)
-      abstract class specializedTraverser extends c.universe.Traverser {
-         var defdefs = scala.collection.mutable.Set.empty[DefDef]
-         var idents = scala.collection.mutable.Set.empty[Ident]
-         var selectTypeRefs = scala.collection.mutable.Set.empty[Select]
-         var valdefs = scala.collection.mutable.Set.empty[ValDef]
-
-         // Debug
-         def defdefNames: Set[Name] = defdefs.toSet[DefDef] map { case DefDef(_, name, _, _, _, _) => name }
-         def identNames: Set[Name] = idents.toSet[Ident] map { case Ident(name) => name }
-         def selectTypeRefNames: Set[Name] = selectTypeRefs.toSet[Select] map { case Select(_, name) => name }
-         def valdefNames: Set[Name] = valdefs.toSet[ValDef] map { case ValDef(_, name, _, _) => name }
-      }
-
-      object traverser_f extends specializedTraverser {
-         override def traverse(tree: Tree): Unit = {
-            tree match {
-               case defdef @ DefDef(_, _, _, _, tpt, _) if checkTpe(tpt) => defdefs += defdef
-               case ident: Ident if checkTpe(ident)                      => idents += ident
-               case select: Select if checkTpe(select) =>
-                  select.tpe.widen match {
-                     case _: MethodType =>
-                     case _: TypeRef    => selectTypeRefs += select
-                     case _             =>
-                  }
-               case valdef @ ValDef(_, _, tpt, _) if checkTpe(tpt) => valdefs += valdef
-               case _ =>
-            }
-            super.traverse(tree)
-         }
-      }
-
-      object traverser_enclosingMethod extends specializedTraverser {
-         override def traverse(tree: Tree): Unit = {
-            tree match {
-               case apply @ Apply(fun: TypeApply, args) =>
-               // c.warning(classTag.tree.pos, ">>> " + showRaw(apply))
-               // TODO identify Apply(TypeApply(Ident(newTermName("specialized")), List(Ident(newTypeName("T")))), ...)
-               // and only ignore contents (i.e don't call super.traverse(tree))
-               case defdef @ DefDef(_, _, _, _, tpt, _) if checkTpe(tpt) =>
-                  defdefs += defdef
-                  super.traverse(tree)
-               case ident: Ident if checkTpe(ident) =>
-                  idents += ident
-                  super.traverse(tree)
-               case select: Select if checkTpe(select) =>
-                  select.tpe.widen match {
-                     case _: MethodType =>
-                     case _: TypeRef    => selectTypeRefs += select
-                     case _             =>
-                  }
-                  super.traverse(tree)
-               case valdef @ ValDef(_, _, tpt, _) if checkTpe(tpt) =>
-                  valdefs += valdef
-                  super.traverse(tree)
-               case _ => super.traverse(tree)
-            }
-         }
-      }
-
-      object traverser_enclosingClass extends specializedTraverser {
-         override def traverse(tree: Tree): Unit = {
-            tree match {
-               case defdef @ DefDef(_, _, _, _, tpt, _) if checkTpe(tpt) => defdefs += defdef
-               case ident: Ident if checkTpe(ident)                      => idents += ident
-               case select: Select if checkTpe(select) =>
-                  select.tpe.widen match {
-                     case _: MethodType =>
-                     case _: TypeRef    => selectTypeRefs += select
-                     case _             =>
-                  }
-               case valdef @ ValDef(_, _, tpt, _) if checkTpe(tpt) => valdefs += valdef
-               case _ =>
-            }
-         }
-      }
-
-      // Find definition and uses inside the specialized block
-      //      traverser_f.traverse(expr_f.tree)
-
-      // Find definition and uses inside the enclosing function and outside the specialized
-      //      traverser_enclosingMethod.traverse(c.enclosingMethod match { case DefDef(_, _, _, _, _, rhs) => rhs })
-      //      traverser_enclosingMethod.valdefs ++= (c.enclosingMethod match { case DefDef(_, _, _, vparamss, _, _) => for (vparams <- vparamss; vparam <- vparams) yield vparam; case _ => Set.empty[ValDef] })
-
-      // Find definition and uses inside the enclosing class
-      //      c.enclosingClass match { case ClassDef(_, _, _, Template(_, _, body)) => for (tree <- body) traverser_enclosingClass.traverse(tree) }
-
-      //      val traverser_debug = traverser_enclosingClass
-      // Debug
-      //      c.warning(classTag.tree.pos, "defdefs ::>>> " + traverser_debug.defdefs.map(showRaw(_)))
-      //      c.warning(classTag.tree.pos, "idents ::>>> " + traverser_debug.idents.map(showRaw(_)))
-      //      c.warning(classTag.tree.pos, "selectsTypeRef ::>>> " + traverser_debug.selectTypeRefs.map(showRaw(_)))
-      //      c.warning(classTag.tree.pos, "valdefs ::>>> " + traverser_debug.valdefs.map(showRaw(_)))
-
-      // Debug
-      //      c.warning(classTag.tree.pos, "defdefNames ::>>> " + traverser_debug.defdefNames.map(showRaw(_)))
-      //      c.warning(classTag.tree.pos, "identNames ::>>> " + traverser_debug.identNames.map(showRaw(_)))
-      //      c.warning(classTag.tree.pos, "selectsTypeRefName ::>>> " + traverser_debug.selectTypeRefNames.map(showRaw(_)))
-      //      c.warning(classTag.tree.pos, "valdefNames ::>>> " + traverser_debug.valdefNames.map(showRaw(_)))
-
-      // CREATE SPECIALIZED METHOD
-//      val vparams = List.empty[ValDef]
-//      val enclMethod = c.enclosingMethod
-//      val ddef = build.newNestedSymbol(enclMethod.symbol, newTermName(c.fresh("spec")), enclMethod.pos, /*Flag.PRIVATE |*/ Flag.DEFERRED /*| METHOD*/, isClass = false)
-//      val params = vparams map { vd =>
-//         val sym = build.newNestedSymbol(ddef, vd.name, ddef.pos, Flag.PARAM, isClass = false)
-//         build.setTypeSignature(sym, vd.tpt.tpe)
-//         vd setSymbol sym
-//         sym
-//      }
-//      build.setTypeSignature(ddef, MethodType(params, typeOf_f)).asMethod
-
       // CREATE SPECIFIC VARIANTS OF TREE
-      def reTypeTree(from: Type, to: Type, in: Type): Tree = TypeTree().setType(in.substituteTypes(List(from.typeSymbol), List(to)))
       def cast(tree: Tree, tpe: Type): Tree = TypeApply(Select(tree, newTermName("asInstanceOf")), List(TypeTree().setType(tpe)))
       def subs(tree0: Tree, newType: Type): Tree = {
          @inline def printw(name: String, t: Tree) = Unit //c.warning(ct.tree.pos, ">> " + name + ": <<<" + showRaw(t.tpe) + ">>> " + showRaw(t)) // TODO: remove this (debug) 
@@ -214,27 +100,18 @@ object `package` {
          rec(tree0)
       }
 
-      val expr_f_Int = c.Expr[Any](subs(expr_f.tree.duplicate, typeOf[Int]))
-      val expr_f_Double = c.Expr[Any](subs(expr_f.tree.duplicate, typeOf[Double]))
-      val expr_f_Boolean = c.Expr[Any](subs(expr_f.tree.duplicate, typeOf[Boolean]))
+      // RETRIEVE DEVINITIONS AND USES OF TERMS THAT HAVE T IN THE TYPE
+      val defDefs = SpecTraversers.getDefDefsWithTypeParam(c)(expr_f, typeOf_T)
+      val idents = SpecTraversers.getIdentsWithTypeParam(c)(expr_f, typeOf_T)
+      val selectTypeRefs = SpecTraversers.getSelectTypeRefWithTypeParam(c)(expr_f, typeOf_T)
+      val valDefs = SpecTraversers.getValDefsWithTypeParam(c)(expr_f, typeOf_T)
 
       // COMPILES SPECIFIC VARIANTS INTO ONE TREE
-      // TODO: create alternative variant selection (try with match{})
-      val newExpr =
-         c.Expr(cast(reify {
-            if (classTag.splice == manifest[Int]) {
-               expr_f_Int.splice
-            } else if (classTag.splice == manifest[Double]) {
-               expr_f_Double.splice
-            } else if (classTag.splice == manifest[Boolean]) {
-               expr_f_Boolean.splice
-            } else {
-               expr_f.splice
-            }
-         }.tree, typeOf_f))
+      val specMeth = SpecMethodMaker.createSpecMethod(c)(classTag, typeOf_T, expr_f)
+      val newExpr = c.Expr(cast(specMeth.tree, typeOf_f))
 
       // RETURN THE NEW TREE
-      c.warning(classTag.tree.pos, show(newExpr))
+      c.warning(classTag.tree.pos, showRaw(expr_f) )
       newExpr
    }
 

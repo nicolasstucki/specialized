@@ -7,35 +7,35 @@ import scala.tools.partest.nest.FileUtil._
 
 class Tests {
 
-  @Test
-  def test = {
-    // for each file in resources/ do:
-    val cwd = sys.props.get("user.dir").getOrElse(".")
-    val res = File(new JFile(cwd)) / "components" / "test" / "res"
-    System.err.println("res: " + res)
+   @Test
+   def test = {
+      // for each file in resources/ do:
+      val cwd = sys.props.get("user.dir").getOrElse(".")
+      val res = File(new JFile(cwd)) / "components" / "test" / "res"
+      System.err.println("res: " + res)
 
-    def new_extension(source: JFile, ext: String) = source.toString.replaceAll("\\.scala", "." + ext)
+      def new_extension(source: JFile, ext: String) = source.toString.replaceAll("\\.scala", "." + ext)
 
-    var crash = false
+      var crash = false
 
-    for (source <- res.jfile.listFiles() if source.getName().endsWith(".scala")) {
-      // source code:
-      val code = File(source).slurp
-      val flags = File(new_extension(source, "flags")).slurp
-      val check_output = File(new_extension(source, "check")).slurp
-      val test = SpecializedDirectTest(code, flags)
-      test.show()
-      val output = test.output
-      val diff = compareContents(output.split("\n"), check_output.split("\n"))
-      if (!diff.isEmpty()) {
-         System.err.println("\n\n\nDifference in test for: " + source)
-         System.err.println("\nCompiler output:\n" + output)
-         System.err.println("\nExpected output:\n" + check_output)
-         System.err.println("\nDiff:\n" + diff)
-         crash = true
+      for (source <- res.jfile.listFiles() if source.getName().endsWith(".scala")) {
+         // source code:
+         val code = File(source).slurp
+         val flags = File(new_extension(source, "flags")).slurp
+         val check_output = File(new_extension(source, "check")).slurp
+         val test = SpecializedDirectTest(code, flags)
+         test.show()
+         val output = test.output
+         val diff = compareContents(output.split("\n"), check_output.split("\n"))
+         if (!diff.isEmpty()) {
+            System.err.println("\n\n\nDifference in test for: " + source)
+            System.err.println("\nCompiler output:\n" + output)
+            System.err.println("\nExpected output:\n" + check_output)
+            System.err.println("\nDiff:\n" + diff)
+            crash = true
+         }
       }
-    }
 
-    assert(!crash, "Tests failed")
-  }
+      assert(!crash, "Tests failed")
+   }
 }

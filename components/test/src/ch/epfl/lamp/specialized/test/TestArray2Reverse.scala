@@ -7,7 +7,11 @@ class TestArray2Reverse[T](implicit classTag: ClassTag[T]) {
    val arr = new Array[T](2)
 
    def reverse = {
+//      def spec[U](arr: Array[U]) = {
+//
+//      }
       specialized[T] {
+//         spec(arr.asInstanceOf[Array[Any]])
          val temp = arr(1)
          arr(0) = arr(1)
          arr(1) = arr(0)
