@@ -49,7 +49,6 @@ object `package` {
       }
 
       // CREATE SPECIFIC VARIANTS OF TREE
-      def cast(tree: Tree, tpe: Type): Tree = TypeApply(Select(tree, newTermName("asInstanceOf")), List(TypeTree().setType(tpe)))
       def subs(tree0: Tree, newType: Type): Tree = {
          @inline def printw(name: String, t: Tree) = Unit //c.warning(ct.tree.pos, ">> " + name + ": <<<" + showRaw(t.tpe) + ">>> " + showRaw(t)) // TODO: remove this (debug) 
          def rec(tree: Tree): Tree = {
@@ -106,18 +105,24 @@ object `package` {
       val selectTypeRefs = SpecTraversers.getSelectTypeRefWithTypeParam(c)(expr_f, typeOf_T)
       val valDefs = SpecTraversers.getValDefsWithTypeParam(c)(expr_f, typeOf_T)
 
+      var identsMapping = Map.empty[String, (Name, Ident)]
+      for (ident <- idents if !identsMapping.keySet(ident.toString)) identsMapping = identsMapping + (ident.toString -> (c.fresh(ident.name), ident))
+//      for (ValDef(_, name, _, _) <- valDefs if identsMapping.keySet(name.toString)) identsMapping = identsMapping - name.toString
+
+      var selectTypeRefsMapping = Map.empty[String, (Name, Select)]
+      for (s <- selectTypeRefs if !selectTypeRefsMapping.keySet(s.toString)) selectTypeRefsMapping = selectTypeRefsMapping + (s.toString -> (c.fresh(newTermName(s.toString.replace(".", "_"))), s))
+
       // COMPILES SPECIFIC VARIANTS INTO ONE TREE
-      val specMeth = SpecMethodMaker.createSpecMethod(c)(classTag, typeOf_T, expr_f)
-      val newExpr = c.Expr(cast(specMeth.tree, typeOf_f))
+      val specMethName = newTermName(c.fresh("specialized"))
+      val specMeth = SpecMethodMaker.createSpecMethod(c)(classTag, typeOf_T, expr_f, specMethName, identsMapping, selectTypeRefsMapping)
+      val specCallers = SpecMethodMaker.createSpecCallers(c)(classTag, typeOf_T, typeOf_f, specMethName, identsMapping, selectTypeRefsMapping)
+      val newExpr = reify {
+         specMeth.splice
+         specCallers.splice
+      }
 
       // RETURN THE NEW TREE
-      c.warning(classTag.tree.pos, showRaw(expr_f) )
+      //c.warning(classTag.tree.pos, "newExpr = " + show(newExpr))
       newExpr
    }
-
-   private def printblockTree(c: Context)(str: String) = {
-      import c.universe._
-      Apply(Ident(newTermName("println")), List(Literal(Constant(str))))
-   }
-
 }

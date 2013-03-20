@@ -12,8 +12,8 @@ import java.io.PrintWriter
 case class SpecializedDirectTest(val code: String, val flags: String) extends DirectTest {
    lazy val cwd = sys.props.get("user.dir").getOrElse(".")
 
-   override lazy val testPath = File(new JFile(f"${cwd}/componets/base")) // File(new JFile(f"${cwd}/components/base/target/scala-2.10/classes")) //File(new JFile(System.getProperty("java.io.tmpdir")))
-   override lazy val testOutput = Directory(new JFile(f"${cwd}/testOutput")) //Directory(new JFile(System.getProperty("java.io.tmpdir")))
+   override lazy val testPath = File(new JFile(f"${cwd}/componets/test")) // File(new JFile(f"${cwd}/components/base/target/scala-2.10/classes")) //File(new JFile(System.getProperty("java.io.tmpdir")))
+   override lazy val testOutput = Directory(new JFile(f"${cwd}/components/test/testOutput")) //Directory(new JFile(System.getProperty("java.io.tmpdir")))
 
    override def extraSettings = "-classpath 'components/base/target/scala-2.10/classes/' " + flags
 
@@ -22,8 +22,6 @@ case class SpecializedDirectTest(val code: String, val flags: String) extends Di
 
    def show() = {
       // this is the interesting part :)
-      println(f"testPath: ${testPath}")
-      println(f"testOutput: ${testOutput}")
       println(f"flags :${flags}")
       val pa = new PrintStream(ba)
       val pOut = Console.out

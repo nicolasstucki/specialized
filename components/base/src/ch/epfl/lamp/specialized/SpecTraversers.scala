@@ -13,21 +13,21 @@ object SpecTraversers {
       import c.universe._
       @inline def checkTpe(tree: Tree): Boolean = if (tree.tpe == null) false else tree.tpe.widen.exists(_ == typeOf_TypeParam)
       object traverser extends Traverser {
-         var defdefs = scala.collection.mutable.Set.empty[DefDef]
-         var idents = scala.collection.mutable.Set.empty[Ident]
-         var selectTypeRefs = scala.collection.mutable.Set.empty[Select]
-         var valdefs = scala.collection.mutable.Set.empty[ValDef]
+         var defdefs = Set.empty[DefDef]
+         var idents = Set.empty[Ident]
+         var selectTypeRefs = Set.empty[Select]
+         var valdefs = Set.empty[ValDef]
          override def traverse(tree: Tree): Unit = {
             tree match {
-               case defdef @ DefDef(_, _, _, _, tpt, _) if checkTpe(tpt) => defdefs += defdef
-               case ident: Ident if checkTpe(ident)                      => idents += ident
-               case select: Select if checkTpe(select) =>
+               case defdef @ DefDef(_, _, _, _, tpt, _) if checkTpe(tpt) => defdefs = defdefs + defdef
+               case ident: Ident if checkTpe(ident)                      => idents = idents + ident
+               case select @ Select(qualifier, name) if checkTpe(select) =>
                   select.tpe.widen match {
                      case _: MethodType =>
-                     case _: TypeRef    => selectTypeRefs += select
+                     case _: TypeRef    => selectTypeRefs = selectTypeRefs + select
                      case _             =>
                   }
-               case valdef @ ValDef(_, _, tpt, _) if checkTpe(tpt) => valdefs += valdef
+               case valdef @ ValDef(_, _, tpt, _) if checkTpe(tpt) => valdefs = valdefs + valdef
                case _ =>
             }
             super.traverse(tree)
