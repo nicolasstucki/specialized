@@ -1,4 +1,5 @@
 package ch.epfl.lamp.specialized.test
+
 import ch.epfl.lamp.specialized._
 import scala.reflect.ClassTag
 
