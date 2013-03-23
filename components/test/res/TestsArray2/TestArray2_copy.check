@@ -1,0 +1,111 @@
+[[syntax trees at end of                     typer]] // newSource1
+package <empty> {
+  import scala.reflect.ClassTag;
+  import ch.epfl.lamp.specialized._;
+  class TestArray2Reverse[T >: Nothing <: Any] extends scala.AnyRef {
+    implicit <synthetic> <paramaccessor> private[this] val evidence$1: scala.reflect.ClassTag[T] = _;
+    def <init>()(implicit evidence$1: scala.reflect.ClassTag[T]): TestArray2Reverse[T] = {
+      TestArray2Reverse.super.<init>();
+      ()
+    };
+    private[this] val arr: Array[T] = TestArray2Reverse.this.evidence$1.newArray(2);
+    <stable> <accessor> def arr: Array[T] = TestArray2Reverse.this.arr;
+    private[this] val arrB: Array[T] = TestArray2Reverse.this.evidence$1.newArray(scala.this.Predef.genericArrayOps[T](TestArray2Reverse.this.arr).size);
+    <stable> <accessor> def arrB: Array[T] = TestArray2Reverse.this.arrB;
+    def copy: Unit = {
+      val arrB: Array[T] = this.arrB;
+      {
+        def copy_spec_Int1(TestArray2Reverse_this_arr1: Array[Int], arrB: Array[Int]): Unit = {
+          TestArray2Reverse_this_arr1.update(0, arrB.apply(0));
+          TestArray2Reverse_this_arr1.update(1, arrB.apply(1))
+        };
+        def copy_spec_Double1(TestArray2Reverse_this_arr1: Array[Double], arrB: Array[Double]): Unit = {
+          TestArray2Reverse_this_arr1.update(0, arrB.apply(0));
+          TestArray2Reverse_this_arr1.update(1, arrB.apply(1))
+        };
+        def copy_spec_Boolean1(TestArray2Reverse_this_arr1: Array[Boolean], arrB: Array[Boolean]): Unit = {
+          TestArray2Reverse_this_arr1.update(0, arrB.apply(0));
+          TestArray2Reverse_this_arr1.update(1, arrB.apply(1))
+        };
+        def copy_spec_Generic1(): Unit = {
+          TestArray2Reverse.this.arr.update(0, arrB.apply(0));
+          TestArray2Reverse.this.arr.update(1, arrB.apply(1))
+        };
+        if (TestArray2Reverse.this.evidence$1.==(Predef.manifest[Int](ManifestFactory.Int)))
+  copy_spec_Int1(TestArray2Reverse.this.arr.asInstanceOf[Array[Int]], arrB.asInstanceOf[Array[Int]])
+else
+  if (TestArray2Reverse.this.evidence$1.==(Predef.manifest[Double](ManifestFactory.Double)))
+    copy_spec_Double1(TestArray2Reverse.this.arr.asInstanceOf[Array[Double]], arrB.asInstanceOf[Array[Double]])
+  else
+    if (TestArray2Reverse.this.evidence$1.==(Predef.manifest[Boolean](ManifestFactory.Boolean)))
+      copy_spec_Boolean1(TestArray2Reverse.this.arr.asInstanceOf[Array[Boolean]], arrB.asInstanceOf[Array[Boolean]])
+    else
+      copy_spec_Generic1().asInstanceOf[Unit]
+      }
+    }
+  }
+}
+
+[[syntax trees at end of                       jvm]] // newSource1
+package <empty> {
+  class TestArray2Reverse extends Object {
+    implicit <synthetic> <paramaccessor> private[this] val evidence$1: reflect.ClassTag = _;
+    private[this] val arr: Object = _;
+    <stable> <accessor> def arr(): Object = TestArray2Reverse.this.arr;
+    private[this] val arrB: Object = _;
+    <stable> <accessor> def arrB(): Object = TestArray2Reverse.this.arrB;
+    def copy(): Unit = {
+      val arrB: Object = this.arrB();
+      {
+        {
+          (if (TestArray2Reverse.this.evidence$1.==(Predef.manifest(ManifestFactory.Int())))
+            {
+              TestArray2Reverse.this.copy_spec_Int1$1(TestArray2Reverse.this.arr().$asInstanceOf[Array[Int]](), arrB.$asInstanceOf[Array[Int]]());
+              scala.runtime.BoxedUnit.UNIT
+            }
+          else
+            if (TestArray2Reverse.this.evidence$1.==(Predef.manifest(ManifestFactory.Double())))
+              {
+                TestArray2Reverse.this.copy_spec_Double1$1(TestArray2Reverse.this.arr().$asInstanceOf[Array[Double]](), arrB.$asInstanceOf[Array[Double]]());
+                scala.runtime.BoxedUnit.UNIT
+              }
+            else
+              if (TestArray2Reverse.this.evidence$1.==(Predef.manifest(ManifestFactory.Boolean())))
+                {
+                  TestArray2Reverse.this.copy_spec_Boolean1$1(TestArray2Reverse.this.arr().$asInstanceOf[Array[Boolean]](), arrB.$asInstanceOf[Array[Boolean]]());
+                  scala.runtime.BoxedUnit.UNIT
+                }
+              else
+                {
+                  TestArray2Reverse.this.copy_spec_Generic1$1(arrB);
+                  scala.runtime.BoxedUnit.UNIT
+                }: runtime.BoxedUnit);
+          ()
+        }
+      }
+    };
+    final private[this] def copy_spec_Int1$1(TestArray2Reverse_this_arr1: Array[Int], arrB: Array[Int]): Unit = {
+      TestArray2Reverse_this_arr1.update(0, arrB.apply(0));
+      TestArray2Reverse_this_arr1.update(1, arrB.apply(1))
+    };
+    final private[this] def copy_spec_Double1$1(TestArray2Reverse_this_arr1: Array[Double], arrB: Array[Double]): Unit = {
+      TestArray2Reverse_this_arr1.update(0, arrB.apply(0));
+      TestArray2Reverse_this_arr1.update(1, arrB.apply(1))
+    };
+    final private[this] def copy_spec_Boolean1$1(TestArray2Reverse_this_arr1: Array[Boolean], arrB: Array[Boolean]): Unit = {
+      TestArray2Reverse_this_arr1.update(0, arrB.apply(0));
+      TestArray2Reverse_this_arr1.update(1, arrB.apply(1))
+    };
+    final private[this] def copy_spec_Generic1$1(arrB$1: Object): Unit = {
+      runtime.this.ScalaRunTime.array_update(TestArray2Reverse.this.arr(), 0, runtime.this.ScalaRunTime.array_apply(arrB$1, 0));
+      runtime.this.ScalaRunTime.array_update(TestArray2Reverse.this.arr(), 1, runtime.this.ScalaRunTime.array_apply(arrB$1, 1))
+    };
+    def <init>(implicit evidence$1: reflect.ClassTag): TestArray2Reverse = {
+      TestArray2Reverse.this.evidence$1 = evidence$1;
+      TestArray2Reverse.super.<init>();
+      TestArray2Reverse.this.arr = evidence$1.newArray(2);
+      TestArray2Reverse.this.arrB = evidence$1.newArray(scala.this.Predef.genericArrayOps(TestArray2Reverse.this.arr()).size());
+      ()
+    }
+  }
+}

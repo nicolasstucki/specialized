@@ -1,0 +1,165 @@
+[[syntax trees at end of                     typer]] // newSource1
+package <empty> {
+  import scala.reflect.ClassTag;
+  import ch.epfl.lamp.specialized._;
+  class TestArrayApplyFunction[T >: Nothing <: Any] extends scala.AnyRef {
+    <paramaccessor> private[this] val arr: Array[T] = _;
+    <paramaccessor> private[this] val func: T => T = _;
+    implicit <synthetic> <paramaccessor> private[this] val evidence$1: scala.reflect.ClassTag[T] = _;
+    def <init>(arr: Array[T], func: T => T)(implicit evidence$1: scala.reflect.ClassTag[T]): TestArrayApplyFunction[T] = {
+      TestArrayApplyFunction.super.<init>();
+      ()
+    };
+    def applyFunc: Array[T] = {
+      val arrB: Array[T] = TestArrayApplyFunction.this.evidence$1.newArray(TestArrayApplyFunction.this.arr.length);
+      {
+        def applyFunc_spec_Int1(arrB: Array[Int], TestArrayApplyFunction_this_func1: Int => Int, TestArrayApplyFunction_this_arr1: Array[Int]): Array[Int] = {
+          scala.this.Predef.intWrapper(1).until(TestArrayApplyFunction_this_arr1.length).foreach[Unit](((i: Int) => TestArrayApplyFunction_this_arr1.update(i, TestArrayApplyFunction_this_func1.apply(TestArrayApplyFunction_this_arr1.apply(i)))));
+          arrB
+        };
+        def applyFunc_spec_Double1(arrB: Array[Double], TestArrayApplyFunction_this_func1: Double => Double, TestArrayApplyFunction_this_arr1: Array[Double]): Array[Double] = {
+          scala.this.Predef.intWrapper(1).until(TestArrayApplyFunction_this_arr1.length).foreach[Unit](((i: Int) => TestArrayApplyFunction_this_arr1.update(i, TestArrayApplyFunction_this_func1.apply(TestArrayApplyFunction_this_arr1.apply(i)))));
+          arrB
+        };
+        def applyFunc_spec_Boolean1(arrB: Array[Boolean], TestArrayApplyFunction_this_func1: Boolean => Boolean, TestArrayApplyFunction_this_arr1: Array[Boolean]): Array[Boolean] = {
+          scala.this.Predef.intWrapper(1).until(TestArrayApplyFunction_this_arr1.length).foreach[Unit](((i: Int) => TestArrayApplyFunction_this_arr1.update(i, TestArrayApplyFunction_this_func1.apply(TestArrayApplyFunction_this_arr1.apply(i)))));
+          arrB
+        };
+        def applyFunc_spec_Generic1(): Array[T] = {
+          scala.this.Predef.intWrapper(1).until(TestArrayApplyFunction.this.arr.length).foreach[Unit](((i: Int) => TestArrayApplyFunction.this.arr.update(i, TestArrayApplyFunction.this.func.apply(TestArrayApplyFunction.this.arr.apply(i)))));
+          arrB
+        };
+        if (TestArrayApplyFunction.this.evidence$1.==(Predef.manifest[Int](ManifestFactory.Int)))
+  applyFunc_spec_Int1(arrB.asInstanceOf[Array[Int]], TestArrayApplyFunction.this.func.asInstanceOf[Int => Int], TestArrayApplyFunction.this.arr.asInstanceOf[Array[Int]])
+else
+  if (TestArrayApplyFunction.this.evidence$1.==(Predef.manifest[Double](ManifestFactory.Double)))
+    applyFunc_spec_Double1(arrB.asInstanceOf[Array[Double]], TestArrayApplyFunction.this.func.asInstanceOf[Double => Double], TestArrayApplyFunction.this.arr.asInstanceOf[Array[Double]])
+  else
+    if (TestArrayApplyFunction.this.evidence$1.==(Predef.manifest[Boolean](ManifestFactory.Boolean)))
+      applyFunc_spec_Boolean1(arrB.asInstanceOf[Array[Boolean]], TestArrayApplyFunction.this.func.asInstanceOf[Boolean => Boolean], TestArrayApplyFunction.this.arr.asInstanceOf[Array[Boolean]])
+    else
+      applyFunc_spec_Generic1().asInstanceOf[Array[T]]
+      }
+    }
+  }
+}
+
+[[syntax trees at end of                       jvm]] // newSource1
+package <empty> {
+  class TestArrayApplyFunction extends Object {
+    <paramaccessor> val TestArrayApplyFunction$$arr: Object = _;
+    <paramaccessor> val TestArrayApplyFunction$$func: Function1 = _;
+    implicit <synthetic> <paramaccessor> private[this] val evidence$1: reflect.ClassTag = _;
+    def applyFunc(): Object = {
+      val arrB: Object = TestArrayApplyFunction.this.evidence$1.newArray(runtime.this.ScalaRunTime.array_length(TestArrayApplyFunction.this.TestArrayApplyFunction$$arr));
+      {
+        if (TestArrayApplyFunction.this.evidence$1.==(Predef.manifest(ManifestFactory.Int())))
+          TestArrayApplyFunction.this.applyFunc_spec_Int1$1(arrB.$asInstanceOf[Array[Int]](), TestArrayApplyFunction.this.TestArrayApplyFunction$$func, TestArrayApplyFunction.this.TestArrayApplyFunction$$arr.$asInstanceOf[Array[Int]]())
+        else
+          if (TestArrayApplyFunction.this.evidence$1.==(Predef.manifest(ManifestFactory.Double())))
+            TestArrayApplyFunction.this.applyFunc_spec_Double1$1(arrB.$asInstanceOf[Array[Double]](), TestArrayApplyFunction.this.TestArrayApplyFunction$$func, TestArrayApplyFunction.this.TestArrayApplyFunction$$arr.$asInstanceOf[Array[Double]]())
+          else
+            if (TestArrayApplyFunction.this.evidence$1.==(Predef.manifest(ManifestFactory.Boolean())))
+              TestArrayApplyFunction.this.applyFunc_spec_Boolean1$1(arrB.$asInstanceOf[Array[Boolean]](), TestArrayApplyFunction.this.TestArrayApplyFunction$$func, TestArrayApplyFunction.this.TestArrayApplyFunction$$arr.$asInstanceOf[Array[Boolean]]())
+            else
+              TestArrayApplyFunction.this.applyFunc_spec_Generic1$1(arrB)
+      }
+    };
+    final private[this] def applyFunc_spec_Int1$1(arrB: Array[Int], TestArrayApplyFunction_this_func1: Function1, TestArrayApplyFunction_this_arr1: Array[Int]): Array[Int] = {
+      RichInt.this.until$extension0(scala.this.Predef.intWrapper(1), TestArrayApplyFunction_this_arr1.length()).foreach$mVc$sp({
+        (new anonymous class anonfun$applyFunc_spec_Int1$1$1(TestArrayApplyFunction.this, TestArrayApplyFunction_this_func1, TestArrayApplyFunction_this_arr1): Function1)
+      });
+      arrB
+    };
+    final private[this] def applyFunc_spec_Double1$1(arrB: Array[Double], TestArrayApplyFunction_this_func1: Function1, TestArrayApplyFunction_this_arr1: Array[Double]): Array[Double] = {
+      RichInt.this.until$extension0(scala.this.Predef.intWrapper(1), TestArrayApplyFunction_this_arr1.length()).foreach$mVc$sp({
+        (new anonymous class anonfun$applyFunc_spec_Double1$1$1(TestArrayApplyFunction.this, TestArrayApplyFunction_this_func1, TestArrayApplyFunction_this_arr1): Function1)
+      });
+      arrB
+    };
+    final private[this] def applyFunc_spec_Boolean1$1(arrB: Array[Boolean], TestArrayApplyFunction_this_func1: Function1, TestArrayApplyFunction_this_arr1: Array[Boolean]): Array[Boolean] = {
+      RichInt.this.until$extension0(scala.this.Predef.intWrapper(1), TestArrayApplyFunction_this_arr1.length()).foreach$mVc$sp({
+        (new anonymous class anonfun$applyFunc_spec_Boolean1$1$1(TestArrayApplyFunction.this, TestArrayApplyFunction_this_func1, TestArrayApplyFunction_this_arr1): Function1)
+      });
+      arrB
+    };
+    final private[this] def applyFunc_spec_Generic1$1(arrB$1: Object): Object = {
+      RichInt.this.until$extension0(scala.this.Predef.intWrapper(1), runtime.this.ScalaRunTime.array_length(TestArrayApplyFunction.this.TestArrayApplyFunction$$arr)).foreach$mVc$sp({
+        (new anonymous class anonfun$applyFunc_spec_Generic1$1$1(TestArrayApplyFunction.this): Function1)
+      });
+      arrB$1
+    };
+    def <init>(arr: Object, func: Function1, evidence$1: reflect.ClassTag): TestArrayApplyFunction = {
+      TestArrayApplyFunction.this.TestArrayApplyFunction$$arr = arr;
+      TestArrayApplyFunction.this.TestArrayApplyFunction$$func = func;
+      TestArrayApplyFunction.this.evidence$1 = evidence$1;
+      TestArrayApplyFunction.super.<init>();
+      ()
+    }
+  };
+  @SerialVersionUID(0) final <synthetic> class TestArrayApplyFunction$$anonfun$applyFunc_spec_Int1$1$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(i: Int): Unit = TestArrayApplyFunction$$anonfun$applyFunc_spec_Int1$1$1.this.apply$mcVI$sp(i);
+    <specialized> def apply$mcVI$sp(i: Int): Unit = TestArrayApplyFunction$$anonfun$applyFunc_spec_Int1$1$1.this.TestArrayApplyFunction_this_arr1$1.update(i, TestArrayApplyFunction$$anonfun$applyFunc_spec_Int1$1$1.this.TestArrayApplyFunction_this_func1$1.apply$mcII$sp(TestArrayApplyFunction$$anonfun$applyFunc_spec_Int1$1$1.this.TestArrayApplyFunction_this_arr1$1.apply(i)));
+    final <bridge> def apply(v1: Object): Object = {
+      TestArrayApplyFunction$$anonfun$applyFunc_spec_Int1$1$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> private[this] val TestArrayApplyFunction_this_func1$1: Function1 = _;
+    <synthetic> <paramaccessor> private[this] val TestArrayApplyFunction_this_arr1$1: Array[Int] = _;
+    def <init>($outer: TestArrayApplyFunction, TestArrayApplyFunction_this_func1$1: Function1, TestArrayApplyFunction_this_arr1$1: Array[Int]): anonymous class anonfun$applyFunc_spec_Int1$1$1 = {
+      TestArrayApplyFunction$$anonfun$applyFunc_spec_Int1$1$1.this.TestArrayApplyFunction_this_func1$1 = TestArrayApplyFunction_this_func1$1;
+      TestArrayApplyFunction$$anonfun$applyFunc_spec_Int1$1$1.this.TestArrayApplyFunction_this_arr1$1 = TestArrayApplyFunction_this_arr1$1;
+      TestArrayApplyFunction$$anonfun$applyFunc_spec_Int1$1$1.super.<init>();
+      ()
+    }
+  };
+  @SerialVersionUID(0) final <synthetic> class TestArrayApplyFunction$$anonfun$applyFunc_spec_Double1$1$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(i: Int): Unit = TestArrayApplyFunction$$anonfun$applyFunc_spec_Double1$1$1.this.apply$mcVI$sp(i);
+    <specialized> def apply$mcVI$sp(i: Int): Unit = TestArrayApplyFunction$$anonfun$applyFunc_spec_Double1$1$1.this.TestArrayApplyFunction_this_arr1$2.update(i, TestArrayApplyFunction$$anonfun$applyFunc_spec_Double1$1$1.this.TestArrayApplyFunction_this_func1$2.apply$mcDD$sp(TestArrayApplyFunction$$anonfun$applyFunc_spec_Double1$1$1.this.TestArrayApplyFunction_this_arr1$2.apply(i)));
+    final <bridge> def apply(v1: Object): Object = {
+      TestArrayApplyFunction$$anonfun$applyFunc_spec_Double1$1$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> private[this] val TestArrayApplyFunction_this_func1$2: Function1 = _;
+    <synthetic> <paramaccessor> private[this] val TestArrayApplyFunction_this_arr1$2: Array[Double] = _;
+    def <init>($outer: TestArrayApplyFunction, TestArrayApplyFunction_this_func1$2: Function1, TestArrayApplyFunction_this_arr1$2: Array[Double]): anonymous class anonfun$applyFunc_spec_Double1$1$1 = {
+      TestArrayApplyFunction$$anonfun$applyFunc_spec_Double1$1$1.this.TestArrayApplyFunction_this_func1$2 = TestArrayApplyFunction_this_func1$2;
+      TestArrayApplyFunction$$anonfun$applyFunc_spec_Double1$1$1.this.TestArrayApplyFunction_this_arr1$2 = TestArrayApplyFunction_this_arr1$2;
+      TestArrayApplyFunction$$anonfun$applyFunc_spec_Double1$1$1.super.<init>();
+      ()
+    }
+  };
+  @SerialVersionUID(0) final <synthetic> class TestArrayApplyFunction$$anonfun$applyFunc_spec_Boolean1$1$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(i: Int): Unit = TestArrayApplyFunction$$anonfun$applyFunc_spec_Boolean1$1$1.this.apply$mcVI$sp(i);
+    <specialized> def apply$mcVI$sp(i: Int): Unit = TestArrayApplyFunction$$anonfun$applyFunc_spec_Boolean1$1$1.this.TestArrayApplyFunction_this_arr1$3.update(i, scala.Boolean.unbox(TestArrayApplyFunction$$anonfun$applyFunc_spec_Boolean1$1$1.this.TestArrayApplyFunction_this_func1$3.apply(scala.Boolean.box(TestArrayApplyFunction$$anonfun$applyFunc_spec_Boolean1$1$1.this.TestArrayApplyFunction_this_arr1$3.apply(i)))));
+    final <bridge> def apply(v1: Object): Object = {
+      TestArrayApplyFunction$$anonfun$applyFunc_spec_Boolean1$1$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> private[this] val TestArrayApplyFunction_this_func1$3: Function1 = _;
+    <synthetic> <paramaccessor> private[this] val TestArrayApplyFunction_this_arr1$3: Array[Boolean] = _;
+    def <init>($outer: TestArrayApplyFunction, TestArrayApplyFunction_this_func1$3: Function1, TestArrayApplyFunction_this_arr1$3: Array[Boolean]): anonymous class anonfun$applyFunc_spec_Boolean1$1$1 = {
+      TestArrayApplyFunction$$anonfun$applyFunc_spec_Boolean1$1$1.this.TestArrayApplyFunction_this_func1$3 = TestArrayApplyFunction_this_func1$3;
+      TestArrayApplyFunction$$anonfun$applyFunc_spec_Boolean1$1$1.this.TestArrayApplyFunction_this_arr1$3 = TestArrayApplyFunction_this_arr1$3;
+      TestArrayApplyFunction$$anonfun$applyFunc_spec_Boolean1$1$1.super.<init>();
+      ()
+    }
+  };
+  @SerialVersionUID(0) final <synthetic> class TestArrayApplyFunction$$anonfun$applyFunc_spec_Generic1$1$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(i: Int): Unit = TestArrayApplyFunction$$anonfun$applyFunc_spec_Generic1$1$1.this.apply$mcVI$sp(i);
+    <specialized> def apply$mcVI$sp(i: Int): Unit = runtime.this.ScalaRunTime.array_update(TestArrayApplyFunction$$anonfun$applyFunc_spec_Generic1$1$1.this.$outer.TestArrayApplyFunction$$arr, i, TestArrayApplyFunction$$anonfun$applyFunc_spec_Generic1$1$1.this.$outer.TestArrayApplyFunction$$func.apply(runtime.this.ScalaRunTime.array_apply(TestArrayApplyFunction$$anonfun$applyFunc_spec_Generic1$1$1.this.$outer.TestArrayApplyFunction$$arr, i)));
+    <synthetic> <paramaccessor> private[this] val $outer: TestArrayApplyFunction = _;
+    final <bridge> def apply(v1: Object): Object = {
+      TestArrayApplyFunction$$anonfun$applyFunc_spec_Generic1$1$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    def <init>($outer: TestArrayApplyFunction): anonymous class anonfun$applyFunc_spec_Generic1$1$1 = {
+      if ($outer.eq(null))
+        throw new NullPointerException()
+      else
+        TestArrayApplyFunction$$anonfun$applyFunc_spec_Generic1$1$1.this.$outer = $outer;
+      TestArrayApplyFunction$$anonfun$applyFunc_spec_Generic1$1$1.super.<init>();
+      ()
+    }
+  }
+}

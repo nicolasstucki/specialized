@@ -18,7 +18,15 @@ class Tests {
 
       var crash = false
 
-      for (source <- res.jfile.listFiles() if source.getName().endsWith(".scala")) {
+      def sources(dir: JFile): Seq[JFile] = {
+         val sourcesInDir = for (source <- dir.listFiles() if source.getName().endsWith(".scala")) yield source
+
+         val sourcesInSubDir = for (source <- dir.listFiles() if source.isDirectory) yield sources(source)
+
+         sourcesInDir.toSeq ++ sourcesInSubDir.toList.flatten
+      }
+
+      for (source <- sources(res.jfile)) {
          // source code:
          val code = File(source).slurp
          val flags = File(new_extension(source, "flags")).slurp

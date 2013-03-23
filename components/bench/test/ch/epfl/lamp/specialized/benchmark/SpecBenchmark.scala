@@ -1,6 +1,6 @@
-package ch.epfl.lamp.specialize.benchmark
+package ch.epfl.lamp.specialized.benchmark
 import org.scalameter.api._
-import ch.epfl.lamp.specialize.benchmark.tests._
+import ch.epfl.lamp.specialized.benchmark.tests._
 import org.scalameter.CurveData
 import org.scalameter.Parameters
 

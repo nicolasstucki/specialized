@@ -22,7 +22,6 @@ case class SpecializedDirectTest(val code: String, val flags: String) extends Di
 
    def show() = {
       // this is the interesting part :)
-      println(f"flags :${flags}")
       val pa = new PrintStream(ba)
       val pOut = Console.out
       val pErr = Console.err

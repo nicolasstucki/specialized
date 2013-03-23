@@ -1,4 +1,4 @@
-package ch.epfl.lamp.specialize.benchmark.tests
+package ch.epfl.lamp.specialized.benchmark.tests
 
 trait TestApi {
    def test: Any

@@ -5,6 +5,8 @@ import scala.reflect.AnyValManifest
 import scala.reflect.ClassTag
 import scala.reflect.macros.Context
 import scala.collection.mutable.MapBuilder
+import scala.AnyValCompanion
+import scala.reflect.internal.Flags
 
 /**
  * @author Nicolas Stucki
@@ -52,43 +54,42 @@ object `package` {
       }
 
       // RETRIEVE DEVINITIONS AND USES OF TERMS THAT HAVE T IN THE TYPE
-      val DefDef(_, encMethName, _, encMethVparamss, _, _) = c.enclosingMethod
-
+      val DefDef(_, encMethName, _, _, _, _) = c.enclosingMethod
       val mapping = getTemsMapping(c)(expr_f, typeOf_T)
 
       // COMPILES SPECIFIC VARIANTS INTO ONE TREE
-      val specMethNameInt = c.fresh(newTermName(f"${encMethName}_spec_Int"))
-      val specMethNameDouble = c.fresh(newTermName(f"${encMethName}_spec_Double"))
-      val specMethNameBoolean = c.fresh(newTermName(f"${encMethName}_spec_Boolean"))
+      val specMethodNameGeneric = c.fresh(newTermName(f"${encMethName}_spec_Generic"))
+      val specMethodNamesAndTypes: Map[Object, (TermName, Type)] = Map(
+         Int -> (c.fresh(newTermName(f"${encMethName}_spec_Int")), typeOf[Int]),
+         Double -> (c.fresh(newTermName(f"${encMethName}_spec_Double")), typeOf[Double]),
+         Boolean -> (c.fresh(newTermName(f"${encMethName}_spec_Boolean")), typeOf[Boolean]))
 
-      val specMethInt = createSpecMethod(c)(classTag, typeOf_T, typeOf[Int], expr_f, specMethNameInt, mapping)
-      val specMethDouble = createSpecMethod(c)(classTag, typeOf_T, typeOf[Double], expr_f, specMethNameDouble, mapping)
-      val specMethBoolean = createSpecMethod(c)(classTag, typeOf_T, typeOf[Boolean], expr_f, specMethNameBoolean, mapping)
+      val specMethodInt = createSpecializedMethod(c)(typeOf_T, expr_f, specMethodNamesAndTypes(Int), mapping)
+      val specMethodDouble = createSpecializedMethod(c)(typeOf_T, expr_f, specMethodNamesAndTypes(Double), mapping)
+      val specMethodBoolean = createSpecializedMethod(c)(typeOf_T, expr_f, specMethodNamesAndTypes(Boolean), mapping)
+      val specMethodGeneric = createGenericMethod(c)(specMethodNameGeneric, expr_f)
 
-      // val specCallers = SpecMethodMaker.createSpecCallers(c)(classTag, typeOf_T, typeOf_f, specMethName, identsMapping, selectTypeRefsMapping)
+      val specCallers = createSpecCallers(c)(classTag, typeOf_T, typeOf_f, mapping, specMethodNamesAndTypes, specMethodNameGeneric)
 
       val newExpr = reify {
-         specMethInt.splice
-         specMethDouble.splice
-         specMethBoolean.splice
-         //specCallers.splice
-         expr_f.splice
+         specMethodInt.splice
+         specMethodDouble.splice
+         specMethodBoolean.splice
+         specMethodGeneric.splice
+         specCallers.splice
       }
 
       // RETURN THE NEW TREE
-      //      c.warning(classTag.tree.pos, "defDefsInside = " + show(defDefsInside))
-      //      c.warning(classTag.tree.pos, "identsInside = " + show(identsInside))
-      //      c.warning(classTag.tree.pos, "selectTypeRefsInside = " + show(selectTypeRefsInside))
-      //      c.warning(classTag.tree.pos, "valDefsIside = " + show(valDefsIside))
-      c.warning(classTag.tree.pos, "newExpr = " + show(newExpr))
+//      c.warning(classTag.tree.pos, "newExpr = " + show(newExpr))
       newExpr // newExpr
    }
 
-   private def getTemsMapping(c: Context)(expr: c.Expr[Any], typeOf_T: c.Type) = {
+   private def getTemsMapping[T](c: Context)(expr: c.Expr[Any], typeOf_T: c.Type): Map[String, (String, c.Type, c.Tree)] = {
       import c.universe._
 
-      val fieldsMapping = scala.collection.mutable.Map.empty[String, (Name, Type)]
+      val fieldsMapping = scala.collection.mutable.Map.empty[String, (String, Type, Tree)]
       val valdefInside = scala.collection.mutable.Set.empty[String]
+      val defdefInside = scala.collection.mutable.Set.empty[String]
 
       object traverser extends Traverser {
          override def traverse(tree: Tree) = tree match {
@@ -97,7 +98,7 @@ object `package` {
                   case _: TypeRef =>
                      val strRep = select.toString
                      if (!fieldsMapping.contains(strRep))
-                        fieldsMapping += (strRep -> (c.fresh(newTermName(strRep.toString.replace(".", "_"))), select.tpe.widen))
+                        fieldsMapping += (strRep -> (c.fresh(newTermName(strRep.toString.replace(".", "_"))).toString, select.tpe.widen, select))
                      super.traverse(tree)
                   case _ => super.traverse(tree)
                }
@@ -107,62 +108,122 @@ object `package` {
             case ident @ Ident(name) if ident.tpe != null && ident.tpe.widen.exists(_ == typeOf_T) =>
                val strRep = name.toString
                if (!fieldsMapping.contains(strRep))
-                  fieldsMapping += (strRep -> (newTermName(strRep), ident.tpe.widen))
+                  fieldsMapping += (strRep -> (strRep, ident.tpe.widen, ident))
+            case defdef @ DefDef(mods, name, tparams, _, tpt, _) if tpt.tpe != null && tpt.tpe.widen.exists(_ == typeOf_T) =>
+               defdefInside += name.toString
+               super.traverse(tree)
             case _ => super.traverse(tree)
          }
       }
 
       traverser.traverse(expr.tree)
 
-      fieldsMapping -- valdefInside
+      fieldsMapping --= valdefInside
+      fieldsMapping --= defdefInside
 
       fieldsMapping.toMap
    }
 
-   private def createSpecMethod[T](c: Context)(classTag: c.Expr[ClassTag[T]], typeOf_T: c.Type, typeOf_Spec: c.Type, body: c.Expr[Any], specMethName: c.universe.TermName, mapping: Map[String, (c.Name, c.Type)]): c.Expr[Any] = {
+   private def createSpecializedMethod[T](c: Context)(typeOf_T: c.Type, body: c.Expr[Any], methodNameAndType: (c.TermName, c.Type), mapping: Map[String, (String, c.Type, c.Tree)]): c.Expr[Any] = {
       import c.universe._
+      val (methodName, typeOf_Spec) = methodNameAndType
 
       def specializedBody(tree: Tree): Tree = tree match {
-         case block @ Block(trees, last)          => Block(trees map (specializedBody(_)), specializedBody(last))
-         case apply @ Apply(func, params)         => Apply(specializedBody(func), params map (specializedBody(_)))
-         case typeApply @ TypeApply(func, params) => TypeApply(specializedBody(func), params map (specializedBody(_)))
          case select @ Select(term, name) =>
             mapping.get(select.toString) match {
-               case Some((newName, _)) => Ident(newName)
-               case None               => Select(specializedBody(term), name)
+               case Some((newName, _, _)) => Ident(newName)
+               case None                  => Select(specializedBody(term), name)
             }
-         case select @ Select(term, name)          => Select(specializedBody(term), name)
-         case typeTree: TypeTree                   => typeTree
-         case valDef @ ValDef(mod, name, tpt, rhs) => ValDef(mod, name, tpt, specializedBody(rhs))
-         case lit: Literal                         => lit
-         case ths: This                            => ths
          case Ident(name) =>
             mapping.get(name.toString) match {
-               case Some((newName, _)) => Ident(newName)
-               case None               => Ident(name)
+               case Some((newName, _, _)) => Ident(newName)
+               case None                  => Ident(name)
             }
-         case mtch @ Match(param, classes) => mtch
-         case x                            => tree
+         case DefDef(mods, name, tparams, vparamss, tpt, rhs) =>
+            val newVparamss = vparamss map (_ map { case ValDef(mods, name, tpt, rhs) => ValDef(mods, name, tranformTypeTree(c)(tpt, typeOf_T, typeOf_Spec), specializedBody(rhs)) })
+            DefDef(mods, name, tparams, newVparamss, tranformTypeTree(c)(tpt, typeOf_T, typeOf_Spec), specializedBody(rhs))
+         case Function(vparams, body) =>
+            val newVparams = vparams map { case ValDef(mods, name, tpt, rhs) => ValDef(mods, name, tranformTypeTree(c)(tpt, typeOf_T, typeOf_Spec), specializedBody(rhs)) }
+            Function(newVparams, specializedBody(body))
+         case If(cond, thenp, elsep)      => If(specializedBody(cond), specializedBody(thenp), specializedBody(elsep))
+         case Block(trees, last)          => Block(trees map (specializedBody(_)), specializedBody(last))
+         case Apply(func, params)         => Apply(specializedBody(func), params map (specializedBody(_)))
+         case TypeApply(func, params)     => TypeApply(specializedBody(func), params map (specializedBody(_)))
+         case Select(term, name)          => Select(specializedBody(term), name)
+         case ValDef(mod, name, tpt, rhs) => ValDef(mod, name, tpt, specializedBody(rhs))
+         case typeTree: TypeTree          => typeTree
+         case lit: Literal                => lit
+         case ths: This                   => ths
+         case EmptyTree                   => EmptyTree
+
+         case _                           => c.warning(body.tree.pos, "TODO: add case in createSpecializedMethod: " + showRaw(tree)); tree
       }
 
       val Block(DefDef(mods, _, tparams, _, tpt, rhs) :: Nil, _) = reify { def spec() = {} }.tree
 
-      val newBody = specializedBody(body.tree).substituteTypes(List(typeOf_T.typeSymbol), List(typeOf_Spec)) // specializedBody(body.tree)
+      val newBody = specializedBody(body.tree).substituteTypes(List(typeOf_T.typeSymbol), List(typeOf_Spec))
 
       val vparamss = List(
          (for (field <- mapping.keys) yield {
             ValDef(
-               Modifiers(Flag.PARAM), newTermName(mapping(field)._1.toString),
+               Modifiers(Flag.PARAM), newTermName(mapping(field)._1),
                TypeTree().setType(mapping(field)._2.substituteTypes(List(typeOf_T.typeSymbol), List(typeOf_Spec))),
                EmptyTree)
          }).toList)
 
-      c.Expr[Any](DefDef(mods, specMethName, tparams, vparamss, TypeTree(), c.resetAllAttrs(newBody)))
+      c.Expr[Any](DefDef(mods, methodName, tparams, vparamss, TypeTree(), c.resetAllAttrs(newBody)))
    }
 
-   private def subsType(c: Context)(tree: c.Tree, from: c.Type, to: c.Type): c.universe.TypeTree = {
-      val typeTree = c.universe.TypeTree()
-      typeTree.setType(tree.tpe.widen.substituteTypes(List(from.typeSymbol), List(to)))
-      typeTree
+   private def createGenericMethod[T](c: Context)(methodName: c.universe.TermName, body: c.Expr[Any]): c.Expr[Any] = {
+      import c.universe._
+      c.Expr[Any](DefDef(Modifiers(), methodName, List(), List(List()), TypeTree(), c.resetAllAttrs(body.tree)))
    }
+
+   private def createSpecCallers[T](c: Context)(classTag: c.Expr[ClassTag[T]], typeOf_T: c.Type, typeOf_f: c.Type, mapping: Map[String, (String, c.Type, c.Tree)], specMethodNamesAndTypes: Map[Object, (c.TermName, c.Type)], specMethodNameGeneric: c.Name) = {
+      import c.universe._
+
+      def createSpecCaller(nameAndType: (Name, Type)) = {
+         val (name, tpe) = nameAndType
+         c.Expr(
+            Apply(
+               Ident(name),
+               (for (key <- mapping.keys) yield {
+                  castTree(c)(
+                     c.resetAllAttrs(mapping(key)._3),
+                     TypeTree().setType(mapping(key)._2).substituteTypes(List(typeOf_T.typeSymbol), List(tpe)).tpe)
+               }).toList))
+      }
+
+      val callIntSpec = createSpecCaller(specMethodNamesAndTypes(Int))
+      val callDoubleSpec = createSpecCaller(specMethodNamesAndTypes(Double))
+      val callBooleanSpec = createSpecCaller(specMethodNamesAndTypes(Boolean))
+      val callGenSpec = c.Expr(Apply(Ident(specMethodNameGeneric), Nil))
+
+      val callersBlock = reify {
+         if (classTag.splice == manifest[Int]) {
+            callIntSpec.splice
+         } else if (classTag.splice == manifest[Double]) {
+            callDoubleSpec.splice
+         } else if (classTag.splice == manifest[Boolean]) {
+            callBooleanSpec.splice
+         } else {
+            callGenSpec.splice
+         }
+      }
+
+      castExpr(c)(callersBlock, typeOf_f)
+   }
+
+   private def castExpr(c: Context)(expr: c.Expr[Any], tpe: c.Type): c.Expr[Any] = c.Expr[Any](castTree(c)(expr.tree, tpe))
+
+   private def castTree(c: Context)(tree: c.Tree, tpe: c.Type): c.Tree = {
+      import c.universe._
+      TypeApply(Select(tree, newTermName("asInstanceOf")), List(TypeTree().setType(tpe)))
+   }
+
+   private def tranformTypeTree(c: Context)(typeTree: c.Tree, typeOf_T: c.Type, typeOf_Spec: c.Type): c.Tree = {
+      import c.universe._
+      TypeTree().setType(typeTree.tpe.widen.substituteTypes(List(typeOf_T.typeSymbol), List(typeOf_Spec)))
+   }
+
 }

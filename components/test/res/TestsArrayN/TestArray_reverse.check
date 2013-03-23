@@ -1,0 +1,189 @@
+[[syntax trees at end of                     typer]] // newSource1
+package <empty> {
+  import scala.reflect.ClassTag;
+  import ch.epfl.lamp.specialized._;
+  class TestArray[T >: Nothing <: Any] extends scala.AnyRef {
+    <paramaccessor> private[this] val arrA: Array[T] = _;
+    implicit <paramaccessor> private[this] val classTag: scala.reflect.ClassTag[T] = _;
+    def <init>(arrA: Array[T])(implicit classTag: scala.reflect.ClassTag[T]): TestArray[T] = {
+      TestArray.super.<init>();
+      ()
+    };
+    private[this] val arrB: Array[T] = TestArray.this.classTag.newArray(TestArray.this.arrA.length);
+    <stable> <accessor> def arrB: Array[T] = TestArray.this.arrB;
+    private[this] val arrC: Array[T] = TestArray.this.classTag.newArray(TestArray.this.arrA.length);
+    <stable> <accessor> def arrC: Array[T] = TestArray.this.arrC;
+    def reverse: Unit = {
+      def reverse_spec_Int1(TestArray_this_arrA1: Array[Int]): Unit = scala.this.Predef.intWrapper(0).to(TestArray_this_arrA1.length./(2)).foreach[Unit](((i: Int) => {
+        val j: Int = TestArray_this_arrA1.length.-(i).-(1);
+        val temp: Int = TestArray_this_arrA1.apply(j);
+        TestArray_this_arrA1.update(j, TestArray_this_arrA1.apply(i));
+        TestArray_this_arrA1.update(i, temp)
+      }));
+      def reverse_spec_Double1(TestArray_this_arrA1: Array[Double]): Unit = scala.this.Predef.intWrapper(0).to(TestArray_this_arrA1.length./(2)).foreach[Unit](((i: Int) => {
+        val j: Int = TestArray_this_arrA1.length.-(i).-(1);
+        val temp: Double = TestArray_this_arrA1.apply(j);
+        TestArray_this_arrA1.update(j, TestArray_this_arrA1.apply(i));
+        TestArray_this_arrA1.update(i, temp)
+      }));
+      def reverse_spec_Boolean1(TestArray_this_arrA1: Array[Boolean]): Unit = scala.this.Predef.intWrapper(0).to(TestArray_this_arrA1.length./(2)).foreach[Unit](((i: Int) => {
+        val j: Int = TestArray_this_arrA1.length.-(i).-(1);
+        val temp: Boolean = TestArray_this_arrA1.apply(j);
+        TestArray_this_arrA1.update(j, TestArray_this_arrA1.apply(i));
+        TestArray_this_arrA1.update(i, temp)
+      }));
+      def reverse_spec_Generic1(): Unit = scala.this.Predef.intWrapper(0).to(TestArray.this.arrA.length./(2)).foreach[Unit](((i: Int) => {
+        val j: Int = TestArray.this.arrA.length.-(i).-(1);
+        val temp: T = TestArray.this.arrA.apply(j);
+        TestArray.this.arrA.update(j, TestArray.this.arrA.apply(i));
+        TestArray.this.arrA.update(i, temp)
+      }));
+      if (TestArray.this.classTag.==(Predef.manifest[Int](ManifestFactory.Int)))
+  reverse_spec_Int1(TestArray.this.arrA.asInstanceOf[Array[Int]])
+else
+  if (TestArray.this.classTag.==(Predef.manifest[Double](ManifestFactory.Double)))
+    reverse_spec_Double1(TestArray.this.arrA.asInstanceOf[Array[Double]])
+  else
+    if (TestArray.this.classTag.==(Predef.manifest[Boolean](ManifestFactory.Boolean)))
+      reverse_spec_Boolean1(TestArray.this.arrA.asInstanceOf[Array[Boolean]])
+    else
+      reverse_spec_Generic1().asInstanceOf[Unit]
+    }
+  }
+}
+
+[[syntax trees at end of                       jvm]] // newSource1
+package <empty> {
+  class TestArray extends Object {
+    <paramaccessor> val TestArray$$arrA: Object = _;
+    implicit <paramaccessor> private[this] val classTag: reflect.ClassTag = _;
+    private[this] val arrB: Object = _;
+    <stable> <accessor> def arrB(): Object = TestArray.this.arrB;
+    private[this] val arrC: Object = _;
+    <stable> <accessor> def arrC(): Object = TestArray.this.arrC;
+    def reverse(): Unit = {
+      (if (TestArray.this.classTag.==(Predef.manifest(ManifestFactory.Int())))
+        {
+          TestArray.this.reverse_spec_Int1$1(TestArray.this.TestArray$$arrA.$asInstanceOf[Array[Int]]());
+          scala.runtime.BoxedUnit.UNIT
+        }
+      else
+        if (TestArray.this.classTag.==(Predef.manifest(ManifestFactory.Double())))
+          {
+            TestArray.this.reverse_spec_Double1$1(TestArray.this.TestArray$$arrA.$asInstanceOf[Array[Double]]());
+            scala.runtime.BoxedUnit.UNIT
+          }
+        else
+          if (TestArray.this.classTag.==(Predef.manifest(ManifestFactory.Boolean())))
+            {
+              TestArray.this.reverse_spec_Boolean1$1(TestArray.this.TestArray$$arrA.$asInstanceOf[Array[Boolean]]());
+              scala.runtime.BoxedUnit.UNIT
+            }
+          else
+            {
+              TestArray.this.reverse_spec_Generic1$1();
+              scala.runtime.BoxedUnit.UNIT
+            }: runtime.BoxedUnit);
+      ()
+    };
+    final private[this] def reverse_spec_Int1$1(TestArray_this_arrA1: Array[Int]): Unit = RichInt.this.to$extension0(scala.this.Predef.intWrapper(0), TestArray_this_arrA1.length()./(2)).foreach$mVc$sp({
+      (new anonymous class anonfun$reverse_spec_Int1$1$1(TestArray.this, TestArray_this_arrA1): Function1)
+    });
+    final private[this] def reverse_spec_Double1$1(TestArray_this_arrA1: Array[Double]): Unit = RichInt.this.to$extension0(scala.this.Predef.intWrapper(0), TestArray_this_arrA1.length()./(2)).foreach$mVc$sp({
+      (new anonymous class anonfun$reverse_spec_Double1$1$1(TestArray.this, TestArray_this_arrA1): Function1)
+    });
+    final private[this] def reverse_spec_Boolean1$1(TestArray_this_arrA1: Array[Boolean]): Unit = RichInt.this.to$extension0(scala.this.Predef.intWrapper(0), TestArray_this_arrA1.length()./(2)).foreach$mVc$sp({
+      (new anonymous class anonfun$reverse_spec_Boolean1$1$1(TestArray.this, TestArray_this_arrA1): Function1)
+    });
+    final private[this] def reverse_spec_Generic1$1(): Unit = RichInt.this.to$extension0(scala.this.Predef.intWrapper(0), runtime.this.ScalaRunTime.array_length(TestArray.this.TestArray$$arrA)./(2)).foreach$mVc$sp({
+      (new anonymous class anonfun$reverse_spec_Generic1$1$1(TestArray.this): Function1)
+    });
+    def <init>(arrA: Object, classTag: reflect.ClassTag): TestArray = {
+      TestArray.this.TestArray$$arrA = arrA;
+      TestArray.this.classTag = classTag;
+      TestArray.super.<init>();
+      TestArray.this.arrB = classTag.newArray(runtime.this.ScalaRunTime.array_length(arrA));
+      TestArray.this.arrC = classTag.newArray(runtime.this.ScalaRunTime.array_length(arrA));
+      ()
+    }
+  };
+  @SerialVersionUID(0) final <synthetic> class TestArray$$anonfun$reverse_spec_Int1$1$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(i: Int): Unit = TestArray$$anonfun$reverse_spec_Int1$1$1.this.apply$mcVI$sp(i);
+    <specialized> def apply$mcVI$sp(i: Int): Unit = {
+      val j: Int = TestArray$$anonfun$reverse_spec_Int1$1$1.this.TestArray_this_arrA1$1.length().-(i).-(1);
+      val temp: Int = TestArray$$anonfun$reverse_spec_Int1$1$1.this.TestArray_this_arrA1$1.apply(j);
+      TestArray$$anonfun$reverse_spec_Int1$1$1.this.TestArray_this_arrA1$1.update(j, TestArray$$anonfun$reverse_spec_Int1$1$1.this.TestArray_this_arrA1$1.apply(i));
+      TestArray$$anonfun$reverse_spec_Int1$1$1.this.TestArray_this_arrA1$1.update(i, temp)
+    };
+    final <bridge> def apply(v1: Object): Object = {
+      TestArray$$anonfun$reverse_spec_Int1$1$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> private[this] val TestArray_this_arrA1$1: Array[Int] = _;
+    def <init>($outer: TestArray, TestArray_this_arrA1$1: Array[Int]): anonymous class anonfun$reverse_spec_Int1$1$1 = {
+      TestArray$$anonfun$reverse_spec_Int1$1$1.this.TestArray_this_arrA1$1 = TestArray_this_arrA1$1;
+      TestArray$$anonfun$reverse_spec_Int1$1$1.super.<init>();
+      ()
+    }
+  };
+  @SerialVersionUID(0) final <synthetic> class TestArray$$anonfun$reverse_spec_Double1$1$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(i: Int): Unit = TestArray$$anonfun$reverse_spec_Double1$1$1.this.apply$mcVI$sp(i);
+    <specialized> def apply$mcVI$sp(i: Int): Unit = {
+      val j: Int = TestArray$$anonfun$reverse_spec_Double1$1$1.this.TestArray_this_arrA1$2.length().-(i).-(1);
+      val temp: Double = TestArray$$anonfun$reverse_spec_Double1$1$1.this.TestArray_this_arrA1$2.apply(j);
+      TestArray$$anonfun$reverse_spec_Double1$1$1.this.TestArray_this_arrA1$2.update(j, TestArray$$anonfun$reverse_spec_Double1$1$1.this.TestArray_this_arrA1$2.apply(i));
+      TestArray$$anonfun$reverse_spec_Double1$1$1.this.TestArray_this_arrA1$2.update(i, temp)
+    };
+    final <bridge> def apply(v1: Object): Object = {
+      TestArray$$anonfun$reverse_spec_Double1$1$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> private[this] val TestArray_this_arrA1$2: Array[Double] = _;
+    def <init>($outer: TestArray, TestArray_this_arrA1$2: Array[Double]): anonymous class anonfun$reverse_spec_Double1$1$1 = {
+      TestArray$$anonfun$reverse_spec_Double1$1$1.this.TestArray_this_arrA1$2 = TestArray_this_arrA1$2;
+      TestArray$$anonfun$reverse_spec_Double1$1$1.super.<init>();
+      ()
+    }
+  };
+  @SerialVersionUID(0) final <synthetic> class TestArray$$anonfun$reverse_spec_Boolean1$1$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(i: Int): Unit = TestArray$$anonfun$reverse_spec_Boolean1$1$1.this.apply$mcVI$sp(i);
+    <specialized> def apply$mcVI$sp(i: Int): Unit = {
+      val j: Int = TestArray$$anonfun$reverse_spec_Boolean1$1$1.this.TestArray_this_arrA1$3.length().-(i).-(1);
+      val temp: Boolean = TestArray$$anonfun$reverse_spec_Boolean1$1$1.this.TestArray_this_arrA1$3.apply(j);
+      TestArray$$anonfun$reverse_spec_Boolean1$1$1.this.TestArray_this_arrA1$3.update(j, TestArray$$anonfun$reverse_spec_Boolean1$1$1.this.TestArray_this_arrA1$3.apply(i));
+      TestArray$$anonfun$reverse_spec_Boolean1$1$1.this.TestArray_this_arrA1$3.update(i, temp)
+    };
+    final <bridge> def apply(v1: Object): Object = {
+      TestArray$$anonfun$reverse_spec_Boolean1$1$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> private[this] val TestArray_this_arrA1$3: Array[Boolean] = _;
+    def <init>($outer: TestArray, TestArray_this_arrA1$3: Array[Boolean]): anonymous class anonfun$reverse_spec_Boolean1$1$1 = {
+      TestArray$$anonfun$reverse_spec_Boolean1$1$1.this.TestArray_this_arrA1$3 = TestArray_this_arrA1$3;
+      TestArray$$anonfun$reverse_spec_Boolean1$1$1.super.<init>();
+      ()
+    }
+  };
+  @SerialVersionUID(0) final <synthetic> class TestArray$$anonfun$reverse_spec_Generic1$1$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(i: Int): Unit = TestArray$$anonfun$reverse_spec_Generic1$1$1.this.apply$mcVI$sp(i);
+    <specialized> def apply$mcVI$sp(i: Int): Unit = {
+      val j: Int = runtime.this.ScalaRunTime.array_length(TestArray$$anonfun$reverse_spec_Generic1$1$1.this.$outer.TestArray$$arrA).-(i).-(1);
+      val temp: Object = runtime.this.ScalaRunTime.array_apply(TestArray$$anonfun$reverse_spec_Generic1$1$1.this.$outer.TestArray$$arrA, j);
+      runtime.this.ScalaRunTime.array_update(TestArray$$anonfun$reverse_spec_Generic1$1$1.this.$outer.TestArray$$arrA, j, runtime.this.ScalaRunTime.array_apply(TestArray$$anonfun$reverse_spec_Generic1$1$1.this.$outer.TestArray$$arrA, i));
+      runtime.this.ScalaRunTime.array_update(TestArray$$anonfun$reverse_spec_Generic1$1$1.this.$outer.TestArray$$arrA, i, temp)
+    };
+    <synthetic> <paramaccessor> private[this] val $outer: TestArray = _;
+    final <bridge> def apply(v1: Object): Object = {
+      TestArray$$anonfun$reverse_spec_Generic1$1$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    def <init>($outer: TestArray): anonymous class anonfun$reverse_spec_Generic1$1$1 = {
+      if ($outer.eq(null))
+        throw new NullPointerException()
+      else
+        TestArray$$anonfun$reverse_spec_Generic1$1$1.this.$outer = $outer;
+      TestArray$$anonfun$reverse_spec_Generic1$1$1.super.<init>();
+      ()
+    }
+  }
+}

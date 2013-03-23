@@ -12,25 +12,4 @@ class TestArray2Reverse[T](implicit classTag: ClassTag[T]) {
          arrB(1) = temp
       }
    }
-
-   def copy = {
-      specialized[T] {
-         arrB(0) = arr(0)
-         arrB(1) = arr(1)
-      }
-   }
-
-   def size = {
-      specialized[T] {
-         arr.size
-      }
-   }
-   
-   def copy2 = {
-      val arrB = this.arrB
-      specialized[T] {
-         arr(0) = arrB(0)
-         arr(1) = arrB(1)
-      }
-   }
 }
