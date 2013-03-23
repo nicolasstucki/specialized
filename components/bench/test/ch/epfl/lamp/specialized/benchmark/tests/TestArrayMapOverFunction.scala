@@ -2,6 +2,7 @@ package ch.epfl.lamp.specialized.benchmark.tests
 
 import scala.util.control.Exception
 import scala.reflect.ClassTag
+import ch.epfl.lamp.specialized._
 
 class TestArrayMapOverFunction[T](val size: Int)(val func: T => T)(implicit mf: ClassTag[T]) extends TestApi {
    val arr = new Array[T](size)
@@ -20,6 +21,14 @@ class TestArrayMapOverFunction[T](val size: Int)(val func: T => T)(implicit mf: 
          arr(i) = func(arr(i))
       }
       // } 
+   }
+
+   def testSpecializedBlock = {
+      specialized[T] {
+         for (i <- 1 until arr.length) {
+            arr(i) = func(arr(i))
+         }
+      }
    }
 
    def testUnrolled = {

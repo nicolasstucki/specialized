@@ -2,6 +2,7 @@ package ch.epfl.lamp.specialized.benchmark.tests
 
 import scala.util.control.Exception
 import scala.reflect.ClassTag
+import ch.epfl.lamp.specialized._
 
 class BenchmarkArrayReverse[T](val size: Int)(implicit classTag: ClassTag[T]) extends TestApi {
    val arr = new Array[T](size)
@@ -18,6 +19,16 @@ class BenchmarkArrayReverse[T](val size: Int)(implicit classTag: ClassTag[T]) ex
          arr(i) = temp
       }
       // }
+   }
+
+   def testSpecializedBlock = {
+      specialized[T] {
+         for (i <- 0 until arr.length / 2) {
+            val temp = arr(arr.length - i - 1)
+            arr(arr.length - i - 1) = arr(i)
+            arr(i) = temp
+         }
+      }
    }
 
    def testUnrolled = {
@@ -69,5 +80,5 @@ class BenchmarkArrayReverse[T](val size: Int)(implicit classTag: ClassTag[T]) ex
          arr(arr.length - i - 1) = arr(i)
          arr(i) = temp
       }
-   } 
+   }
 }

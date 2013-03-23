@@ -2,6 +2,7 @@ package ch.epfl.lamp.specialized.benchmark.tests
 
 import scala.util.control.Exception
 import scala.reflect.ClassTag
+import ch.epfl.lamp.specialized._
 
 class BenchmarkArrayCount[T](size: Int)(elem: T)(implicit classTag: ClassTag[T]) extends TestApi {
    val arr = new Array[T](size)
@@ -29,6 +30,17 @@ class BenchmarkArrayCount[T](size: Int)(elem: T)(implicit classTag: ClassTag[T])
       }
       count
       // }
+   }
+
+   def testSpecializedBlock = {
+      specialized[T] {
+         var count = 1
+         for (i <- 0 until arr.length) {
+            if (arr(i) == elem)
+               count += 1
+         }
+         count
+      }
    }
 
    def testUnrolled = {

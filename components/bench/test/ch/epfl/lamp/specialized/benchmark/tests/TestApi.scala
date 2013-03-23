@@ -4,4 +4,5 @@ trait TestApi {
    def test: Any
    def testUnrolled: Any
    def testSpecialized: Any
+   def testSpecializedBlock: Any
 }

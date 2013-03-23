@@ -47,17 +47,19 @@ object `package` {
             // 1. specialized {...} is used and there is no type parameter with a ClassTag in scope 
             // 2. or there is more than one type parameter have manifests and therefore the type could not be inferred.
             // 3. The type parameter is not a type parameter of the enclosing context, examples: specialized[Int] {...}, specialized[Any] {...}, specialized[Array[Int]] {...}, specialized[T] {...}, ...   
-            c.warning(classTag.tree.pos, "Specify type parameter using: specialized[T] {...}, T must be a type parameter of the enclosing context and it must have a ClassTag." +
+            c.error(classTag.tree.pos, "Specify type parameter using: specialized[T] {...}, T must be a type parameter of the enclosing context and it must have a ClassTag." +
                " Type patameter must be on top level, example: if you want to specialize an Array[T] use specialize[T] {...}.")
             return expr_f
          }
       }
 
+      // TODO: Check for uses of 'var' inside that are defined outside 
+
       // RETRIEVE DEVINITIONS AND USES OF TERMS THAT HAVE T IN THE TYPE
       val DefDef(_, encMethName, _, _, _, _) = c.enclosingMethod
       val mapping = getTemsMapping(c)(expr_f, typeOf_T)
 
-      // COMPILES SPECIFIC VARIANTS INTO ONE TREE
+      // COMPILE SPECIFIC VARIANTS INTO ONE TREE
       val specMethodNameGeneric = c.fresh(newTermName(f"${encMethName}_spec_Generic"))
       val specMethodNamesAndTypes: Map[Object, (TermName, Type)] = Map(
          Int -> (c.fresh(newTermName(f"${encMethName}_spec_Int")), typeOf[Int]),
@@ -80,7 +82,7 @@ object `package` {
       }
 
       // RETURN THE NEW TREE
-//      c.warning(classTag.tree.pos, "newExpr = " + show(newExpr))
+//       c.warning(classTag.tree.pos, "newExpr = " + show(newExpr))
       newExpr // newExpr
    }
 
@@ -91,9 +93,11 @@ object `package` {
       val valdefInside = scala.collection.mutable.Set.empty[String]
       val defdefInside = scala.collection.mutable.Set.empty[String]
 
+      def typeHasT(tree: Tree): Boolean = tree.tpe != null && tree.tpe.widen.exists(_ == typeOf_T)
+
       object traverser extends Traverser {
          override def traverse(tree: Tree) = tree match {
-            case select @ Select(term, name) if select.tpe != null && select.tpe.widen.exists(_ == typeOf_T) =>
+            case select @ Select(term, name) if typeHasT(select) =>
                select.tpe.widen match {
                   case _: TypeRef =>
                      val strRep = select.toString
@@ -105,12 +109,13 @@ object `package` {
             case valDef @ ValDef(mod, name, tpt, rhs) =>
                valdefInside += name.toString
                super.traverse(tree)
-            case ident @ Ident(name) if ident.tpe != null && ident.tpe.widen.exists(_ == typeOf_T) =>
+            case ident @ Ident(name) if typeHasT(ident) =>
                val strRep = name.toString
                if (!fieldsMapping.contains(strRep))
                   fieldsMapping += (strRep -> (strRep, ident.tpe.widen, ident))
-            case defdef @ DefDef(mods, name, tparams, _, tpt, _) if tpt.tpe != null && tpt.tpe.widen.exists(_ == typeOf_T) =>
+            case defdef @ DefDef(mods, name, tparams, vparamss, tpt, _) if typeHasT(tpt) =>
                defdefInside += name.toString
+               // TODO: don't let Select(term, name) take names from parameters of this definition
                super.traverse(tree)
             case _ => super.traverse(tree)
          }
@@ -145,6 +150,7 @@ object `package` {
          case Function(vparams, body) =>
             val newVparams = vparams map { case ValDef(mods, name, tpt, rhs) => ValDef(mods, name, tranformTypeTree(c)(tpt, typeOf_T, typeOf_Spec), specializedBody(rhs)) }
             Function(newVparams, specializedBody(body))
+         case Assign(lhs, rhs)            => Assign(specializedBody(lhs), specializedBody(rhs))
          case If(cond, thenp, elsep)      => If(specializedBody(cond), specializedBody(thenp), specializedBody(elsep))
          case Block(trees, last)          => Block(trees map (specializedBody(_)), specializedBody(last))
          case Apply(func, params)         => Apply(specializedBody(func), params map (specializedBody(_)))
@@ -156,10 +162,10 @@ object `package` {
          case ths: This                   => ths
          case EmptyTree                   => EmptyTree
 
-         case _                           => c.warning(body.tree.pos, "TODO: add case in createSpecializedMethod: " + showRaw(tree)); tree
+         case _                           => c.warning(body.tree.pos, "TODO: add case in createSpecializedMethod to handle: " + showRaw(tree)); tree
       }
 
-      val Block(DefDef(mods, _, tparams, _, tpt, rhs) :: Nil, _) = reify { def spec() = {} }.tree
+      val Block(DefDef(mods, _, tparams, _, _, _) :: Nil, _) = reify { def spec() = {} }.tree
 
       val newBody = specializedBody(body.tree).substituteTypes(List(typeOf_T.typeSymbol), List(typeOf_Spec))
 
@@ -194,20 +200,20 @@ object `package` {
                }).toList))
       }
 
-      val callIntSpec = createSpecCaller(specMethodNamesAndTypes(Int))
-      val callDoubleSpec = createSpecCaller(specMethodNamesAndTypes(Double))
-      val callBooleanSpec = createSpecCaller(specMethodNamesAndTypes(Boolean))
-      val callGenSpec = c.Expr(Apply(Ident(specMethodNameGeneric), Nil))
+      val callIntMethod = createSpecCaller(specMethodNamesAndTypes(Int))
+      val callDoubleMethod = createSpecCaller(specMethodNamesAndTypes(Double))
+      val callBooleanMethod = createSpecCaller(specMethodNamesAndTypes(Boolean))
+      val callGenericMethod = c.Expr(Apply(Ident(specMethodNameGeneric), Nil))
 
       val callersBlock = reify {
          if (classTag.splice == manifest[Int]) {
-            callIntSpec.splice
+            callIntMethod.splice
          } else if (classTag.splice == manifest[Double]) {
-            callDoubleSpec.splice
+            callDoubleMethod.splice
          } else if (classTag.splice == manifest[Boolean]) {
-            callBooleanSpec.splice
+            callBooleanMethod.splice
          } else {
-            callGenSpec.splice
+            callGenericMethod.splice
          }
       }
 
