@@ -82,8 +82,8 @@ object `package` {
       }
 
       // RETURN THE NEW TREE
-//       c.warning(classTag.tree.pos, "newExpr = " + show(newExpr))
-      newExpr // newExpr
+      // c.warning(classTag.tree.pos, "newExpr = " + show(newExpr))
+      newExpr
    }
 
    private def getTemsMapping[T](c: Context)(expr: c.Expr[Any], typeOf_T: c.Type): Map[String, (String, c.Type, c.Tree)] = {
@@ -96,28 +96,46 @@ object `package` {
       def typeHasT(tree: Tree): Boolean = tree.tpe != null && tree.tpe.widen.exists(_ == typeOf_T)
 
       object traverser extends Traverser {
-         override def traverse(tree: Tree) = tree match {
-            case select @ Select(term, name) if typeHasT(select) =>
-               select.tpe.widen match {
-                  case _: TypeRef =>
-                     val strRep = select.toString
-                     if (!fieldsMapping.contains(strRep))
-                        fieldsMapping += (strRep -> (c.fresh(newTermName(strRep.toString.replace(".", "_"))).toString, select.tpe.widen, select))
-                     super.traverse(tree)
-                  case _ => super.traverse(tree)
-               }
-            case valDef @ ValDef(mod, name, tpt, rhs) =>
-               valdefInside += name.toString
-               super.traverse(tree)
-            case ident @ Ident(name) if typeHasT(ident) =>
-               val strRep = name.toString
-               if (!fieldsMapping.contains(strRep))
-                  fieldsMapping += (strRep -> (strRep, ident.tpe.widen, ident))
-            case defdef @ DefDef(mods, name, tparams, vparamss, tpt, _) if typeHasT(tpt) =>
-               defdefInside += name.toString
-               // TODO: don't let Select(term, name) take names from parameters of this definition
-               super.traverse(tree)
-            case _ => super.traverse(tree)
+         var valDefsInScope = Set.empty[String]
+
+         override def traverse(tree: Tree) = {
+            
+            val oldValDefsInScope = valDefsInScope
+            
+            tree match {
+               case select @ Select(This(termName), name) if typeHasT(select) =>
+                  
+                  select.tpe.widen match {
+                     case _: TypeRef =>
+                        val strRep = select.toString
+                        if (!fieldsMapping.contains(strRep))
+                           fieldsMapping += (strRep -> (c.fresh(newTermName(strRep.toString.replace(".", "_"))).toString, select.tpe.widen, select))
+                     case _ => 
+                  }
+               case select @ Select(Ident(termName), name) if typeHasT(select) && !valDefsInScope(termName.toString) =>
+                  select.tpe.widen match {
+                     case _: TypeRef =>
+                        val strRep = select.toString
+                        if (!fieldsMapping.contains(strRep))
+                           fieldsMapping += (strRep -> (c.fresh(newTermName(strRep)).toString, select.tpe.widen, select))
+                     case _ =>
+                  }
+               case valDef @ ValDef(mod, name, tpt, rhs) =>
+                  valdefInside += name.toString
+                  valDefsInScope = valDefsInScope + name.toString
+               case ident @ Ident(name) if typeHasT(ident) =>
+                  val strRep = name.toString
+                  if (!fieldsMapping.contains(strRep))
+                     fieldsMapping += (strRep -> (strRep, ident.tpe.widen, ident))
+               case defdef @ DefDef(mods, name, tparams, vparamss, tpt, _) if typeHasT(tpt) =>
+                  defdefInside += name.toString
+                  valDefsInScope = valDefsInScope ++ (vparamss flatMap (_ map { case ValDef(_, name, _, _) => name.toString }))
+               case _ =>
+            }
+            
+            super.traverse(tree)
+            
+            valDefsInScope = oldValDefsInScope
          }
       }
 

@@ -12,13 +12,11 @@ class BenchmarkArrayReverse[T](val size: Int)(implicit classTag: ClassTag[T]) ex
     * Tests get and update operations of an array
     */
    def test = {
-      //specialized[T] {
       for (i <- 0 until arr.length / 2) {
          val temp = arr(arr.length - i - 1)
          arr(arr.length - i - 1) = arr(i)
          arr(i) = temp
       }
-      // }
    }
 
    def testSpecializedBlock = {

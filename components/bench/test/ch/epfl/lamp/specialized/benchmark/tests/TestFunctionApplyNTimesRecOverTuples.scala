@@ -5,31 +5,28 @@ import scala.reflect.ClassTag
 import scala.annotation.tailrec
 import ch.epfl.lamp.specialized._
 
-class TestFunctionApplyNTimesRecOverTuples[T](val times: Int)(val init: (T, T), val func: T => T)(implicit mf: ClassTag[T]) extends TestApi {
+class TestFunctionApplyNTimesRecOverTuples[T](val times: Int)(val init: (T, T), val func: T => T)(implicit classTag: ClassTag[T]) extends TestApi {
 
    def test = {
-      //specialized[T] {
       @tailrec def rec(n: Int, last: (T, T)): (T, T) = {
          if (n == 0) last
          else rec(n - 1, (func(last._1), func(last._2)))
       }
       rec(times, init)
-      // } 
    }
 
-   def testSpecializedBlock = {
-      // TODO: Check this 
-//      specialized[T] {
-//         @tailrec def rec(n: Int, last: (T, T)): (T, T) = {
-//            if (n == 0) last
-//            else rec(n - 1, (func(last._1), func(last._2)))
-//         }
-//         rec(times, init)
-//      }
+   def testSpecializedBlock = {    
+      specialized[T] {
+         @tailrec def rec(n: Int, last: (T, T)): (T, T) = {
+            if (n == 0) last
+            else rec(n - 1, (func(last._1), func(last._2)))
+         }
+         rec(times, init)
+      }
    }
 
    def testUnrolled = {
-      (if (mf == manifest[Boolean]) {
+      (if (classTag == manifest[Boolean]) {
          val spec_init = init.asInstanceOf[(Boolean, Boolean)]
          val spec_func = func.asInstanceOf[Function1[Boolean, Boolean]]
          @tailrec def rec(n: Int, last: (Boolean, Boolean)): (Boolean, Boolean) = {
@@ -37,7 +34,7 @@ class TestFunctionApplyNTimesRecOverTuples[T](val times: Int)(val init: (T, T), 
             else rec(n - 1, (spec_func(last._1), spec_func(last._2)))
          }
          rec(times, spec_init)
-      } else if (mf == manifest[Double]) {
+      } else if (classTag == manifest[Double]) {
          val spec_init = init.asInstanceOf[(Double, Double)]
          val spec_func = func.asInstanceOf[Function1[Double, Double]]
          @tailrec def rec(n: Int, last: (Double, Double)): (Double, Double) = {
@@ -45,7 +42,7 @@ class TestFunctionApplyNTimesRecOverTuples[T](val times: Int)(val init: (T, T), 
             else rec(n - 1, (spec_func(last._1), spec_func(last._2)))
          }
          rec(times, spec_init)
-      } else if (mf == manifest[Int]) {
+      } else if (classTag == manifest[Int]) {
          val spec_init = init.asInstanceOf[(Int, Int)]
          val spec_func = func.asInstanceOf[Function1[Int, Int]]
          @tailrec def rec(n: Int, last: (Int, Int)): (Int, Int) = {
@@ -63,11 +60,11 @@ class TestFunctionApplyNTimesRecOverTuples[T](val times: Int)(val init: (T, T), 
    }
 
    def testSpecialized = {
-      (if (mf == manifest[Boolean]) {
+      (if (classTag == manifest[Boolean]) {
          spec[Boolean](init.asInstanceOf[(Boolean, Boolean)], func.asInstanceOf[Function1[Boolean, Boolean]])
-      } else if (mf == manifest[Double]) {
+      } else if (classTag == manifest[Double]) {
          spec[Double](init.asInstanceOf[(Double, Double)], func.asInstanceOf[Function1[Double, Double]])
-      } else if (mf == manifest[Int]) {
+      } else if (classTag == manifest[Int]) {
          spec[Int](init.asInstanceOf[(Int, Int)], func.asInstanceOf[Function1[Int, Int]])
       } else {
          spec[T](init, func)

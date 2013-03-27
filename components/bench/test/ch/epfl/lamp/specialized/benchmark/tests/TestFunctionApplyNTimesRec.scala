@@ -8,13 +8,11 @@ import ch.epfl.lamp.specialized._
 class TestFunctionApplyNTimesRec[T](val times: Int)(val init: T, val func: T => T)(implicit mf: ClassTag[T]) extends TestApi {
 
    def test = {
-      //specialized[T] {
       @tailrec def rec(n: Int, last: T): T = {
          if (n == 0) last
          else rec(n - 1, func(last))
       }
       rec(times, init)
-      // } 
    }
 
    def testSpecializedBlock = {

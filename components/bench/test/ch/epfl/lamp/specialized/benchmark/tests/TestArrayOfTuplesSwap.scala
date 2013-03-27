@@ -1,9 +1,9 @@
 package ch.epfl.lamp.specialized.benchmark.tests
 
-import scala.util.control.Exception
+import scala.reflect.ClassTag
 import ch.epfl.lamp.specialized._
 
-class TestArrayOfTuplesSwap[T](val size: Int)(implicit mf: Manifest[T]) extends TestApi {
+class TestArrayOfTuplesSwap[T](val size: Int)(implicit mf: ClassTag[T]) extends TestApi {
    val arr = new Array[(T, T)](size)
    // Fill array with non null values
    for (i <- 0 until size) arr(i) = if (mf == manifest[Boolean]) {
@@ -20,20 +20,17 @@ class TestArrayOfTuplesSwap[T](val size: Int)(implicit mf: Manifest[T]) extends 
     * and tests swap operation of tuples
     */
    def test = {
-      //specialized[T] { 
       for (i <- 0 until arr.length) {
          arr(i) = arr(i).swap
       }
-      // } 
    }
 
    def testSpecializedBlock = {
-      // TODO: Check this
-//      specialized[T] {
-//         for (i <- 0 until arr.length) {
-//            arr(i) = arr(i).swap
-//         }
-//      }
+      specialized[T] {
+         for (i <- 0 until arr.length) {
+            arr(i) = arr(i).swap
+         }
+      }
    }
 
    def testUnrolled = {

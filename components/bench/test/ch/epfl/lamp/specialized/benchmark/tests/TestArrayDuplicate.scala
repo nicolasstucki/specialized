@@ -4,24 +4,22 @@ import scala.util.control.Exception
 import scala.reflect.ClassTag
 import ch.epfl.lamp.specialized._
 
-class TestArrayDuplicate[T](val size: Int)(implicit mf: ClassTag[T]) extends TestApi {
+class TestArrayDuplicate[T](val size: Int)(implicit classTag: ClassTag[T]) extends TestApi {
    val arr = new Array[T](size)
-   for (i <- 0 until size) arr(i) = if (mf == manifest[Boolean]) {
+   for (i <- 0 until size) arr(i) = if (classTag == manifest[Boolean]) {
       (true).asInstanceOf[T]
-   } else if (mf == manifest[Double]) {
+   } else if (classTag == manifest[Double]) {
       (54.3d).asInstanceOf[T]
-   } else if (mf == manifest[Int]) {
+   } else if (classTag == manifest[Int]) {
       (53).asInstanceOf[T]
    } else { (new { def g = "h" }).asInstanceOf[T] }
 
    def test: Array[T] = {
-      //specialized[T] {
       val arr2 = new Array[T](size)
       for (i <- 0 until size) {
          arr2(i) = arr(i)
       }
       return arr2
-      // } 
    }
 
    def testSpecializedBlock: Array[T] = {
@@ -35,14 +33,14 @@ class TestArrayDuplicate[T](val size: Int)(implicit mf: ClassTag[T]) extends Tes
    }
 
    def testUnrolled: Array[T] = {
-      (if (mf == manifest[Boolean]) {
+      (if (classTag == manifest[Boolean]) {
          val spec_arr: Array[Boolean] = arr.asInstanceOf[Array[Boolean]]
          val arr2 = new Array[Boolean](size)
          for (i <- 0 until size) {
             arr2(i) = spec_arr(i)
          }
          return arr2.asInstanceOf[Array[T]]
-      } else if (mf == manifest[Double]) {
+      } else if (classTag == manifest[Double]) {
          val spec_arr: Array[Double] = arr.asInstanceOf[Array[Double]]
          val arr2 = new Array[Double](size)
          //         for (i <- 0 until size) {
@@ -54,7 +52,7 @@ class TestArrayDuplicate[T](val size: Int)(implicit mf: ClassTag[T]) extends Tes
             i += 1
          }
          return arr2.asInstanceOf[Array[T]]
-      } else if (mf == manifest[Int]) {
+      } else if (classTag == manifest[Int]) {
          val spec_arr: Array[Int] = arr.asInstanceOf[Array[Int]]
          val arr2 = new Array[Int](size)
          for (i <- 0 until size) {
@@ -72,11 +70,11 @@ class TestArrayDuplicate[T](val size: Int)(implicit mf: ClassTag[T]) extends Tes
 
    def testSpecialized = {
 
-      (if (mf == manifest[Boolean]) {
+      (if (classTag == manifest[Boolean]) {
          spec[Boolean](arr.asInstanceOf[Array[Boolean]])
-      } else if (mf == manifest[Double]) {
+      } else if (classTag == manifest[Double]) {
          spec[Double](arr.asInstanceOf[Array[Double]])
-      } else if (mf == manifest[Int]) {
+      } else if (classTag == manifest[Int]) {
          spec[Int](arr.asInstanceOf[Array[Int]])
       } else {
          spec[T](arr)

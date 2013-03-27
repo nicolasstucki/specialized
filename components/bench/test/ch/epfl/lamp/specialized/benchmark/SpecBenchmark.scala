@@ -55,41 +55,41 @@ object RangeBenchmark
       }
    }
 
-   for (n <- Seq(200000, 500000, 1000000, 2000000)) {
-      //      bench(Gen.single("TestArrayReverse[Int]")(n).map(new BenchmarkArrayReverse[Int](_)))
-      //      bench(Gen.single("BenchmarkArrayReverse[Double]")(n).map(new BenchmarkArrayReverse[Double](_)))
-      //      bench(Gen.single("TestArrayReverse[Boolean]")(n).map(new BenchmarkArrayReverse[Boolean](_)))
-      //      bench(Gen.single("TestArrayReverse[Any]")(n).map(new BenchmarkArrayReverse[Any](_)))
+   for (n <- Seq(30000 /*200000, 500000, 1000000, 2000000*/ )) {
+      bench(Gen.single("TestArrayReverse[Int]")(n).map(new BenchmarkArrayReverse[Int](_)))
+      bench(Gen.single("BenchmarkArrayReverse[Double]")(n).map(new BenchmarkArrayReverse[Double](_)))
+      bench(Gen.single("TestArrayReverse[Boolean]")(n).map(new BenchmarkArrayReverse[Boolean](_)))
+      bench(Gen.single("TestArrayReverse[Any]")(n).map(new BenchmarkArrayReverse[Any](_)))
 
-      //      bench(Gen.single("TestArrayDuplicate[Int]")(n).map(new TestArrayDuplicate[Int](_)))
-      //      bench(Gen.single("TestArrayDuplicate[Double]")(n).map(new TestArrayDuplicate[Double](_)))
-      //      bench(Gen.single("TestArrayDuplicate[Boolean]")(n).map(new TestArrayDuplicate[Boolean](_)))
-      //      bench(Gen.single("TestArrayDuplicate[Any]")(n).map(new TestArrayDuplicate[Any](_)))
+      bench(Gen.single("TestArrayDuplicate[Int]")(n).map(new TestArrayDuplicate[Int](_)))
+      bench(Gen.single("TestArrayDuplicate[Double]")(n).map(new TestArrayDuplicate[Double](_)))
+      bench(Gen.single("TestArrayDuplicate[Boolean]")(n).map(new TestArrayDuplicate[Boolean](_)))
+      bench(Gen.single("TestArrayDuplicate[Any]")(n).map(new TestArrayDuplicate[Any](_)))
 
       bench(Gen.single("TestFunctionApplyNTimesRec[Int]")(n).map(new TestFunctionApplyNTimesRec[Int](_)(7, (x: Int) => x * 5)))
-      //      bench(Gen.single("TestFunctionApplyNTimesRec[Double]")(n).map(new TestFunctionApplyNTimesRec[Double](_)(2.3, (x: Double) => x * 2.3d)))
-      //      bench(Gen.single("TestFunctionApplyNTimesRec[Boolean]")(n).map(new TestFunctionApplyNTimesRec[Boolean](_)(false, (x: Boolean) => !x)))
-      //      bench(Gen.single("TestFunctionApplyNTimesRec[Any]")(n).map(new TestFunctionApplyNTimesRec[Any](_)("f", (x: Any) => x)))
+      bench(Gen.single("TestFunctionApplyNTimesRec[Double]")(n).map(new TestFunctionApplyNTimesRec[Double](_)(2.3, (x: Double) => x * 2.3d)))
+      bench(Gen.single("TestFunctionApplyNTimesRec[Boolean]")(n).map(new TestFunctionApplyNTimesRec[Boolean](_)(false, (x: Boolean) => !x)))
+      bench(Gen.single("TestFunctionApplyNTimesRec[Any]")(n).map(new TestFunctionApplyNTimesRec[Any](_)("f", (x: Any) => x)))
 
-      //      bench(Gen.single("TestArrayMapOverFunction[Int]")(n).map(new TestArrayMapOverFunction[Int](_)((x: Int) => x)))
-      //      bench(Gen.single("TestArrayMapOverFunction[Double]")(n).map(new TestArrayMapOverFunction[Double](_)((x: Double) => x)))
-      //      bench(Gen.single("TestArrayMapOverFunction[Boolean]")(n).map(new TestArrayMapOverFunction[Boolean](_)((x: Boolean) => x)))
-      //      bench(Gen.single("TestArrayMapOverFunction[Any]")(n).map(new TestArrayMapOverFunction[Any](_)((x: Any) => x)))
+      bench(Gen.single("TestFunction2ApplyNTimesRec[Int]")(n).map(new TestFunction2ApplyNTimesRec[Int](_)(0, 1, (x: Int, y: Int) => x + y)))
+      bench(Gen.single("TestFunction2ApplyNTimesRec[Double]")(n).map(new TestFunction2ApplyNTimesRec[Double](_)(0.0, 1.0, (x: Double, y: Double) => x + y)))
+      bench(Gen.single("TestFunction2ApplyNTimesRec[Boolean]")(n).map(new TestFunction2ApplyNTimesRec[Boolean](_)(false, true, (x: Boolean, y: Boolean) => x && y)))
+      bench(Gen.single("TestFunction2ApplyNTimesRec[Any]")(n).map(new TestFunction2ApplyNTimesRec[Any](_)("f", "g", (x: Any, y: Any) => x)))
 
-      //      bench(Gen.single("TestFunctionApplyNTimesRecOverTuples[Int]")(n).map(new TestFunctionApplyNTimesRecOverTuples[Int](_)((7, 4), (x: Int) => x * 5)))
-      //      bench(Gen.single("TestFunctionApplyNTimesRecOverTuples[Double]")(n).map(new TestFunctionApplyNTimesRecOverTuples[Double](_)((2.3, 3.5), (x: Double) => x * 2.3d)))
-      //      bench(Gen.single("TestFunctionApplyNTimesRecOverTuples[Boolean]")(n).map(new TestFunctionApplyNTimesRecOverTuples[Boolean](_)((false, true), (x: Boolean) => !x)))
-      //      bench(Gen.single("TestFunctionApplyNTimesRecOverTuples[Any]")(n).map(new TestFunctionApplyNTimesRecOverTuples[Any](_)(("f", BigInt("3")), (x: Any) => x.hashCode)))
+      bench(Gen.single("TestArrayMapOverFunction[Int]")(n).map(new TestArrayMapOverFunction[Int](_)((x: Int) => x)))
+      bench(Gen.single("TestArrayMapOverFunction[Double]")(n).map(new TestArrayMapOverFunction[Double](_)((x: Double) => x)))
+      bench(Gen.single("TestArrayMapOverFunction[Boolean]")(n).map(new TestArrayMapOverFunction[Boolean](_)((x: Boolean) => x)))
+      bench(Gen.single("TestArrayMapOverFunction[Any]")(n).map(new TestArrayMapOverFunction[Any](_)((x: Any) => x)))
 
-      //      bench(Gen.single("TestArrayCount[Int]")(n).map(new TestArrayCount[Int](_)(1)))
-      //      bench(Gen.single("TestArrayCount[Double]")(n).map(new TestArrayCount[Double](_)(2.0)))
-      //      bench(Gen.single("TestArrayCount[Boolean]")(n).map(new TestArrayCount[Boolean](_)(false)))
-      //      bench(Gen.single("TestArrayCount[Any]")(n).map(new TestArrayCount[Any](_)("2")))
+      bench(Gen.single("TestFunctionApplyNTimesRecOverTuples[Int]")(n).map(new TestFunctionApplyNTimesRecOverTuples[Int](_)((7, 4), (x: Int) => x * 5)))
+      bench(Gen.single("TestFunctionApplyNTimesRecOverTuples[Double]")(n).map(new TestFunctionApplyNTimesRecOverTuples[Double](_)((2.3, 3.5), (x: Double) => x * 2.3d)))
+      bench(Gen.single("TestFunctionApplyNTimesRecOverTuples[Boolean]")(n).map(new TestFunctionApplyNTimesRecOverTuples[Boolean](_)((false, true), (x: Boolean) => !x)))
+      bench(Gen.single("TestFunctionApplyNTimesRecOverTuples[Any]")(n).map(new TestFunctionApplyNTimesRecOverTuples[Any](_)(("f", BigInt("3")), (x: Any) => x.hashCode)))
 
-      //      bench(Gen.single("TestArrayOfTuplesSwap[Int]")(n).map(new TestArrayOfTuplesSwap[Int](_)))
-      //      bench(Gen.single("TestArrayOfTuplesSwap[Double]")(n).map(new TestArrayOfTuplesSwap[Double](_)))
-      //      bench(Gen.single("TestArrayOfTuplesSwap[Boolean]")(n).map(new TestArrayOfTuplesSwap[Boolean](_)))
-      //      bench(Gen.single("TestArrayOfTuplesSwap[Any]")(n).map(new TestArrayOfTuplesSwap[Any](_)))
+      bench(Gen.single("TestArrayOfTuplesSwap[Int]")(n).map(new TestArrayOfTuplesSwap[Int](_)))
+      bench(Gen.single("TestArrayOfTuplesSwap[Double]")(n).map(new TestArrayOfTuplesSwap[Double](_)))
+      bench(Gen.single("TestArrayOfTuplesSwap[Boolean]")(n).map(new TestArrayOfTuplesSwap[Boolean](_)))
+      bench(Gen.single("TestArrayOfTuplesSwap[Any]")(n).map(new TestArrayOfTuplesSwap[Any](_)))
    }
 
    def bench(test: Gen[TestApi]): Unit = {
@@ -99,7 +99,7 @@ object RangeBenchmark
       val samples = 1
       val minWarmupRuns = 1000
 
-      for ((flagtype, flags) <- Seq(interpFlags, c1Flags, c2Flags)) {
+      for ((flagtype, flags) <- Seq(interpFlags /*, c1Flags, c2Flags*/ )) {
 
          // The four measures are needed for the formating of the reporter
          measure method "%s".format(flagtype) in {
