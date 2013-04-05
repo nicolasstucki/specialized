@@ -53,13 +53,13 @@ object `package` {
          }
       }
 
-      // TODO: Check for uses of 'var' inside that are defined outside 
-
       // RETRIEVE DEVINITIONS AND USES OF TERMS THAT HAVE T IN THE TYPE
-      val DefDef(_, encMethName, _, _, _, _) = c.enclosingMethod
       val mapping = getTemsMapping(c)(expr_f, typeOf_T)
 
+      // TODO: Check for uses of 'var' inside that are defined outside 
+
       // COMPILE SPECIFIC VARIANTS INTO ONE TREE
+      val DefDef(_, encMethName, _, _, _, _) = c.enclosingMethod
       val specMethodNameGeneric = c.fresh(newTermName(f"${encMethName}_spec_Generic"))
       val specMethodNamesAndTypes: Map[Object, (TermName, Type)] = Map(
          Int -> (c.fresh(newTermName(f"${encMethName}_spec_Int")), typeOf[Int]),
@@ -86,7 +86,16 @@ object `package` {
       newExpr
    }
 
-   private def getTemsMapping[T](c: Context)(expr: c.Expr[Any], typeOf_T: c.Type): Map[String, (String, c.Type, c.Tree)] = {
+   /**
+    * Mapping that contains all information needed about the all the arguments that will be needed for the specialized methods.
+    * The keys of the mapping contain the original names of the argument. Each is mapped into a 3-tuple that contains
+    * the new name (or the same as the key if renaming is unnecesary), the widen type of the argument and the reference to the argument itself.
+    * @param c: context of the macro
+    * @param expr: the body of the specialized expression.
+    * @param typeOf_T: the type being specialized.
+    * @return the mapping of all arguments needed for specialization
+    */
+   @inline private def getTemsMapping[T](c: Context)(expr: c.Expr[Any], typeOf_T: c.Type): Map[String, (String, c.Type, c.Tree)] = {
       import c.universe._
 
       val fieldsMapping = scala.collection.mutable.Map.empty[String, (String, Type, Tree)]
@@ -99,18 +108,17 @@ object `package` {
          var valDefsInScope = Set.empty[String]
 
          override def traverse(tree: Tree) = {
-            
+
             val oldValDefsInScope = valDefsInScope
-            
+
             tree match {
                case select @ Select(This(termName), name) if typeHasT(select) =>
-                  
                   select.tpe.widen match {
                      case _: TypeRef =>
                         val strRep = select.toString
                         if (!fieldsMapping.contains(strRep))
                            fieldsMapping += (strRep -> (c.fresh(newTermName(strRep.toString.replace(".", "_"))).toString, select.tpe.widen, select))
-                     case _ => 
+                     case _ =>
                   }
                case select @ Select(Ident(termName), name) if typeHasT(select) && !valDefsInScope(termName.toString) =>
                   select.tpe.widen match {
@@ -132,21 +140,30 @@ object `package` {
                   valDefsInScope = valDefsInScope ++ (vparamss flatMap (_ map { case ValDef(_, name, _, _) => name.toString }))
                case _ =>
             }
-            
+
             super.traverse(tree)
-            
+
             valDefsInScope = oldValDefsInScope
          }
       }
 
       traverser.traverse(expr.tree)
 
-      fieldsMapping --= valdefInside
+      fieldsMapping --= valdefInside // TODO: Check if this is still needed (after the addition of valDefsInScope)
       fieldsMapping --= defdefInside
 
       fieldsMapping.toMap
    }
 
+   // TODO: Fill documentation
+   /**
+    * @param c
+    * @param typeOf_T
+    * @param body
+    * @param methodNameAndType
+    * @param mapping
+    * @return
+    */
    private def createSpecializedMethod[T](c: Context)(typeOf_T: c.Type, body: c.Expr[Any], methodNameAndType: (c.TermName, c.Type), mapping: Map[String, (String, c.Type, c.Tree)]): c.Expr[Any] = {
       import c.universe._
       val (methodName, typeOf_Spec) = methodNameAndType
@@ -198,12 +215,35 @@ object `package` {
       c.Expr[Any](DefDef(mods, methodName, tparams, vparamss, TypeTree(), c.resetAllAttrs(newBody)))
    }
 
-   private def createGenericMethod[T](c: Context)(methodName: c.universe.TermName, body: c.Expr[Any]): c.Expr[Any] = {
+   /**
+    * Creates the method that will be called in case that the type parameter is not specialized.
+    * Note that no parameters are defined because everything can be retrieved from the environment.
+    * @param c: context of the macro
+    * @param methodName: name of the method
+    * @param body: body of the method (same as body of the specialized block)
+    * @return a function definition wrapper of the generic version of the code
+    */
+   @inline private def createGenericMethod[T](c: Context)(methodName: c.universe.TermName, body: c.Expr[Any]): c.Expr[Any] = {
       import c.universe._
       c.Expr[Any](DefDef(Modifiers(), methodName, List(), List(List()), TypeTree(), c.resetAllAttrs(body.tree)))
    }
 
-   private def createSpecCallers[T](c: Context)(classTag: c.Expr[ClassTag[T]], typeOf_T: c.Type, typeOf_f: c.Type, mapping: Map[String, (String, c.Type, c.Tree)], specMethodNamesAndTypes: Map[Object, (c.TermName, c.Type)], specMethodNameGeneric: c.Name) = {
+   /**
+    * Creates the calls to the specialized function by calling the different versions of the method depending on the classTag
+    * if (classTag == manifest[Int]) callIntMethod(...)
+    * else if (classTag == manifest[Double]) callDoubleMethod(...)
+    * else if (classTag == manifest[Boolean]) callBooleanMethod(...)
+    * else callGenericMethod(...)
+    * @param c: context of the macro
+    * @param classTag: expression that represents the classTag
+    * @param typeOf_T: The type being specialized
+    * @param typeOf_f: The return type of the block being specialized.
+    * @param mapping: represents the arguments, where the keys are the names of the arguments and the mapping contains a 3-tuple with the actual type in position ._2 and the actual tree representing the reference to that argument in position ._3.
+    * @param specMethodNamesAndTypes: A mapping from (Int,Boolean,...) to a 2-tuple that has the name of the method in the position ._1.
+    * @param specMethodNameGeneric: Name of the fall-back method that gets executed for any non specialized type parameter.
+    * @return expression containing the all the different callers
+    */
+   @inline private def createSpecCallers[T](c: Context)(classTag: c.Expr[ClassTag[T]], typeOf_T: c.Type, typeOf_f: c.Type, mapping: Map[String, (String, c.Type, c.Tree)], specMethodNamesAndTypes: Map[Object, (c.TermName, c.Type)], specMethodNameGeneric: c.Name) = {
       import c.universe._
 
       def createSpecCaller(nameAndType: (Name, Type)) = {
@@ -238,14 +278,36 @@ object `package` {
       castExpr(c)(callersBlock, typeOf_f)
    }
 
-   private def castExpr(c: Context)(expr: c.Expr[Any], tpe: c.Type): c.Expr[Any] = c.Expr[Any](castTree(c)(expr.tree, tpe))
+   /**
+    * Cast a c.Expr to a given type using isInstanceOf[].
+    * @param c: The context of the macro.
+    * @param expr: The expression to be casted.
+    * @param tpe: Type of the casting.
+    * @return the expression casted to tpe.
+    */
+   @inline private def castExpr(c: Context)(expr: c.Expr[Any], tpe: c.Type): c.Expr[Any] = c.Expr[Any](castTree(c)(expr.tree, tpe))
 
-   private def castTree(c: Context)(tree: c.Tree, tpe: c.Type): c.Tree = {
+   /**
+    * Cast a c.Tree to a given type using isInstanceOf[].
+    * @param c: The context of the macro.
+    * @param tree: The tree to be casted.
+    * @param tpe: Type of the casting.
+    * @return the tree casted to tpe.
+    */
+   @inline private def castTree(c: Context)(tree: c.Tree, tpe: c.Type): c.Tree = {
       import c.universe._
       TypeApply(Select(tree, newTermName("asInstanceOf")), List(TypeTree().setType(tpe)))
    }
 
-   private def tranformTypeTree(c: Context)(typeTree: c.Tree, typeOf_T: c.Type, typeOf_Spec: c.Type): c.Tree = {
+   /**
+    *
+    * @param c
+    * @param typeTree
+    * @param typeOf_T
+    * @param typeOf_Spec
+    * @return
+    */
+   @inline private def tranformTypeTree(c: Context)(typeTree: c.Tree, typeOf_T: c.Type, typeOf_Spec: c.Type): c.Tree = {
       import c.universe._
       TypeTree().setType(typeTree.tpe.widen.substituteTypes(List(typeOf_T.typeSymbol), List(typeOf_Spec)))
    }
