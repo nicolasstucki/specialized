@@ -15,6 +15,6 @@ package <empty> {
       C.super.<init>();
       ()
     };
-    def m(): <error> = ch.epfl.lamp.specialized.`package`.specialized[T](scala.Unit)()
+    def m(): <error> = ch.epfl.lamp.specialized.`package`.specialized[T](0)()
   }
 }

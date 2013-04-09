@@ -5,7 +5,7 @@ class C[T,U] {
    
    def m() = {
       specialized[Nothing] {
-         Unit
+         0
       }
    }
 }

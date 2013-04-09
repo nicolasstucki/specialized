@@ -6,7 +6,7 @@ class C[T: ClassTag, U: ClassTag] {
 
    def m() = {
       specialized {
-         Unit
+         0
       }
    }
 }
