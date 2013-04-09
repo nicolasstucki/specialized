@@ -11,17 +11,17 @@ package <empty> {
       ()
     };
     def swapTuple: (T, T) = {
+      def swapTuple_spec_Generic1(): (T, T) = TestTuplesSwap.this.tup.swap;
       def swapTuple_spec_Int1(TestTuplesSwap_this_tup1: (Int, Int)): (Int, Int) = TestTuplesSwap_this_tup1.swap;
       def swapTuple_spec_Double1(TestTuplesSwap_this_tup1: (Double, Double)): (Double, Double) = TestTuplesSwap_this_tup1.swap;
       def swapTuple_spec_Boolean1(TestTuplesSwap_this_tup1: (Boolean, Boolean)): (Boolean, Boolean) = TestTuplesSwap_this_tup1.swap;
-      def swapTuple_spec_Generic1(): (T, T) = TestTuplesSwap.this.tup.swap;
-      if (TestTuplesSwap.this.evidence$1.==(Predef.manifest[Int](ManifestFactory.Int)))
+      if (TestTuplesSwap.this.evidence$1.==(ManifestFactory.Int))
   swapTuple_spec_Int1(TestTuplesSwap.this.tup.asInstanceOf[(Int, Int)])
 else
-  if (TestTuplesSwap.this.evidence$1.==(Predef.manifest[Double](ManifestFactory.Double)))
+  if (TestTuplesSwap.this.evidence$1.==(ManifestFactory.Double))
     swapTuple_spec_Double1(TestTuplesSwap.this.tup.asInstanceOf[(Double, Double)])
   else
-    if (TestTuplesSwap.this.evidence$1.==(Predef.manifest[Boolean](ManifestFactory.Boolean)))
+    if (TestTuplesSwap.this.evidence$1.==(ManifestFactory.Boolean))
       swapTuple_spec_Boolean1(TestTuplesSwap.this.tup.asInstanceOf[(Boolean, Boolean)])
     else
       swapTuple_spec_Generic1().asInstanceOf[(T, T)]
@@ -35,20 +35,20 @@ package <empty> {
     <paramaccessor> private[this] val tup: Tuple2 = _;
     <stable> <accessor> <paramaccessor> def tup(): Tuple2 = TestTuplesSwap.this.tup;
     implicit <synthetic> <paramaccessor> private[this] val evidence$1: reflect.ClassTag = _;
-    def swapTuple(): Tuple2 = if (TestTuplesSwap.this.evidence$1.==(Predef.manifest(ManifestFactory.Int())))
+    def swapTuple(): Tuple2 = if (TestTuplesSwap.this.evidence$1.==(ManifestFactory.Int()))
       TestTuplesSwap.this.swapTuple_spec_Int1$1(TestTuplesSwap.this.tup())
     else
-      if (TestTuplesSwap.this.evidence$1.==(Predef.manifest(ManifestFactory.Double())))
+      if (TestTuplesSwap.this.evidence$1.==(ManifestFactory.Double()))
         TestTuplesSwap.this.swapTuple_spec_Double1$1(TestTuplesSwap.this.tup())
       else
-        if (TestTuplesSwap.this.evidence$1.==(Predef.manifest(ManifestFactory.Boolean())))
+        if (TestTuplesSwap.this.evidence$1.==(ManifestFactory.Boolean()))
           TestTuplesSwap.this.swapTuple_spec_Boolean1$1(TestTuplesSwap.this.tup())
         else
           TestTuplesSwap.this.swapTuple_spec_Generic1$1();
+    final private[this] def swapTuple_spec_Generic1$1(): Tuple2 = TestTuplesSwap.this.tup().swap();
     final private[this] def swapTuple_spec_Int1$1(TestTuplesSwap_this_tup1: Tuple2): Tuple2 = TestTuplesSwap_this_tup1.swap$mcII$sp();
     final private[this] def swapTuple_spec_Double1$1(TestTuplesSwap_this_tup1: Tuple2): Tuple2 = TestTuplesSwap_this_tup1.swap$mcDD$sp();
     final private[this] def swapTuple_spec_Boolean1$1(TestTuplesSwap_this_tup1: Tuple2): Tuple2 = TestTuplesSwap_this_tup1.swap$mcZZ$sp();
-    final private[this] def swapTuple_spec_Generic1$1(): Tuple2 = TestTuplesSwap.this.tup().swap();
     def <init>(tup: Tuple2, evidence$1: reflect.ClassTag): TestTuplesSwap = {
       TestTuplesSwap.this.tup = tup;
       TestTuplesSwap.this.evidence$1 = evidence$1;

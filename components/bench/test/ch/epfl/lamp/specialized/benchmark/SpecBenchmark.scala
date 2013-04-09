@@ -9,10 +9,15 @@ object RangeBenchmark
 
    // PerformanceTest defs
    // TODO: Not sure this is supposed to be transient, but it complains class is not serializable due to it
-   @transient lazy val executor = SeparateJvmsExecutor(
-      Executor.Warmer.Default(),
+//   @transient lazy val executor = SeparateJvmsExecutor(
+//      Executor.Warmer.Default(),
+//      Aggregator.complete(Aggregator.average),
+//      new Executor.Measurer.Default)
+   def executor = new org.scalameter.execution.LocalExecutor(
+         Executor.Warmer.Default(),
       Aggregator.complete(Aggregator.average),
       new Executor.Measurer.Default)
+   
    def persistor = Persistor.None
    def reporter = new LoggingReporter {
       var count = 0
@@ -55,7 +60,7 @@ object RangeBenchmark
       }
    }
 
-   for (n <- Seq(30000 /*200000, 500000, 1000000, 2000000*/ )) {
+   for (n <- Seq(500000 /*200000, 500000, 1000000, 2000000*/ )) {
       bench(Gen.single("TestArrayReverse[Int]")(n).map(new BenchmarkArrayReverse[Int](_)))
       bench(Gen.single("BenchmarkArrayReverse[Double]")(n).map(new BenchmarkArrayReverse[Double](_)))
       bench(Gen.single("TestArrayReverse[Boolean]")(n).map(new BenchmarkArrayReverse[Boolean](_)))
@@ -93,13 +98,14 @@ object RangeBenchmark
    }
 
    def bench(test: Gen[TestApi]): Unit = {
+      val debugFlags = "-XX:+PrintInlining -XX:-TieredCompilation"
       val interpFlags = ("int", "-Xint")
-      val c1Flags = ("c1 ", "-XX:+PrintInlining -XX:-TieredCompilation -XX:CompileThreshold=1 -client") // -XX:+PrintCompilation")
-      val c2Flags = ("c2 ", "-XX:+PrintInlining -XX:-TieredCompilation -XX:CompileThreshold=1 -server") // -XX:+PrintCompilation")
+      val c1Flags = ("c1 ", "-XX:-TieredCompilation -XX:CompileThreshold=1 -client") // -XX:+PrintCompilation")
+      val c2Flags = ("c2 ", "-XX:-TieredCompilation -XX:CompileThreshold=1 -server") // -XX:+PrintCompilation")
       val samples = 1
       val minWarmupRuns = 1000
 
-      for ((flagtype, flags) <- Seq(interpFlags /*, c1Flags, c2Flags*/ )) {
+      for ((flagtype, flags) <- Seq(interpFlags, c1Flags, c2Flags)) {
 
          // The four measures are needed for the formating of the reporter
          measure method "%s".format(flagtype) in {

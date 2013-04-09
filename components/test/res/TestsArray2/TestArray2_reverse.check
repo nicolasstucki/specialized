@@ -13,6 +13,11 @@ package <empty> {
     private[this] val arrB: Array[T] = TestArray2Reverse.this.classTag.newArray(scala.this.Predef.genericArrayOps[T](TestArray2Reverse.this.arr).size);
     <stable> <accessor> def arrB: Array[T] = TestArray2Reverse.this.arrB;
     def reverse: Unit = {
+      def reverse_spec_Generic1(): Unit = {
+        val temp: T = TestArray2Reverse.this.arr.apply(0);
+        TestArray2Reverse.this.arrB.update(0, TestArray2Reverse.this.arr.apply(1));
+        TestArray2Reverse.this.arrB.update(1, temp)
+      };
       def reverse_spec_Int1(TestArray2Reverse_this_arr1: Array[Int], TestArray2Reverse_this_arrB1: Array[Int]): Unit = {
         val temp: Int = TestArray2Reverse_this_arr1.apply(0);
         TestArray2Reverse_this_arrB1.update(0, TestArray2Reverse_this_arr1.apply(1));
@@ -28,18 +33,13 @@ package <empty> {
         TestArray2Reverse_this_arrB1.update(0, TestArray2Reverse_this_arr1.apply(1));
         TestArray2Reverse_this_arrB1.update(1, temp)
       };
-      def reverse_spec_Generic1(): Unit = {
-        val temp: T = TestArray2Reverse.this.arr.apply(0);
-        TestArray2Reverse.this.arrB.update(0, TestArray2Reverse.this.arr.apply(1));
-        TestArray2Reverse.this.arrB.update(1, temp)
-      };
-      if (TestArray2Reverse.this.classTag.==(Predef.manifest[Int](ManifestFactory.Int)))
+      if (TestArray2Reverse.this.classTag.==(ManifestFactory.Int))
   reverse_spec_Int1(TestArray2Reverse.this.arr.asInstanceOf[Array[Int]], TestArray2Reverse.this.arrB.asInstanceOf[Array[Int]])
 else
-  if (TestArray2Reverse.this.classTag.==(Predef.manifest[Double](ManifestFactory.Double)))
+  if (TestArray2Reverse.this.classTag.==(ManifestFactory.Double))
     reverse_spec_Double1(TestArray2Reverse.this.arr.asInstanceOf[Array[Double]], TestArray2Reverse.this.arrB.asInstanceOf[Array[Double]])
   else
-    if (TestArray2Reverse.this.classTag.==(Predef.manifest[Boolean](ManifestFactory.Boolean)))
+    if (TestArray2Reverse.this.classTag.==(ManifestFactory.Boolean))
       reverse_spec_Boolean1(TestArray2Reverse.this.arr.asInstanceOf[Array[Boolean]], TestArray2Reverse.this.arrB.asInstanceOf[Array[Boolean]])
     else
       reverse_spec_Generic1().asInstanceOf[Unit]
@@ -56,19 +56,19 @@ package <empty> {
     private[this] val arrB: Object = _;
     <stable> <accessor> def arrB(): Object = TestArray2Reverse.this.arrB;
     def reverse(): Unit = {
-      (if (TestArray2Reverse.this.classTag.==(Predef.manifest(ManifestFactory.Int())))
+      (if (TestArray2Reverse.this.classTag.==(ManifestFactory.Int()))
         {
           TestArray2Reverse.this.reverse_spec_Int1$1(TestArray2Reverse.this.arr().$asInstanceOf[Array[Int]](), TestArray2Reverse.this.arrB().$asInstanceOf[Array[Int]]());
           scala.runtime.BoxedUnit.UNIT
         }
       else
-        if (TestArray2Reverse.this.classTag.==(Predef.manifest(ManifestFactory.Double())))
+        if (TestArray2Reverse.this.classTag.==(ManifestFactory.Double()))
           {
             TestArray2Reverse.this.reverse_spec_Double1$1(TestArray2Reverse.this.arr().$asInstanceOf[Array[Double]](), TestArray2Reverse.this.arrB().$asInstanceOf[Array[Double]]());
             scala.runtime.BoxedUnit.UNIT
           }
         else
-          if (TestArray2Reverse.this.classTag.==(Predef.manifest(ManifestFactory.Boolean())))
+          if (TestArray2Reverse.this.classTag.==(ManifestFactory.Boolean()))
             {
               TestArray2Reverse.this.reverse_spec_Boolean1$1(TestArray2Reverse.this.arr().$asInstanceOf[Array[Boolean]](), TestArray2Reverse.this.arrB().$asInstanceOf[Array[Boolean]]());
               scala.runtime.BoxedUnit.UNIT
@@ -79,6 +79,11 @@ package <empty> {
               scala.runtime.BoxedUnit.UNIT
             }: runtime.BoxedUnit);
       ()
+    };
+    final private[this] def reverse_spec_Generic1$1(): Unit = {
+      val temp: Object = runtime.this.ScalaRunTime.array_apply(TestArray2Reverse.this.arr(), 0);
+      runtime.this.ScalaRunTime.array_update(TestArray2Reverse.this.arrB(), 0, runtime.this.ScalaRunTime.array_apply(TestArray2Reverse.this.arr(), 1));
+      runtime.this.ScalaRunTime.array_update(TestArray2Reverse.this.arrB(), 1, temp)
     };
     final private[this] def reverse_spec_Int1$1(TestArray2Reverse_this_arr1: Array[Int], TestArray2Reverse_this_arrB1: Array[Int]): Unit = {
       val temp: Int = TestArray2Reverse_this_arr1.apply(0);
@@ -94,11 +99,6 @@ package <empty> {
       val temp: Boolean = TestArray2Reverse_this_arr1.apply(0);
       TestArray2Reverse_this_arrB1.update(0, TestArray2Reverse_this_arr1.apply(1));
       TestArray2Reverse_this_arrB1.update(1, temp)
-    };
-    final private[this] def reverse_spec_Generic1$1(): Unit = {
-      val temp: Object = runtime.this.ScalaRunTime.array_apply(TestArray2Reverse.this.arr(), 0);
-      runtime.this.ScalaRunTime.array_update(TestArray2Reverse.this.arrB(), 0, runtime.this.ScalaRunTime.array_apply(TestArray2Reverse.this.arr(), 1));
-      runtime.this.ScalaRunTime.array_update(TestArray2Reverse.this.arrB(), 1, temp)
     };
     def <init>(implicit classTag: reflect.ClassTag): TestArray2Reverse = {
       TestArray2Reverse.this.classTag = classTag;

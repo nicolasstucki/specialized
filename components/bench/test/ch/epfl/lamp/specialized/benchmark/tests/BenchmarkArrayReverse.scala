@@ -30,21 +30,21 @@ class BenchmarkArrayReverse[T](val size: Int)(implicit classTag: ClassTag[T]) ex
    }
 
    def testUnrolled = {
-      if (classTag == manifest[Boolean]) {
+      if (classTag == implicitly[ClassTag[Boolean]]) {
          val spec_arr: Array[Boolean] = arr.asInstanceOf[Array[Boolean]]
          for (i <- 0 until spec_arr.length / 2) {
             val temp: Boolean = spec_arr(spec_arr.length - i - 1)
             spec_arr(spec_arr.length - i - 1) = spec_arr(i)
             spec_arr(i) = temp
          }
-      } else if (classTag == manifest[Int]) {
+      } else if (classTag == implicitly[ClassTag[Int]]) {
          val spec_arr: Array[Int] = arr.asInstanceOf[Array[Int]]
          for (i <- 0 until spec_arr.length / 2) {
             val temp: Int = spec_arr(spec_arr.length - i - 1)
             spec_arr(spec_arr.length - i - 1) = spec_arr(i)
             spec_arr(i) = temp
          }
-      } else if (classTag == manifest[Double]) {
+      } else if (classTag == implicitly[ClassTag[Double]]) {
          val spec_arr: Array[Double] = arr.asInstanceOf[Array[Double]]
          for (i <- 0 until spec_arr.length / 2) {
             val temp: Double = spec_arr(spec_arr.length - i - 1)
