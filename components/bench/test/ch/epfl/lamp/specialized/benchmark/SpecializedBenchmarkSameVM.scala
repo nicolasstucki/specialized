@@ -4,20 +4,15 @@ import ch.epfl.lamp.specialized.benchmark.tests._
 import org.scalameter.CurveData
 import org.scalameter.Parameters
 
-object RangeBenchmark
+object SpecializedBenchmarkSameVM
       extends PerformanceTest {
 
    // PerformanceTest defs
-   // TODO: Not sure this is supposed to be transient, but it complains class is not serializable due to it
-//   @transient lazy val executor = SeparateJvmsExecutor(
-//      Executor.Warmer.Default(),
-//      Aggregator.complete(Aggregator.average),
-//      new Executor.Measurer.Default)
    def executor = new org.scalameter.execution.LocalExecutor(
-         Executor.Warmer.Default(),
+      Executor.Warmer.Default(),
       Aggregator.complete(Aggregator.average),
       new Executor.Measurer.Default)
-   
+
    def persistor = Persistor.None
    def reporter = new LoggingReporter {
       var count = 0
@@ -98,14 +93,12 @@ object RangeBenchmark
    }
 
    def bench(test: Gen[TestApi]): Unit = {
-      val debugFlags = "-XX:+PrintInlining -XX:-TieredCompilation"
-      val interpFlags = ("int", "-Xint")
-      val c1Flags = ("c1 ", "-XX:-TieredCompilation -XX:CompileThreshold=1 -client") // -XX:+PrintCompilation")
-      val c2Flags = ("c2 ", "-XX:-TieredCompilation -XX:CompileThreshold=1 -server") // -XX:+PrintCompilation")
+      val debugFlags = "-XX:+PrintInlining "
+      val interpFlags = ("same", "-Xint")
       val samples = 1
       val minWarmupRuns = 1000
 
-      for ((flagtype, flags) <- Seq(interpFlags, c1Flags, c2Flags)) {
+      for ((flagtype, flags) <- Seq(interpFlags)) {
 
          // The four measures are needed for the formating of the reporter
          measure method "%s".format(flagtype) in {

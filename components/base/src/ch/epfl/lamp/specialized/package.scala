@@ -118,9 +118,7 @@ object `package` {
       }
 
       // RETRIEVE DEVINITIONS AND USES OF TERMS THAT HAVE T IN THE TYPE
-      val mapping = getTemsMapping(c)(expr_f, typeOf_T)
-
-      // TODO: Check for uses of 'var' inside that are defined outside 
+      val (mapping, vardefs) = getTemsMapping(c)(expr_f, typeOf_T)
 
       // COMPILE SPECIFIC VARIANTS INTO ONE TREE
       val DefDef(_, encMethName, _, _, _, _) = c.enclosingMethod
@@ -144,7 +142,7 @@ object `package` {
          typesList map (typesIntoNamesAndTypeTrees(_))
       }
 
-      val specMethods = SortedMap((specMethodNamesAndTypesList map { case (tpnme, name, specType) => tpnme -> createSpecializedMethod(c)(typeOf_T, expr_f, name, specType, mapping) }): _*)
+      val specMethods = SortedMap((specMethodNamesAndTypesList map { case (tpnme, name, specType) => tpnme -> createSpecializedMethod(c)(typeOf_T, expr_f, name, specType, mapping, vardefs) }): _*)
 
       val specMethodGeneric = createGenericMethod(c)(specMethodNameGeneric, expr_f)
 
@@ -153,7 +151,7 @@ object `package` {
       val newExpr = c.Expr(Block(specMethodGeneric :: specMethods.values.toList, specCallers))
 
       // RETURN THE NEW TREE
-      //            c.warning(classTag.tree.pos, "newExpr = " + show(newExpr))
+//            c.warning(classTag.tree.pos, "newExpr = " + show(newExpr))
       newExpr
    }
 
@@ -166,16 +164,17 @@ object `package` {
     * @param typeOf_T: the type being specialized.
     * @return the mapping of all arguments needed for specialization
     */
-   @inline private def getTemsMapping[T](c: Context)(expr: c.Expr[Any], typeOf_T: c.Type): SortedMap[String, (String, c.Type, c.Tree)] = {
+   @inline private def getTemsMapping[T](c: Context)(expr: c.Expr[Any], typeOf_T: c.Type): (SortedMap[String, (String, c.Type, c.Tree)], SortedMap[String, c.Type]) = {
       import c.universe._
 
       val fieldsMapping = scala.collection.mutable.Map.empty[String, (String, Type, Tree)]
       val valdefInside = scala.collection.mutable.Set.empty[String]
+      val vardefs = scala.collection.mutable.Map.empty[String, Type]
       val defdefInside = scala.collection.mutable.Set.empty[String]
 
       def typeHasT(tree: Tree): Boolean = tree.tpe != null && tree.tpe.widen.exists(_ == typeOf_T)
 
-      object traverser extends Traverser {
+      object bodyTraverser extends Traverser {
          var valDefsInScope = Set.empty[String]
 
          override def traverse(tree: Tree) = {
@@ -218,15 +217,36 @@ object `package` {
          }
       }
 
-      traverser.traverse(expr.tree)
+      object enclosingMethodTraverser extends Traverser {
+         override def traverse(tree: Tree) = {
+            tree match {
+               case valDef @ ValDef(mod, name, tpt, rhs) if mod.hasFlag(Flag.MUTABLE) && !valdefInside(name.toString) => vardefs += (name.toString -> tpt.duplicate.tpe.widen)
+               case _ => showRaw(tree)
+            }
 
-      fieldsMapping --= valdefInside // TODO: Check if this is still needed (after the addition of valDefsInScope)
+            super.traverse(tree)
+         }
+      }
+
+      bodyTraverser.traverse(expr.tree)
+
+      fieldsMapping --= valdefInside
       fieldsMapping --= defdefInside
 
-      SortedMap[String, (String, c.Type, c.Tree)](fieldsMapping.toList: _*)
+      enclosingMethodTraverser.traverse(c.enclosingMethod)
+      val ClassDef(_, _, _, Template(parents, self, body)) = c.enclosingClass
+      val vardefsInClass = body collect { case ValDef(mods, name, _, _) if mods.hasFlag(Flag.MUTABLE) => name.toString }
+
+      fieldsMapping --= vardefs.keys
+      fieldsMapping --= vardefsInClass
+
+      val immutableFieldsMapping = SortedMap[String, (String, c.Type, c.Tree)](fieldsMapping.toList: _*)
+      val immutableVardefs = SortedMap[String, Type](vardefs.toList: _*)
+
+      (immutableFieldsMapping, immutableVardefs)
    }
 
-   private def createSpecializedMethod[T](c: Context)(typeOf_T: c.Type, body: c.Expr[Any], methodName: c.TermName, typeOf_Spec: c.Type, mapping: SortedMap[String, (String, c.Type, c.Tree)]): c.Tree = {
+   private def createSpecializedMethod[T](c: Context)(typeOf_T: c.Type, body: c.Expr[Any], methodName: c.TermName, typeOf_Spec: c.Type, mapping: SortedMap[String, (String, c.Type, c.Tree)], vardefs: SortedMap[String, c.Type]): c.Tree = {
       import c.universe._
 
       def specializedBody(tree: Tree): Tree = tree match {
@@ -249,6 +269,7 @@ object `package` {
          //         case Match(selector, cases) =>
          //            val specializedCases = cases map { case CaseDef(pat, guard, body) => CaseDef(specializedBody(pat), specializedBody(guard), specializedBody(body)) }
          //            Match(specializedBody(selector), specializedCases)
+         //         case Assign(Ident(name), rhs) if vardefs.isDefinedAt(name.toString) => Assign(specializedBody(Ident(name)), castTree(c)(specializedBody(rhs), vardefs(name.toString)))
          case Assign(lhs, rhs)            => Assign(specializedBody(lhs), specializedBody(rhs))
          case If(cond, thenp, elsep)      => If(specializedBody(cond), specializedBody(thenp), specializedBody(elsep))
          case Block(trees, last)          => Block(trees map (specializedBody(_)), specializedBody(last))

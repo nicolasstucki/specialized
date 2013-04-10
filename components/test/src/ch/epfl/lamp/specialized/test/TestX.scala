@@ -5,10 +5,17 @@ import ch.epfl.lamp.specialized._
 
 // Class used for quick testing of new changes
 class TestX[T: ClassTag, U: ClassTag](val tup: (T, T), val v1: T) {
-
+   var c = v1
    def matchTest(v2: T) = {
+      var b = v1
       specialized[T](Specializable.Primitives) {
-         v1
+         var a = v1
+         a = tup._1
+         c = b
+         //         c = a
+         //         a = c
+         //         b = a
+         //         a = b
       }
       //      specialized {
       //         tup match {
