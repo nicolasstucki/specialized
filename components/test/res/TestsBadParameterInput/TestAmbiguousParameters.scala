@@ -5,7 +5,7 @@ import scala.reflect.ClassTag
 class C[T: ClassTag, U: ClassTag] {
 
    def m() = {
-      specialized {
+      specialized(Int, Double, Boolean) {
          0
       }
    }

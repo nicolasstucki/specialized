@@ -6,7 +6,7 @@ class TestArray2Reverse[T](implicit classTag: ClassTag[T]) {
    val arrB = new Array[T](arr.size)
 
    def reverse = {
-      specialized[T] {
+      specialized[T](Int, Double, Boolean) {
          val temp = arr(0)
          arrB(0) = arr(1)
          arrB(1) = temp

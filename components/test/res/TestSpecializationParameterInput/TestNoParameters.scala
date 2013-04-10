@@ -4,8 +4,14 @@ import scala.reflect.ClassTag
 
 class C[T: ClassTag] {
 
-   def m() = {
+   def m1() = {
       specialized[T]() {
+         println
+      }
+   }
+   
+   def m2() = {
+      specialized[T] {
          println
       }
    }

@@ -16,7 +16,7 @@ object `package` {
    private[this] implicit object SpecializableOrdering extends Ordering[Specializable] {
       def compare(a: Specializable, b: Specializable) = a.toString compare b.toString
    }
-   
+
    /**
     * Specialized block
     * @param expr_f: Code inside the specialized block
@@ -46,14 +46,13 @@ object `package` {
    /**
     * Macro implementation of specialized[T]{...}
     * @param c: Context
-    * @param types: Types to be specialized. If empty, default specialization is used (Int,Double,Boolean)
     * @param expr_f: Code inside the specialized block
     * @param classTag: ClassTag of the type being specialized
     * @param typetagT: Implicit WeakTypeTag of the type being specialized
     * @return: Code inside the specialized block with specialization
     */
    def impl_specialized_default_types[T](c: Context)(expr_f: c.Expr[Any])(classTag: c.Expr[ClassTag[T]])(implicit typetagT: c.WeakTypeTag[T]): c.Expr[Any] = {
-      impl_specialized[T](c)()(expr_f)(classTag)(typetagT)
+      impl_specialized_group[T](c)(c.universe.reify { Specializable.Primitives })(expr_f)(classTag)(typetagT)
    }
 
    /**
@@ -101,7 +100,7 @@ object `package` {
 
       val typesList = types.toList match {
          case list @ _ :: _ => list map (tpExpr => c eval c.Expr[Specializable](c resetAllAttrs tpExpr.tree))
-         case Nil           => List(Int, Double, Boolean)
+         case Nil           => List(Byte, Short, Int, Long, Char, Float, Double, Boolean, Unit)
       }
 
       // Check if T is a valid type parameter
@@ -167,7 +166,7 @@ object `package` {
     * @param typeOf_T: the type being specialized.
     * @return the mapping of all arguments needed for specialization
     */
-   @inline private def getTemsMapping[T](c: Context)(expr: c.Expr[Any], typeOf_T: c.Type): Map[String, (String, c.Type, c.Tree)] = {
+   @inline private def getTemsMapping[T](c: Context)(expr: c.Expr[Any], typeOf_T: c.Type): SortedMap[String, (String, c.Type, c.Tree)] = {
       import c.universe._
 
       val fieldsMapping = scala.collection.mutable.Map.empty[String, (String, Type, Tree)]
@@ -224,10 +223,10 @@ object `package` {
       fieldsMapping --= valdefInside // TODO: Check if this is still needed (after the addition of valDefsInScope)
       fieldsMapping --= defdefInside
 
-      fieldsMapping.toMap
+      SortedMap[String, (String, c.Type, c.Tree)](fieldsMapping.toList: _*)
    }
 
-   private def createSpecializedMethod[T](c: Context)(typeOf_T: c.Type, body: c.Expr[Any], methodName: c.TermName, typeOf_Spec: c.Type, mapping: Map[String, (String, c.Type, c.Tree)]): c.Tree = {
+   private def createSpecializedMethod[T](c: Context)(typeOf_T: c.Type, body: c.Expr[Any], methodName: c.TermName, typeOf_Spec: c.Type, mapping: SortedMap[String, (String, c.Type, c.Tree)]): c.Tree = {
       import c.universe._
 
       def specializedBody(tree: Tree): Tree = tree match {
@@ -308,7 +307,7 @@ object `package` {
     * @param specMethodNameGeneric: Name of the fall-back method that gets executed for any non specialized type parameter.
     * @return expression containing the all the different callers
     */
-   @inline private def createSpecCallers[T](c: Context)(classTag: c.Expr[ClassTag[T]], typeOf_T: c.Type, typeOf_f: c.Type, mapping: Map[String, (String, c.Type, c.Tree)], specMethodNamesAndTypesList: List[(Specializable, c.TermName, c.Type)], specMethodNameGeneric: c.Name) = {
+   @inline private def createSpecCallers[T](c: Context)(classTag: c.Expr[ClassTag[T]], typeOf_T: c.Type, typeOf_f: c.Type, mapping: SortedMap[String, (String, c.Type, c.Tree)], specMethodNamesAndTypesList: List[(Specializable, c.TermName, c.Type)], specMethodNameGeneric: c.Name) = {
       import c.universe._
 
       def createSpecCaller(name: Name, tpe: Type) = {
@@ -374,5 +373,4 @@ object `package` {
       TypeTree().setType(typeTree.tpe.widen.substituteTypes(List(typeOf_T.typeSymbol), List(typeOf_Spec)))
    }
 
-   
 }

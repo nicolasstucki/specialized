@@ -2,8 +2,8 @@ newSource1:8: error: ambiguous implicit values:
  both value evidence$2 in class C of type scala.reflect.ClassTag[U]
  and value evidence$1 in class C of type scala.reflect.ClassTag[T]
  match expected type scala.reflect.ClassTag[T]
-      specialized {
-                  ^
+      specialized(Int, Double, Boolean) {
+                                        ^
 [[syntax trees at end of                     typer]] // newSource1
 package <empty> {
   import ch.epfl.lamp.specialized._;
@@ -15,6 +15,6 @@ package <empty> {
       C.super.<init>();
       ()
     };
-    def m(): <error> = ch.epfl.lamp.specialized.`package`.specialized[T](0)()
+    def m(): <error> = ch.epfl.lamp.specialized.`package`.specialized[T](scala.Int, scala.Double, scala.Boolean)(0)()
   }
 }

@@ -7,7 +7,7 @@ class TestArray2Reverse[T: ClassTag] {
 
    def copy = {
       val arrB = this.arrB
-      specialized[T] {
+      specialized[T](Int, Double, Boolean) {
          arr(0) = arrB(0)
          arr(1) = arrB(1)
       }

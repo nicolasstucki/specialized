@@ -8,21 +8,85 @@ package <empty> {
       C.super.<init>();
       ()
     };
-    def m(): Unit = {
-      def m_spec_Generic1(): Unit = scala.this.Predef.println();
-      def m_spec_Boolean1(): Unit = scala.this.Predef.println();
-      def m_spec_Double1(): Unit = scala.this.Predef.println();
-      def m_spec_Int1(): Unit = scala.this.Predef.println();
+    def m1(): Unit = {
+      def m1_spec_Generic1(): Unit = scala.this.Predef.println();
+      def m1_spec_Boolean1(): Unit = scala.this.Predef.println();
+      def m1_spec_Byte1(): Unit = scala.this.Predef.println();
+      def m1_spec_Char1(): Unit = scala.this.Predef.println();
+      def m1_spec_Double1(): Unit = scala.this.Predef.println();
+      def m1_spec_Float1(): Unit = scala.this.Predef.println();
+      def m1_spec_Int1(): Unit = scala.this.Predef.println();
+      def m1_spec_Long1(): Unit = scala.this.Predef.println();
+      def m1_spec_Short1(): Unit = scala.this.Predef.println();
+      def m1_spec_Unit1(): Unit = scala.this.Predef.println();
       if (C.this.evidence$1.==(ManifestFactory.Boolean))
-  m_spec_Boolean1()
+  m1_spec_Boolean1()
 else
-  if (C.this.evidence$1.==(ManifestFactory.Double))
-    m_spec_Double1()
+  if (C.this.evidence$1.==(ManifestFactory.Byte))
+    m1_spec_Byte1()
   else
-    if (C.this.evidence$1.==(ManifestFactory.Int))
-      m_spec_Int1()
+    if (C.this.evidence$1.==(ManifestFactory.Char))
+      m1_spec_Char1()
     else
-      m_spec_Generic1().asInstanceOf[Unit]
+      if (C.this.evidence$1.==(ManifestFactory.Double))
+        m1_spec_Double1()
+      else
+        if (C.this.evidence$1.==(ManifestFactory.Float))
+          m1_spec_Float1()
+        else
+          if (C.this.evidence$1.==(ManifestFactory.Int))
+            m1_spec_Int1()
+          else
+            if (C.this.evidence$1.==(ManifestFactory.Long))
+              m1_spec_Long1()
+            else
+              if (C.this.evidence$1.==(ManifestFactory.Short))
+                m1_spec_Short1()
+              else
+                if (C.this.evidence$1.==(ManifestFactory.Unit))
+                  m1_spec_Unit1()
+                else
+                  m1_spec_Generic1().asInstanceOf[Unit]
+    };
+    def m2(): Unit = {
+      def m2_spec_Generic1(): Unit = scala.this.Predef.println();
+      def m2_spec_Boolean1(): Unit = scala.this.Predef.println();
+      def m2_spec_Byte1(): Unit = scala.this.Predef.println();
+      def m2_spec_Char1(): Unit = scala.this.Predef.println();
+      def m2_spec_Double1(): Unit = scala.this.Predef.println();
+      def m2_spec_Float1(): Unit = scala.this.Predef.println();
+      def m2_spec_Int1(): Unit = scala.this.Predef.println();
+      def m2_spec_Long1(): Unit = scala.this.Predef.println();
+      def m2_spec_Short1(): Unit = scala.this.Predef.println();
+      def m2_spec_Unit1(): Unit = scala.this.Predef.println();
+      if (C.this.evidence$1.==(ManifestFactory.Boolean))
+  m2_spec_Boolean1()
+else
+  if (C.this.evidence$1.==(ManifestFactory.Byte))
+    m2_spec_Byte1()
+  else
+    if (C.this.evidence$1.==(ManifestFactory.Char))
+      m2_spec_Char1()
+    else
+      if (C.this.evidence$1.==(ManifestFactory.Double))
+        m2_spec_Double1()
+      else
+        if (C.this.evidence$1.==(ManifestFactory.Float))
+          m2_spec_Float1()
+        else
+          if (C.this.evidence$1.==(ManifestFactory.Int))
+            m2_spec_Int1()
+          else
+            if (C.this.evidence$1.==(ManifestFactory.Long))
+              m2_spec_Long1()
+            else
+              if (C.this.evidence$1.==(ManifestFactory.Short))
+                m2_spec_Short1()
+              else
+                if (C.this.evidence$1.==(ManifestFactory.Unit))
+                  m2_spec_Unit1()
+                else
+                  m2_spec_Generic1().asInstanceOf[Unit]
     }
   }
 }

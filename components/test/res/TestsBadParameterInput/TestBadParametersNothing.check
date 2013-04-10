@@ -1,6 +1,6 @@
 newSource1:7: error: Specify type parameter using: specialized[T] {...}, T must be a type parameter of the enclosing context and it must have a ClassTag. Type patameter must be on top level, example: if you want to specialize an Array[T] use specialize[T] {...}.
-      specialized[Nothing] {
-                           ^
+      specialized[Nothing](Int, Double, Boolean) {
+                                                 ^
 [[syntax trees at end of                     typer]] // newSource1
 package <empty> {
   import ch.epfl.lamp.specialized._;
@@ -9,6 +9,6 @@ package <empty> {
       C.super.<init>();
       ()
     };
-    def m(): <error> = ch.epfl.lamp.specialized.`package`.specialized[Nothing](0)(ClassTag.Nothing)
+    def m(): <error> = ch.epfl.lamp.specialized.`package`.specialized[Nothing](scala.Int, scala.Double, scala.Boolean)(0)(ClassTag.Nothing)
   }
 }
