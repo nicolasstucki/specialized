@@ -22,7 +22,7 @@ package <empty> {
           arrB.update(i, TestArray.this.arrA.apply(i));
           arrD.update(i, TestArray.this.arrA.apply(i))
         }));
-        def copy_spec_Int1(arrB: Array[Int], TestArray_this_arrA1: Array[Int], arrD: Array[Int]): Unit = scala.this.Predef.intWrapper(0).until(TestArray_this_arrA1.length).foreach[Unit](((i: Int) => {
+        def copy_spec_Boolean1(arrB: Array[Boolean], TestArray_this_arrA1: Array[Boolean], arrD: Array[Boolean]): Unit = scala.this.Predef.intWrapper(0).until(TestArray_this_arrA1.length).foreach[Unit](((i: Int) => {
           arrB.update(i, TestArray_this_arrA1.apply(i));
           arrD.update(i, TestArray_this_arrA1.apply(i))
         }));
@@ -30,18 +30,18 @@ package <empty> {
           arrB.update(i, TestArray_this_arrA1.apply(i));
           arrD.update(i, TestArray_this_arrA1.apply(i))
         }));
-        def copy_spec_Boolean1(arrB: Array[Boolean], TestArray_this_arrA1: Array[Boolean], arrD: Array[Boolean]): Unit = scala.this.Predef.intWrapper(0).until(TestArray_this_arrA1.length).foreach[Unit](((i: Int) => {
+        def copy_spec_Int1(arrB: Array[Int], TestArray_this_arrA1: Array[Int], arrD: Array[Int]): Unit = scala.this.Predef.intWrapper(0).until(TestArray_this_arrA1.length).foreach[Unit](((i: Int) => {
           arrB.update(i, TestArray_this_arrA1.apply(i));
           arrD.update(i, TestArray_this_arrA1.apply(i))
         }));
-        if (TestArray.this.classTag.==(ManifestFactory.Int))
-  copy_spec_Int1(arrB.asInstanceOf[Array[Int]], TestArray.this.arrA.asInstanceOf[Array[Int]], arrD.asInstanceOf[Array[Int]])
+        if (TestArray.this.classTag.==(ManifestFactory.Boolean))
+  copy_spec_Boolean1(arrB.asInstanceOf[Array[Boolean]], TestArray.this.arrA.asInstanceOf[Array[Boolean]], arrD.asInstanceOf[Array[Boolean]])
 else
   if (TestArray.this.classTag.==(ManifestFactory.Double))
     copy_spec_Double1(arrB.asInstanceOf[Array[Double]], TestArray.this.arrA.asInstanceOf[Array[Double]], arrD.asInstanceOf[Array[Double]])
   else
-    if (TestArray.this.classTag.==(ManifestFactory.Boolean))
-      copy_spec_Boolean1(arrB.asInstanceOf[Array[Boolean]], TestArray.this.arrA.asInstanceOf[Array[Boolean]], arrD.asInstanceOf[Array[Boolean]])
+    if (TestArray.this.classTag.==(ManifestFactory.Int))
+      copy_spec_Int1(arrB.asInstanceOf[Array[Int]], TestArray.this.arrA.asInstanceOf[Array[Int]], arrD.asInstanceOf[Array[Int]])
     else
       copy_spec_Generic1().asInstanceOf[Unit]
       }
@@ -64,9 +64,9 @@ package <empty> {
       val arrE: Object = TestArray.this.classTag.newArray(runtime.this.ScalaRunTime.array_length(TestArray.this.TestArray$$arrA));
       {
         {
-          (if (TestArray.this.classTag.==(ManifestFactory.Int()))
+          (if (TestArray.this.classTag.==(ManifestFactory.Boolean()))
             {
-              TestArray.this.copy_spec_Int1$1(arrB.$asInstanceOf[Array[Int]](), TestArray.this.TestArray$$arrA.$asInstanceOf[Array[Int]](), arrD.$asInstanceOf[Array[Int]]());
+              TestArray.this.copy_spec_Boolean1$1(arrB.$asInstanceOf[Array[Boolean]](), TestArray.this.TestArray$$arrA.$asInstanceOf[Array[Boolean]](), arrD.$asInstanceOf[Array[Boolean]]());
               scala.runtime.BoxedUnit.UNIT
             }
           else
@@ -76,9 +76,9 @@ package <empty> {
                 scala.runtime.BoxedUnit.UNIT
               }
             else
-              if (TestArray.this.classTag.==(ManifestFactory.Boolean()))
+              if (TestArray.this.classTag.==(ManifestFactory.Int()))
                 {
-                  TestArray.this.copy_spec_Boolean1$1(arrB.$asInstanceOf[Array[Boolean]](), TestArray.this.TestArray$$arrA.$asInstanceOf[Array[Boolean]](), arrD.$asInstanceOf[Array[Boolean]]());
+                  TestArray.this.copy_spec_Int1$1(arrB.$asInstanceOf[Array[Int]](), TestArray.this.TestArray$$arrA.$asInstanceOf[Array[Int]](), arrD.$asInstanceOf[Array[Int]]());
                   scala.runtime.BoxedUnit.UNIT
                 }
               else
@@ -93,14 +93,14 @@ package <empty> {
     final private[this] def copy_spec_Generic1$1(arrB$1: Object, arrD$1: Object): Unit = RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), runtime.this.ScalaRunTime.array_length(TestArray.this.TestArray$$arrA)).foreach$mVc$sp({
       (new anonymous class anonfun$copy_spec_Generic1$1$1(TestArray.this, arrB$1, arrD$1): Function1)
     });
-    final private[this] def copy_spec_Int1$1(arrB: Array[Int], TestArray_this_arrA1: Array[Int], arrD: Array[Int]): Unit = RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), TestArray_this_arrA1.length()).foreach$mVc$sp({
-      (new anonymous class anonfun$copy_spec_Int1$1$1(TestArray.this, arrB, TestArray_this_arrA1, arrD): Function1)
+    final private[this] def copy_spec_Boolean1$1(arrB: Array[Boolean], TestArray_this_arrA1: Array[Boolean], arrD: Array[Boolean]): Unit = RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), TestArray_this_arrA1.length()).foreach$mVc$sp({
+      (new anonymous class anonfun$copy_spec_Boolean1$1$1(TestArray.this, arrB, TestArray_this_arrA1, arrD): Function1)
     });
     final private[this] def copy_spec_Double1$1(arrB: Array[Double], TestArray_this_arrA1: Array[Double], arrD: Array[Double]): Unit = RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), TestArray_this_arrA1.length()).foreach$mVc$sp({
       (new anonymous class anonfun$copy_spec_Double1$1$1(TestArray.this, arrB, TestArray_this_arrA1, arrD): Function1)
     });
-    final private[this] def copy_spec_Boolean1$1(arrB: Array[Boolean], TestArray_this_arrA1: Array[Boolean], arrD: Array[Boolean]): Unit = RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), TestArray_this_arrA1.length()).foreach$mVc$sp({
-      (new anonymous class anonfun$copy_spec_Boolean1$1$1(TestArray.this, arrB, TestArray_this_arrA1, arrD): Function1)
+    final private[this] def copy_spec_Int1$1(arrB: Array[Int], TestArray_this_arrA1: Array[Int], arrD: Array[Int]): Unit = RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), TestArray_this_arrA1.length()).foreach$mVc$sp({
+      (new anonymous class anonfun$copy_spec_Int1$1$1(TestArray.this, arrB, TestArray_this_arrA1, arrD): Function1)
     });
     def <init>(arrA: Object, classTag: reflect.ClassTag): TestArray = {
       TestArray.this.TestArray$$arrA = arrA;
@@ -135,24 +135,24 @@ package <empty> {
       ()
     }
   };
-  @SerialVersionUID(0) final <synthetic> class TestArray$$anonfun$copy_spec_Int1$1$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
-    final def apply(i: Int): Unit = TestArray$$anonfun$copy_spec_Int1$1$1.this.apply$mcVI$sp(i);
+  @SerialVersionUID(0) final <synthetic> class TestArray$$anonfun$copy_spec_Boolean1$1$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(i: Int): Unit = TestArray$$anonfun$copy_spec_Boolean1$1$1.this.apply$mcVI$sp(i);
     <specialized> def apply$mcVI$sp(i: Int): Unit = {
-      TestArray$$anonfun$copy_spec_Int1$1$1.this.arrB$2.update(i, TestArray$$anonfun$copy_spec_Int1$1$1.this.TestArray_this_arrA1$1.apply(i));
-      TestArray$$anonfun$copy_spec_Int1$1$1.this.arrD$2.update(i, TestArray$$anonfun$copy_spec_Int1$1$1.this.TestArray_this_arrA1$1.apply(i))
+      TestArray$$anonfun$copy_spec_Boolean1$1$1.this.arrB$2.update(i, TestArray$$anonfun$copy_spec_Boolean1$1$1.this.TestArray_this_arrA1$1.apply(i));
+      TestArray$$anonfun$copy_spec_Boolean1$1$1.this.arrD$2.update(i, TestArray$$anonfun$copy_spec_Boolean1$1$1.this.TestArray_this_arrA1$1.apply(i))
     };
     final <bridge> def apply(v1: Object): Object = {
-      TestArray$$anonfun$copy_spec_Int1$1$1.this.apply(scala.Int.unbox(v1));
+      TestArray$$anonfun$copy_spec_Boolean1$1$1.this.apply(scala.Int.unbox(v1));
       scala.runtime.BoxedUnit.UNIT
     };
-    <synthetic> <paramaccessor> private[this] val arrB$2: Array[Int] = _;
-    <synthetic> <paramaccessor> private[this] val TestArray_this_arrA1$1: Array[Int] = _;
-    <synthetic> <paramaccessor> private[this] val arrD$2: Array[Int] = _;
-    def <init>($outer: TestArray, arrB$2: Array[Int], TestArray_this_arrA1$1: Array[Int], arrD$2: Array[Int]): anonymous class anonfun$copy_spec_Int1$1$1 = {
-      TestArray$$anonfun$copy_spec_Int1$1$1.this.arrB$2 = arrB$2;
-      TestArray$$anonfun$copy_spec_Int1$1$1.this.TestArray_this_arrA1$1 = TestArray_this_arrA1$1;
-      TestArray$$anonfun$copy_spec_Int1$1$1.this.arrD$2 = arrD$2;
-      TestArray$$anonfun$copy_spec_Int1$1$1.super.<init>();
+    <synthetic> <paramaccessor> private[this] val arrB$2: Array[Boolean] = _;
+    <synthetic> <paramaccessor> private[this] val TestArray_this_arrA1$1: Array[Boolean] = _;
+    <synthetic> <paramaccessor> private[this] val arrD$2: Array[Boolean] = _;
+    def <init>($outer: TestArray, arrB$2: Array[Boolean], TestArray_this_arrA1$1: Array[Boolean], arrD$2: Array[Boolean]): anonymous class anonfun$copy_spec_Boolean1$1$1 = {
+      TestArray$$anonfun$copy_spec_Boolean1$1$1.this.arrB$2 = arrB$2;
+      TestArray$$anonfun$copy_spec_Boolean1$1$1.this.TestArray_this_arrA1$1 = TestArray_this_arrA1$1;
+      TestArray$$anonfun$copy_spec_Boolean1$1$1.this.arrD$2 = arrD$2;
+      TestArray$$anonfun$copy_spec_Boolean1$1$1.super.<init>();
       ()
     }
   };
@@ -177,24 +177,24 @@ package <empty> {
       ()
     }
   };
-  @SerialVersionUID(0) final <synthetic> class TestArray$$anonfun$copy_spec_Boolean1$1$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
-    final def apply(i: Int): Unit = TestArray$$anonfun$copy_spec_Boolean1$1$1.this.apply$mcVI$sp(i);
+  @SerialVersionUID(0) final <synthetic> class TestArray$$anonfun$copy_spec_Int1$1$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(i: Int): Unit = TestArray$$anonfun$copy_spec_Int1$1$1.this.apply$mcVI$sp(i);
     <specialized> def apply$mcVI$sp(i: Int): Unit = {
-      TestArray$$anonfun$copy_spec_Boolean1$1$1.this.arrB$4.update(i, TestArray$$anonfun$copy_spec_Boolean1$1$1.this.TestArray_this_arrA1$3.apply(i));
-      TestArray$$anonfun$copy_spec_Boolean1$1$1.this.arrD$4.update(i, TestArray$$anonfun$copy_spec_Boolean1$1$1.this.TestArray_this_arrA1$3.apply(i))
+      TestArray$$anonfun$copy_spec_Int1$1$1.this.arrB$4.update(i, TestArray$$anonfun$copy_spec_Int1$1$1.this.TestArray_this_arrA1$3.apply(i));
+      TestArray$$anonfun$copy_spec_Int1$1$1.this.arrD$4.update(i, TestArray$$anonfun$copy_spec_Int1$1$1.this.TestArray_this_arrA1$3.apply(i))
     };
     final <bridge> def apply(v1: Object): Object = {
-      TestArray$$anonfun$copy_spec_Boolean1$1$1.this.apply(scala.Int.unbox(v1));
+      TestArray$$anonfun$copy_spec_Int1$1$1.this.apply(scala.Int.unbox(v1));
       scala.runtime.BoxedUnit.UNIT
     };
-    <synthetic> <paramaccessor> private[this] val arrB$4: Array[Boolean] = _;
-    <synthetic> <paramaccessor> private[this] val TestArray_this_arrA1$3: Array[Boolean] = _;
-    <synthetic> <paramaccessor> private[this] val arrD$4: Array[Boolean] = _;
-    def <init>($outer: TestArray, arrB$4: Array[Boolean], TestArray_this_arrA1$3: Array[Boolean], arrD$4: Array[Boolean]): anonymous class anonfun$copy_spec_Boolean1$1$1 = {
-      TestArray$$anonfun$copy_spec_Boolean1$1$1.this.arrB$4 = arrB$4;
-      TestArray$$anonfun$copy_spec_Boolean1$1$1.this.TestArray_this_arrA1$3 = TestArray_this_arrA1$3;
-      TestArray$$anonfun$copy_spec_Boolean1$1$1.this.arrD$4 = arrD$4;
-      TestArray$$anonfun$copy_spec_Boolean1$1$1.super.<init>();
+    <synthetic> <paramaccessor> private[this] val arrB$4: Array[Int] = _;
+    <synthetic> <paramaccessor> private[this] val TestArray_this_arrA1$3: Array[Int] = _;
+    <synthetic> <paramaccessor> private[this] val arrD$4: Array[Int] = _;
+    def <init>($outer: TestArray, arrB$4: Array[Int], TestArray_this_arrA1$3: Array[Int], arrD$4: Array[Int]): anonymous class anonfun$copy_spec_Int1$1$1 = {
+      TestArray$$anonfun$copy_spec_Int1$1$1.this.arrB$4 = arrB$4;
+      TestArray$$anonfun$copy_spec_Int1$1$1.this.TestArray_this_arrA1$3 = TestArray_this_arrA1$3;
+      TestArray$$anonfun$copy_spec_Int1$1$1.this.arrD$4 = arrD$4;
+      TestArray$$anonfun$copy_spec_Int1$1$1.super.<init>();
       ()
     }
   }

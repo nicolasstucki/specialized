@@ -1,15 +1,11 @@
 package ch.epfl.lamp.specialized
 
 import scala.language.experimental.macros
-import scala.reflect.AnyValManifest
 import scala.reflect.ClassTag
 import scala.reflect.macros.Context
-import scala.collection.mutable.MapBuilder
-import scala.AnyValCompanion
-import scala.reflect.internal.Flags
 import scala.Specializable._
-import sun.reflect.generics.scope.ClassScope
 import scala.reflect.ManifestFactory
+import scala.collection.SortedMap
 
 /**
  * @author Nicolas Stucki
@@ -17,6 +13,10 @@ import scala.reflect.ManifestFactory
  */
 object `package` {
 
+   private[this] implicit object SpecializableOrdering extends Ordering[Specializable] {
+      def compare(a: Specializable, b: Specializable) = a.toString compare b.toString
+   }
+   
    /**
     * Specialized block
     * @param expr_f: Code inside the specialized block
@@ -24,6 +24,15 @@ object `package` {
     * @return: Original return statement of the block
     */
    def specialized[T](expr_f: => Any)(implicit classTag: ClassTag[T]): Any = macro impl_specialized_default_types[T]
+
+   /**
+    * Specialized block
+    * @param specGroup: types that will be specialized
+    * @param expr_f: Code inside the specialized block
+    * @param classTag: Implicit ClassTag of the type being specialized
+    * @return: Original return statement of the block
+    */
+   def specialized[T](specGroup: SpecializedGroup)(expr_f: => Any)(implicit classTag: ClassTag[T]): Any = macro impl_specialized_group[T]
 
    /**
     * Specialized block
@@ -45,6 +54,32 @@ object `package` {
     */
    def impl_specialized_default_types[T](c: Context)(expr_f: c.Expr[Any])(classTag: c.Expr[ClassTag[T]])(implicit typetagT: c.WeakTypeTag[T]): c.Expr[Any] = {
       impl_specialized[T](c)()(expr_f)(classTag)(typetagT)
+   }
+
+   /**
+    * Macro implementation of specialized[T]{...}
+    * @param c: Context
+    * @param specGroupExpr: Types to be specialized. If empty, default specialization is used (Int,Double,Boolean)
+    * @param expr_f: Code inside the specialized block
+    * @param classTag: ClassTag of the type being specialized
+    * @param typetagT: Implicit WeakTypeTag of the type being specialized
+    * @return: Code inside the specialized block with specialization
+    */
+   def impl_specialized_group[T](c: Context)(specGroup: c.Expr[SpecializedGroup])(expr_f: c.Expr[Any])(classTag: c.Expr[ClassTag[T]])(implicit typetagT: c.WeakTypeTag[T]): c.Expr[Any] = {
+      import c.universe._
+      // This is a hack and should be changed
+      // Note that SpecializedGroup can be passed directly to @specialized(group)
+      val group = c eval c.Expr[SpecializedGroup](c resetAllAttrs specGroup.tree)
+      val specList = (group match {
+         case Primitives  => List(reify { Byte }, reify { Short }, reify { Int }, reify { Long }, reify { Char }, reify { Float }, reify { Double }, reify { Boolean }, reify { Unit })
+         case Everything  => List(reify { Byte }, reify { Short }, reify { Int }, reify { Long }, reify { Char }, reify { Float }, reify { Double }, reify { Boolean }, reify { Unit } /*, reify { AnyRef }*/ )
+         case Bits32AndUp => List(reify { Int }, reify { Long }, reify { Float }, reify { Double })
+         case Integral    => List(reify { Byte }, reify { Short }, reify { Int }, reify { Long }, reify { Char })
+         case AllNumeric  => List(reify { Byte }, reify { Short }, reify { Int }, reify { Long }, reify { Char }, reify { Float }, reify { Double })
+         case BestOfBreed => List(reify { Int }, reify { Double }, reify { Boolean }, reify { Unit } /*, reify { AnyRef }*/ )
+         case _           => Nil
+      })
+      impl_specialized[T](c)(specList: _*)(expr_f)(classTag)(typetagT)
    }
 
    /**
@@ -91,13 +126,9 @@ object `package` {
       // COMPILE SPECIFIC VARIANTS INTO ONE TREE
       val DefDef(_, encMethName, _, _, _, _) = c.enclosingMethod
       val specMethodNameGeneric = c.fresh(newTermName(f"${encMethName}_spec_Generic"))
-      //      val specMethodNamesAndTypes: Map[Object, (TermName, Type)] = Map(
-      //         Int -> (c.fresh(newTermName(f"${encMethName}_spec_Int")), typeOf[Int]),
-      //         Double -> (c.fresh(newTermName(f"${encMethName}_spec_Double")), typeOf[Double]),
-      //         Boolean -> (c.fresh(newTermName(f"${encMethName}_spec_Boolean")), typeOf[Boolean]))
 
       val specMethodNamesAndTypesList = {
-         val typeToTypeTree: Map[Specializable, Type] = Map(
+         val typeToTypeTree = SortedMap[Specializable, Type](
             Int -> typeOf[Int],
             Long -> typeOf[Long],
             Double -> typeOf[Double],
@@ -114,26 +145,13 @@ object `package` {
          typesList map (typesIntoNamesAndTypeTrees(_))
       }
 
-      val specMethods = Map((specMethodNamesAndTypesList map { case (tpnme, name, specType) => tpnme -> createSpecializedMethod(c)(typeOf_T, expr_f, name, specType, mapping) }): _*)
+      val specMethods = SortedMap((specMethodNamesAndTypesList map { case (tpnme, name, specType) => tpnme -> createSpecializedMethod(c)(typeOf_T, expr_f, name, specType, mapping) }): _*)
 
-      //      val specMethodInt = createSpecializedMethod(c)(typeOf_T, expr_f, specMethodNamesAndTypes(Int), mapping)
-      //      val specMethodDouble = createSpecializedMethod(c)(typeOf_T, expr_f, specMethodNamesAndTypes(Double), mapping)
-      //      val specMethodBoolean = createSpecializedMethod(c)(typeOf_T, expr_f, specMethodNamesAndTypes(Boolean), mapping)
       val specMethodGeneric = createGenericMethod(c)(specMethodNameGeneric, expr_f)
 
       val specCallers = createSpecCallers(c)(classTag, typeOf_T, typeOf_f, mapping, specMethodNamesAndTypesList, specMethodNameGeneric)
 
       val newExpr = c.Expr(Block(specMethodGeneric :: specMethods.values.toList, specCallers))
-      //      reify {
-      //         specMethods(Int).splice
-      //         specMethods(Double).splice
-      //         specMethods(Boolean).splice
-      //         //         specMethodInt.splice
-      //         //         specMethodDouble.splice
-      //         //         specMethodBoolean.splice
-      //         specMethodGeneric.splice
-      //         specCallers.splice
-      //      }
 
       // RETURN THE NEW TREE
       //            c.warning(classTag.tree.pos, "newExpr = " + show(newExpr))
@@ -209,15 +227,6 @@ object `package` {
       fieldsMapping.toMap
    }
 
-   // TODO: Fill documentation
-   /**
-    * @param c
-    * @param typeOf_T
-    * @param body
-    * @param methodNameAndType
-    * @param mapping
-    * @return
-    */
    private def createSpecializedMethod[T](c: Context)(typeOf_T: c.Type, body: c.Expr[Any], methodName: c.TermName, typeOf_Spec: c.Type, mapping: Map[String, (String, c.Type, c.Tree)]): c.Tree = {
       import c.universe._
 
@@ -313,10 +322,10 @@ object `package` {
                }).toList))
       }
 
-      val callMethods = Map((specMethodNamesAndTypesList map { case (tp, name, tpe) => tp -> createSpecCaller(name, tpe) }): _*)
+      val callMethods = SortedMap((specMethodNamesAndTypesList map { case (tp, name, tpe) => tp -> createSpecCaller(name, tpe) }): _*)
       val callGenericMethod = c.Expr(Apply(Ident(specMethodNameGeneric), Nil))
 
-      val manifestsExpr: Map[Specializable, c.Expr[Any]] = Map(
+      val manifestsExpr = SortedMap[Specializable, c.Expr[Any]](
          Int -> reify { ManifestFactory.Int },
          Long -> reify { ManifestFactory.Long },
          Double -> reify { ManifestFactory.Double },
@@ -328,17 +337,6 @@ object `package` {
          Unit -> reify { ManifestFactory.Unit })
 
       val callersBlock = callMethods.keys.foldRight[c.Expr[Any]](callGenericMethod)((tpe, expr) => reify { if (classTag.splice == manifestsExpr(tpe).splice) callMethods(tpe).splice else expr.splice })
-      //         reify {
-      //         if (classTag.splice == ManifestFactory.Int) {
-      //            callMethods(Int).splice
-      //         } else if (classTag.splice == ManifestFactory.Double) {
-      //            callMethods(Double).splice
-      //         } else if (classTag.splice == ManifestFactory.Boolean) {
-      //            callMethods(Boolean).splice
-      //         } else {
-      //            callGenericMethod.splice
-      //         }
-      //      }
 
       castTree(c)(callersBlock.tree, typeOf_f)
    }
@@ -365,7 +363,6 @@ object `package` {
    }
 
    /**
-    *
     * @param c
     * @param typeTree
     * @param typeOf_T
@@ -377,4 +374,5 @@ object `package` {
       TypeTree().setType(typeTree.tpe.widen.substituteTypes(List(typeOf_T.typeSymbol), List(typeOf_Spec)))
    }
 
+   
 }

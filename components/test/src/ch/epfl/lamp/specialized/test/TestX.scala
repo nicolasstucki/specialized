@@ -3,10 +3,11 @@ package ch.epfl.lamp.specialized.benchmark.tests
 import scala.reflect.ClassTag
 import ch.epfl.lamp.specialized._
 
+// Class used for quick testing new changes
 class TestX[T: ClassTag, U: ClassTag](val tup: (T, T), val v1: T) {
 
    def matchTest(v2: T) = {
-      specialized[T](Int) {
+      specialized[T](Specializable.Primitives) {
          v1
       }
       //      specialized {

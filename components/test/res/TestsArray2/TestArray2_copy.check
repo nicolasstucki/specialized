@@ -19,7 +19,7 @@ package <empty> {
           TestArray2Reverse.this.arr.update(0, arrB.apply(0));
           TestArray2Reverse.this.arr.update(1, arrB.apply(1))
         };
-        def copy_spec_Int1(TestArray2Reverse_this_arr1: Array[Int], arrB: Array[Int]): Unit = {
+        def copy_spec_Boolean1(TestArray2Reverse_this_arr1: Array[Boolean], arrB: Array[Boolean]): Unit = {
           TestArray2Reverse_this_arr1.update(0, arrB.apply(0));
           TestArray2Reverse_this_arr1.update(1, arrB.apply(1))
         };
@@ -27,18 +27,18 @@ package <empty> {
           TestArray2Reverse_this_arr1.update(0, arrB.apply(0));
           TestArray2Reverse_this_arr1.update(1, arrB.apply(1))
         };
-        def copy_spec_Boolean1(TestArray2Reverse_this_arr1: Array[Boolean], arrB: Array[Boolean]): Unit = {
+        def copy_spec_Int1(TestArray2Reverse_this_arr1: Array[Int], arrB: Array[Int]): Unit = {
           TestArray2Reverse_this_arr1.update(0, arrB.apply(0));
           TestArray2Reverse_this_arr1.update(1, arrB.apply(1))
         };
-        if (TestArray2Reverse.this.evidence$1.==(ManifestFactory.Int))
-  copy_spec_Int1(TestArray2Reverse.this.arr.asInstanceOf[Array[Int]], arrB.asInstanceOf[Array[Int]])
+        if (TestArray2Reverse.this.evidence$1.==(ManifestFactory.Boolean))
+  copy_spec_Boolean1(TestArray2Reverse.this.arr.asInstanceOf[Array[Boolean]], arrB.asInstanceOf[Array[Boolean]])
 else
   if (TestArray2Reverse.this.evidence$1.==(ManifestFactory.Double))
     copy_spec_Double1(TestArray2Reverse.this.arr.asInstanceOf[Array[Double]], arrB.asInstanceOf[Array[Double]])
   else
-    if (TestArray2Reverse.this.evidence$1.==(ManifestFactory.Boolean))
-      copy_spec_Boolean1(TestArray2Reverse.this.arr.asInstanceOf[Array[Boolean]], arrB.asInstanceOf[Array[Boolean]])
+    if (TestArray2Reverse.this.evidence$1.==(ManifestFactory.Int))
+      copy_spec_Int1(TestArray2Reverse.this.arr.asInstanceOf[Array[Int]], arrB.asInstanceOf[Array[Int]])
     else
       copy_spec_Generic1().asInstanceOf[Unit]
       }
@@ -58,9 +58,9 @@ package <empty> {
       val arrB: Object = this.arrB();
       {
         {
-          (if (TestArray2Reverse.this.evidence$1.==(ManifestFactory.Int()))
+          (if (TestArray2Reverse.this.evidence$1.==(ManifestFactory.Boolean()))
             {
-              TestArray2Reverse.this.copy_spec_Int1$1(TestArray2Reverse.this.arr().$asInstanceOf[Array[Int]](), arrB.$asInstanceOf[Array[Int]]());
+              TestArray2Reverse.this.copy_spec_Boolean1$1(TestArray2Reverse.this.arr().$asInstanceOf[Array[Boolean]](), arrB.$asInstanceOf[Array[Boolean]]());
               scala.runtime.BoxedUnit.UNIT
             }
           else
@@ -70,9 +70,9 @@ package <empty> {
                 scala.runtime.BoxedUnit.UNIT
               }
             else
-              if (TestArray2Reverse.this.evidence$1.==(ManifestFactory.Boolean()))
+              if (TestArray2Reverse.this.evidence$1.==(ManifestFactory.Int()))
                 {
-                  TestArray2Reverse.this.copy_spec_Boolean1$1(TestArray2Reverse.this.arr().$asInstanceOf[Array[Boolean]](), arrB.$asInstanceOf[Array[Boolean]]());
+                  TestArray2Reverse.this.copy_spec_Int1$1(TestArray2Reverse.this.arr().$asInstanceOf[Array[Int]](), arrB.$asInstanceOf[Array[Int]]());
                   scala.runtime.BoxedUnit.UNIT
                 }
               else
@@ -88,7 +88,7 @@ package <empty> {
       runtime.this.ScalaRunTime.array_update(TestArray2Reverse.this.arr(), 0, runtime.this.ScalaRunTime.array_apply(arrB$1, 0));
       runtime.this.ScalaRunTime.array_update(TestArray2Reverse.this.arr(), 1, runtime.this.ScalaRunTime.array_apply(arrB$1, 1))
     };
-    final private[this] def copy_spec_Int1$1(TestArray2Reverse_this_arr1: Array[Int], arrB: Array[Int]): Unit = {
+    final private[this] def copy_spec_Boolean1$1(TestArray2Reverse_this_arr1: Array[Boolean], arrB: Array[Boolean]): Unit = {
       TestArray2Reverse_this_arr1.update(0, arrB.apply(0));
       TestArray2Reverse_this_arr1.update(1, arrB.apply(1))
     };
@@ -96,7 +96,7 @@ package <empty> {
       TestArray2Reverse_this_arr1.update(0, arrB.apply(0));
       TestArray2Reverse_this_arr1.update(1, arrB.apply(1))
     };
-    final private[this] def copy_spec_Boolean1$1(TestArray2Reverse_this_arr1: Array[Boolean], arrB: Array[Boolean]): Unit = {
+    final private[this] def copy_spec_Int1$1(TestArray2Reverse_this_arr1: Array[Int], arrB: Array[Int]): Unit = {
       TestArray2Reverse_this_arr1.update(0, arrB.apply(0));
       TestArray2Reverse_this_arr1.update(1, arrB.apply(1))
     };

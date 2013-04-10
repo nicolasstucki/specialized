@@ -1,0 +1,188 @@
+[[syntax trees at end of                     typer]] // newSource1
+package <empty> {
+  import ch.epfl.lamp.specialized._;
+  import scala.reflect.ClassTag;
+  class C[T >: Nothing <: Any] extends scala.AnyRef {
+    implicit <synthetic> <paramaccessor> private[this] val evidence$1: scala.reflect.ClassTag[T] = _;
+    def <init>()(implicit evidence$1: scala.reflect.ClassTag[T]): C[T] = {
+      C.super.<init>();
+      ()
+    };
+    def mPrimitives(): Unit = {
+      def mPrimitives_spec_Generic1(): Unit = scala.this.Predef.println();
+      def mPrimitives_spec_Boolean1(): Unit = scala.this.Predef.println();
+      def mPrimitives_spec_Byte1(): Unit = scala.this.Predef.println();
+      def mPrimitives_spec_Char1(): Unit = scala.this.Predef.println();
+      def mPrimitives_spec_Double1(): Unit = scala.this.Predef.println();
+      def mPrimitives_spec_Float1(): Unit = scala.this.Predef.println();
+      def mPrimitives_spec_Int1(): Unit = scala.this.Predef.println();
+      def mPrimitives_spec_Long1(): Unit = scala.this.Predef.println();
+      def mPrimitives_spec_Short1(): Unit = scala.this.Predef.println();
+      def mPrimitives_spec_Unit1(): Unit = scala.this.Predef.println();
+      if (C.this.evidence$1.==(ManifestFactory.Boolean))
+  mPrimitives_spec_Boolean1()
+else
+  if (C.this.evidence$1.==(ManifestFactory.Byte))
+    mPrimitives_spec_Byte1()
+  else
+    if (C.this.evidence$1.==(ManifestFactory.Char))
+      mPrimitives_spec_Char1()
+    else
+      if (C.this.evidence$1.==(ManifestFactory.Double))
+        mPrimitives_spec_Double1()
+      else
+        if (C.this.evidence$1.==(ManifestFactory.Float))
+          mPrimitives_spec_Float1()
+        else
+          if (C.this.evidence$1.==(ManifestFactory.Int))
+            mPrimitives_spec_Int1()
+          else
+            if (C.this.evidence$1.==(ManifestFactory.Long))
+              mPrimitives_spec_Long1()
+            else
+              if (C.this.evidence$1.==(ManifestFactory.Short))
+                mPrimitives_spec_Short1()
+              else
+                if (C.this.evidence$1.==(ManifestFactory.Unit))
+                  mPrimitives_spec_Unit1()
+                else
+                  mPrimitives_spec_Generic1().asInstanceOf[Unit]
+    };
+    def mEverything(): Unit = {
+      def mEverything_spec_Generic1(): Unit = scala.this.Predef.println();
+      def mEverything_spec_Boolean1(): Unit = scala.this.Predef.println();
+      def mEverything_spec_Byte1(): Unit = scala.this.Predef.println();
+      def mEverything_spec_Char1(): Unit = scala.this.Predef.println();
+      def mEverything_spec_Double1(): Unit = scala.this.Predef.println();
+      def mEverything_spec_Float1(): Unit = scala.this.Predef.println();
+      def mEverything_spec_Int1(): Unit = scala.this.Predef.println();
+      def mEverything_spec_Long1(): Unit = scala.this.Predef.println();
+      def mEverything_spec_Short1(): Unit = scala.this.Predef.println();
+      def mEverything_spec_Unit1(): Unit = scala.this.Predef.println();
+      if (C.this.evidence$1.==(ManifestFactory.Boolean))
+  mEverything_spec_Boolean1()
+else
+  if (C.this.evidence$1.==(ManifestFactory.Byte))
+    mEverything_spec_Byte1()
+  else
+    if (C.this.evidence$1.==(ManifestFactory.Char))
+      mEverything_spec_Char1()
+    else
+      if (C.this.evidence$1.==(ManifestFactory.Double))
+        mEverything_spec_Double1()
+      else
+        if (C.this.evidence$1.==(ManifestFactory.Float))
+          mEverything_spec_Float1()
+        else
+          if (C.this.evidence$1.==(ManifestFactory.Int))
+            mEverything_spec_Int1()
+          else
+            if (C.this.evidence$1.==(ManifestFactory.Long))
+              mEverything_spec_Long1()
+            else
+              if (C.this.evidence$1.==(ManifestFactory.Short))
+                mEverything_spec_Short1()
+              else
+                if (C.this.evidence$1.==(ManifestFactory.Unit))
+                  mEverything_spec_Unit1()
+                else
+                  mEverything_spec_Generic1().asInstanceOf[Unit]
+    };
+    def mBits32AndUp(): Unit = {
+      def mBits32AndUp_spec_Generic1(): Unit = scala.this.Predef.println();
+      def mBits32AndUp_spec_Double1(): Unit = scala.this.Predef.println();
+      def mBits32AndUp_spec_Float1(): Unit = scala.this.Predef.println();
+      def mBits32AndUp_spec_Int1(): Unit = scala.this.Predef.println();
+      def mBits32AndUp_spec_Long1(): Unit = scala.this.Predef.println();
+      if (C.this.evidence$1.==(ManifestFactory.Double))
+  mBits32AndUp_spec_Double1()
+else
+  if (C.this.evidence$1.==(ManifestFactory.Float))
+    mBits32AndUp_spec_Float1()
+  else
+    if (C.this.evidence$1.==(ManifestFactory.Int))
+      mBits32AndUp_spec_Int1()
+    else
+      if (C.this.evidence$1.==(ManifestFactory.Long))
+        mBits32AndUp_spec_Long1()
+      else
+        mBits32AndUp_spec_Generic1().asInstanceOf[Unit]
+    };
+    def mIntegral(): Unit = {
+      def mIntegral_spec_Generic1(): Unit = scala.this.Predef.println();
+      def mIntegral_spec_Byte1(): Unit = scala.this.Predef.println();
+      def mIntegral_spec_Char1(): Unit = scala.this.Predef.println();
+      def mIntegral_spec_Int1(): Unit = scala.this.Predef.println();
+      def mIntegral_spec_Long1(): Unit = scala.this.Predef.println();
+      def mIntegral_spec_Short1(): Unit = scala.this.Predef.println();
+      if (C.this.evidence$1.==(ManifestFactory.Byte))
+  mIntegral_spec_Byte1()
+else
+  if (C.this.evidence$1.==(ManifestFactory.Char))
+    mIntegral_spec_Char1()
+  else
+    if (C.this.evidence$1.==(ManifestFactory.Int))
+      mIntegral_spec_Int1()
+    else
+      if (C.this.evidence$1.==(ManifestFactory.Long))
+        mIntegral_spec_Long1()
+      else
+        if (C.this.evidence$1.==(ManifestFactory.Short))
+          mIntegral_spec_Short1()
+        else
+          mIntegral_spec_Generic1().asInstanceOf[Unit]
+    };
+    def mAllNumeric(): Unit = {
+      def mAllNumeric_spec_Generic1(): Unit = scala.this.Predef.println();
+      def mAllNumeric_spec_Byte1(): Unit = scala.this.Predef.println();
+      def mAllNumeric_spec_Char1(): Unit = scala.this.Predef.println();
+      def mAllNumeric_spec_Double1(): Unit = scala.this.Predef.println();
+      def mAllNumeric_spec_Float1(): Unit = scala.this.Predef.println();
+      def mAllNumeric_spec_Int1(): Unit = scala.this.Predef.println();
+      def mAllNumeric_spec_Long1(): Unit = scala.this.Predef.println();
+      def mAllNumeric_spec_Short1(): Unit = scala.this.Predef.println();
+      if (C.this.evidence$1.==(ManifestFactory.Byte))
+  mAllNumeric_spec_Byte1()
+else
+  if (C.this.evidence$1.==(ManifestFactory.Char))
+    mAllNumeric_spec_Char1()
+  else
+    if (C.this.evidence$1.==(ManifestFactory.Double))
+      mAllNumeric_spec_Double1()
+    else
+      if (C.this.evidence$1.==(ManifestFactory.Float))
+        mAllNumeric_spec_Float1()
+      else
+        if (C.this.evidence$1.==(ManifestFactory.Int))
+          mAllNumeric_spec_Int1()
+        else
+          if (C.this.evidence$1.==(ManifestFactory.Long))
+            mAllNumeric_spec_Long1()
+          else
+            if (C.this.evidence$1.==(ManifestFactory.Short))
+              mAllNumeric_spec_Short1()
+            else
+              mAllNumeric_spec_Generic1().asInstanceOf[Unit]
+    };
+    def mBestOfBreed(): Unit = {
+      def mBestOfBreed_spec_Generic1(): Unit = scala.this.Predef.println();
+      def mBestOfBreed_spec_Boolean1(): Unit = scala.this.Predef.println();
+      def mBestOfBreed_spec_Double1(): Unit = scala.this.Predef.println();
+      def mBestOfBreed_spec_Int1(): Unit = scala.this.Predef.println();
+      def mBestOfBreed_spec_Unit1(): Unit = scala.this.Predef.println();
+      if (C.this.evidence$1.==(ManifestFactory.Boolean))
+  mBestOfBreed_spec_Boolean1()
+else
+  if (C.this.evidence$1.==(ManifestFactory.Double))
+    mBestOfBreed_spec_Double1()
+  else
+    if (C.this.evidence$1.==(ManifestFactory.Int))
+      mBestOfBreed_spec_Int1()
+    else
+      if (C.this.evidence$1.==(ManifestFactory.Unit))
+        mBestOfBreed_spec_Unit1()
+      else
+        mBestOfBreed_spec_Generic1().asInstanceOf[Unit]
+    }
+  }
+}
