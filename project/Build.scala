@@ -4,7 +4,7 @@ import Process._
 
 object SpecializeBuild extends Build {
 
-  val scala = "2.10.2-SNAPSHOT"
+  val scala = "2.11.0-M2"
 
   // http://stackoverflow.com/questions/6506377/how-to-get-list-of-dependency-jars-from-an-sbt-0-10-0-project
   val getJars = TaskKey[Unit]("get-jars")
@@ -16,7 +16,7 @@ object SpecializeBuild extends Build {
   val defaults = Defaults.defaultSettings ++ Seq(
     // scala version + resolver
     scalaVersion := scala,
-    scalaBinaryVersion := "2.10",
+    scalaBinaryVersion := "2.11",
     resolvers in ThisBuild += ScalaToolsSnapshots,
     // paths
     scalaSource in Compile <<= baseDirectory(_ / "src"),

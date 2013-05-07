@@ -7,6 +7,7 @@ import ch.epfl.lamp.specialized._
 
 class TestFunctionApplyNTimesRec[T](val times: Int)(val init: T, val func: T => T)(implicit mf: ClassTag[T]) extends TestApi {
 
+   
    def test = {
       @tailrec def rec(n: Int, last: T): T = {
          if (n == 0) last
@@ -72,7 +73,7 @@ class TestFunctionApplyNTimesRec[T](val times: Int)(val init: T, val func: T => 
    }
 
    private def spec[@specialized U](init: U, func: U => U) = {
-      @tailrec def rec(n: Int, last: U): U = { // Here there is some conversion to do
+      @tailrec def rec(n: Int, last: U): U = { 
          if (n == 0) last
          else rec(n - 1, func(last))
       }
