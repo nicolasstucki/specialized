@@ -122,43 +122,36 @@ object `package` {
 
       // COMPILE SPECIFIC VARIANTS INTO ONE TREE
       val DefDef(_, encMethName, _, _, _, _) = c.enclosingMethod
-      val specMethodNameGeneric = c.fresh(newTermName(f"${encMethName}_spec_Generic"))
+      val specMethodName = c.fresh(newTermName(f"${encMethName}_specialized"))
 
-      val specMethodNamesAndTypesList = {
-         val typeToTypeTree = SortedMap[Specializable, Type](
-            Int -> typeOf[Int],
-            Long -> typeOf[Long],
-            Double -> typeOf[Double],
-            Float -> typeOf[Float],
-            Char -> typeOf[Char],
-            Short -> typeOf[Short],
-            Byte -> typeOf[Byte],
-            Boolean -> typeOf[Boolean],
-            Unit -> typeOf[Unit])
-         def typesIntoNamesAndTypeTrees(tpe: Specializable) = {
-            val name = c.fresh(newTermName(f"${encMethName}_spec_${val str = tpe.toString; str.substring(str.lastIndexOf(".") + 1)}"))
-            (tpe, name, typeToTypeTree(tpe))
-         }
-         typesList map (typesIntoNamesAndTypeTrees(_))
+      val typesToTypeTree = SortedMap[Specializable, Type](
+         Int -> typeOf[Int],
+         Long -> typeOf[Long],
+         Double -> typeOf[Double],
+         Float -> typeOf[Float],
+         Char -> typeOf[Char],
+         Short -> typeOf[Short],
+         Byte -> typeOf[Byte],
+         Boolean -> typeOf[Boolean],
+         Unit -> typeOf[Unit]).filterKeys(typesList.contains(_))
+
+      val specMethod = c.Expr[Any](c.resetAllAttrs(createSpecializedMethod(c)(typeOf_T, expr_f, specMethodName, mapping, vardefs)))
+
+      val specCallers = c.Expr[Any](c.resetAllAttrs(createSpecCallers(c)(classTag, typeOf_T, typeOf_f, mapping, specMethodName, typesToTypeTree)))
+
+      // REIFY THE NEW TREE
+      c.warning(classTag.tree.pos, "newExpr = " + show(reify { import scala.reflect.ManifestFactory; specMethod.splice; specCallers.splice }))
+      reify {
+         import scala.reflect.ManifestFactory
+         specMethod.splice
+         specCallers.splice
       }
-
-      val specMethods = SortedMap((specMethodNamesAndTypesList map { case (tpnme, name, specType) => tpnme -> createSpecializedMethod(c)(typeOf_T, expr_f, name, specType, mapping, vardefs) }): _*)
-
-      val specMethodGeneric = createGenericMethod(c)(specMethodNameGeneric, expr_f)
-
-      val specCallers = createSpecCallers(c)(classTag, typeOf_T, typeOf_f, mapping, specMethodNamesAndTypesList, specMethodNameGeneric)
-
-      val newExpr = c.Expr(Block(specMethodGeneric :: specMethods.values.toList, specCallers))
-
-      // RETURN THE NEW TREE
-//            c.warning(classTag.tree.pos, "newExpr = " + show(newExpr))
-      newExpr
    }
 
    /**
     * Mapping that contains all information needed about the all the arguments that will be needed for the specialized methods.
     * The keys of the mapping contain the original names of the argument. Each is mapped into a 3-tuple that contains
-    * the new name (or the same as the key if renaming is unnecesary), the widen type of the argument and the reference to the argument itself.
+    * the new name (or the same as the key if renaming is unnecessary), the widen type of the argument and the reference to the argument itself.
     * @param c: context of the macro
     * @param expr: the body of the specialized expression.
     * @param typeOf_T: the type being specialized.
@@ -246,14 +239,27 @@ object `package` {
       (immutableFieldsMapping, immutableVardefs)
    }
 
-   private def createSpecializedMethod[T](c: Context)(typeOf_T: c.Type, body: c.Expr[Any], methodName: c.TermName, typeOf_Spec: c.Type, mapping: SortedMap[String, (String, c.Type, c.Tree)], vardefs: SortedMap[String, c.Type]): c.Tree = {
+   private def createSpecializedMethod[T](c: Context)(typeOf_T: c.Type, body: c.Expr[Any], methodName: c.TermName, mapping: SortedMap[String, (String, c.Type, c.Tree)], vardefs: SortedMap[String, c.Type]): c.Tree = {
       import c.universe._
 
-      def specializedBody(tree: Tree): Tree = tree match {
+      // TODO: only use the types in typesList as parameters of @specialized
+      // TODO: create fresh type patameter instead of U
+      
+      val template = reify { def tempName[@specialized(Int, Long, Double, Float, Boolean, Short, Char, Byte, Unit) U](a: U) = { a } }.tree
+      val Block(DefDef(mods, _, tparams, _, _, _) :: Nil, _) = template
+      val Block(DefDef(_, _, _, _, _, rhs) :: Nil, _) = c.typeCheck(template) // To get the type of U
+
+      val TypeDef(tparams_mods, tparams_name, tparams_tparams, tparams_rhs) = tparams.head
+      // val new_tparam_name = c.fresh(tparams_name)
+      // val typeOf_Spec = tq"$new_tparam_name"
+      val typeOf_Spec = rhs.tpe
+
+      // TODO: find better way to rename 
+      def renameing(tree: Tree): Tree = tree match {
          case select @ Select(term, name) =>
             mapping.get(select.toString) match {
                case Some((newName, _, _)) => Ident(newName)
-               case None                  => Select(specializedBody(term), name)
+               case None                  => Select(renameing(term), name)
             }
          case Ident(name) =>
             mapping.get(name.toString) match {
@@ -261,22 +267,22 @@ object `package` {
                case None                  => Ident(name)
             }
          case DefDef(mods, name, tparams, vparamss, tpt, rhs) =>
-            val newVparamss = vparamss map (_ map { case ValDef(mods, name, tpt, rhs) => ValDef(mods, name, tranformTypeTree(c)(tpt, typeOf_T, typeOf_Spec), specializedBody(rhs)) })
-            DefDef(mods, name, tparams, newVparamss, tranformTypeTree(c)(tpt, typeOf_T, typeOf_Spec), specializedBody(rhs))
+            val newVparamss = vparamss map (_ map { case ValDef(mods, name, tpt, rhs) => ValDef(mods, name, tpt, renameing(rhs)) })
+            DefDef(mods, name, tparams, newVparamss, tpt, renameing(rhs))
          case Function(vparams, body) =>
-            val newVparams = vparams map { case ValDef(mods, name, tpt, rhs) => ValDef(mods, name, tranformTypeTree(c)(tpt, typeOf_T, typeOf_Spec), specializedBody(rhs)) }
-            Function(newVparams, specializedBody(body))
+            val newVparams = vparams map { case ValDef(mods, name, tpt, rhs) => ValDef(mods, name, tranformTypeTree(c)(tpt, typeOf_T, typeOf_Spec), renameing(rhs)) }
+            Function(newVparams, renameing(body))
          //         case Match(selector, cases) =>
          //            val specializedCases = cases map { case CaseDef(pat, guard, body) => CaseDef(specializedBody(pat), specializedBody(guard), specializedBody(body)) }
          //            Match(specializedBody(selector), specializedCases)
          //         case Assign(Ident(name), rhs) if vardefs.isDefinedAt(name.toString) => Assign(specializedBody(Ident(name)), castTree(c)(specializedBody(rhs), vardefs(name.toString)))
-         case Assign(lhs, rhs)            => Assign(specializedBody(lhs), specializedBody(rhs))
-         case If(cond, thenp, elsep)      => If(specializedBody(cond), specializedBody(thenp), specializedBody(elsep))
-         case Block(trees, last)          => Block(trees map (specializedBody(_)), specializedBody(last))
-         case Apply(func, params)         => Apply(specializedBody(func), params map (specializedBody(_)))
-         case TypeApply(func, params)     => TypeApply(specializedBody(func), params map (specializedBody(_)))
-         case Select(term, name)          => Select(specializedBody(term), name)
-         case ValDef(mod, name, tpt, rhs) => ValDef(mod, name, tpt, specializedBody(rhs))
+         case Assign(lhs, rhs)            => Assign(renameing(lhs), renameing(rhs))
+         case If(cond, thenp, elsep)      => If(renameing(cond), renameing(thenp), renameing(elsep))
+         case Block(trees, last)          => Block(trees map (renameing(_)), renameing(last))
+         case Apply(func, params)         => Apply(renameing(func), params map (renameing(_)))
+         case TypeApply(func, params)     => TypeApply(renameing(func), params map (renameing(_)))
+         case Select(term, name)          => Select(renameing(term), name)
+         case ValDef(mod, name, tpt, rhs) => ValDef(mod, name, tpt, renameing(rhs))
          case typeTree: TypeTree          => typeTree
          case lit: Literal                => lit
          case ths: This                   => ths
@@ -285,9 +291,10 @@ object `package` {
          case _                           => c.warning(body.tree.pos, "TODO: add case in createSpecializedMethod to handle: " + showRaw(tree)); tree
       }
 
-      val Block(DefDef(mods, _, tparams, _, _, _) :: Nil, _) = reify { def spec() = {} }.tree
+      val new_tparams = List(TypeDef(tparams_mods, newTypeName(typeOf_Spec.typeSymbol.toString) /*new_tparam_name*/ , tparams_tparams, tparams_rhs))
+      val newBody = renameing(body.tree).substituteTypes(List(typeOf_T.typeSymbol), List(typeOf_Spec))
 
-      val newBody = specializedBody(body.tree).substituteTypes(List(typeOf_T.typeSymbol), List(typeOf_Spec))
+      // c.warning(body.tree.pos, showRaw(tparams_mods))
 
       val vparamss = List(
          (for (field <- mapping.keys) yield {
@@ -297,20 +304,7 @@ object `package` {
                EmptyTree)
          }).toList)
 
-      DefDef(mods, methodName, tparams, vparamss, TypeTree(), c.resetAllAttrs(newBody))
-   }
-
-   /**
-    * Creates the method that will be called in case that the type parameter is not specialized.
-    * Note that no parameters are defined because everything can be retrieved from the environment.
-    * @param c: context of the macro
-    * @param methodName: name of the method
-    * @param body: body of the method (same as body of the specialized block)
-    * @return a function definition wrapper of the generic version of the code
-    */
-   @inline private def createGenericMethod[T](c: Context)(methodName: c.universe.TermName, body: c.Expr[Any]): c.Tree = {
-      import c.universe._
-      DefDef(Modifiers(), methodName, List(), List(List()), TypeTree(), c.resetAllAttrs(body.tree))
+      DefDef(mods, methodName, new_tparams, vparamss, TypeTree(), newBody)
    }
 
    /**
@@ -328,22 +322,22 @@ object `package` {
     * @param specMethodNameGeneric: Name of the fall-back method that gets executed for any non specialized type parameter.
     * @return expression containing the all the different callers
     */
-   @inline private def createSpecCallers[T](c: Context)(classTag: c.Expr[ClassTag[T]], typeOf_T: c.Type, typeOf_f: c.Type, mapping: SortedMap[String, (String, c.Type, c.Tree)], specMethodNamesAndTypesList: List[(Specializable, c.TermName, c.Type)], specMethodNameGeneric: c.Name) = {
+   @inline private def createSpecCallers[T](c: Context)(classTag: c.Expr[ClassTag[T]], typeOf_T: c.Type, typeOf_f: c.Type, mapping: SortedMap[String, (String, c.Type, c.Tree)], specMethodName: c.Name, typesToTypeTree: SortedMap[Specializable, c.Type]) = {
       import c.universe._
 
-      def createSpecCaller(name: Name, tpe: Type) = {
+      def createSpecCaller(tpe: Type) = {
          c.Expr(
             Apply(
-               Ident(name),
+               Ident(specMethodName),
                (for (key <- mapping.keys) yield {
                   castTree(c)(
-                     c.resetAllAttrs(mapping(key)._3),
+                     mapping(key)._3,
                      TypeTree().setType(mapping(key)._2).substituteTypes(List(typeOf_T.typeSymbol), List(tpe)).tpe)
                }).toList))
       }
 
-      val callMethods = SortedMap((specMethodNamesAndTypesList map { case (tp, name, tpe) => tp -> createSpecCaller(name, tpe) }): _*)
-      val callGenericMethod = c.Expr(Apply(Ident(specMethodNameGeneric), Nil))
+      val callMethods = SortedMap((typesToTypeTree.keys.toList map { tp => tp -> createSpecCaller(typesToTypeTree(tp)) }): _*)
+      val callGenericMethod = c.Expr(Apply(Ident(specMethodName), Nil))
 
       val manifestsExpr = SortedMap[Specializable, c.Expr[Any]](
          Int -> reify { ManifestFactory.Int },
