@@ -14,7 +14,7 @@ class TestX[T: ClassTag, U: ClassTag]() {
          val temp = arr(0)
          arrB(0) = arr(1)
          arrB(1) = temp
-         //temp
+         
       }
    }
 }
