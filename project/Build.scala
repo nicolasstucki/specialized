@@ -15,6 +15,7 @@ object SpecializeBuild extends Build {
 
   val defaults = Defaults.defaultSettings ++ Seq(
     // scala version + resolver
+    // scalaHome := Some(file("/Users/nicolasstucki/GitHub/scala-issue-7343")),
     scalaVersion := scala,
     scalaBinaryVersion := "2.10",
     resolvers in ThisBuild += ScalaToolsSnapshots,
@@ -39,7 +40,7 @@ object SpecializeBuild extends Build {
     com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseKeys.withSource := true
     // debugging
      //scalacOptions ++= Seq("-uniqid")
-    , scalacOptions ++= Seq("-uniqid", "-Ydebug", "-Yinfer-debug", "-Ytyper-debug")
+    //, scalacOptions ++= Seq("-uniqid", "-Ydebug", "-Yinfer-debug", "-Ytyper-debug")
   )
 
   val benchDeps = Seq(
