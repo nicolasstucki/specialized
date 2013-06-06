@@ -1,6 +1,8 @@
 Using reified types for specialization
 ======================================
 
+Link to draft paper describing the project: https://github.com/nicolasstucki/specialized/blob/master/docs/2013-03-scala-workshop-draft.pdf
+
 Generic code increases programmer productivity as it increases code reuse. For example, the LinkedList abstraction can be used in many contexts, from storing a list of numbers to storing representations of files on the disk. Unfortunately this comes at the expense of performance, as the generic code needs a common representation for all types. The common representation is usually a pointer to heap data. But for value types, such as integers, bytes and even value classes (see SIP-15) this leads to significant overheads, as they need to be allocated as objects on the heap and then pointed to, breaking data locality and adding an extra indirection.
 
 To overcome this performance loss, many programming languages and virtual machines perform code specialization, which creates a copy of the generic class for each value type and adapts the data representation.
