@@ -55,7 +55,7 @@ object SpecializedBenchmarkSameVM
     }
   }
 
-  for (n <- Seq(2000000 /*200000, 500000, 1000000, 2000000*/ )) {
+  for (n <- Seq(5000000 /*200000, 500000, 1000000, 2000000*/ )) {
     bench(Gen.single("TestArrayReverse[Int]")(n).map(new BenchmarkArrayReverse[Int](_)))
     bench(Gen.single("BenchmarkArrayReverse[Double]")(n).map(new BenchmarkArrayReverse[Double](_)))
     bench(Gen.single("TestArrayReverse[Boolean]")(n).map(new BenchmarkArrayReverse[Boolean](_)))
@@ -101,7 +101,7 @@ object SpecializedBenchmarkSameVM
     val debugFlags = "-XX:+PrintInlining "
     val interpFlags = ("same", "-Xint")
     val samples = 1
-    val minWarmupRuns = 10
+    val minWarmupRuns = 3
 
     for ((flagtype, flags) <- Seq(interpFlags)) {
 
