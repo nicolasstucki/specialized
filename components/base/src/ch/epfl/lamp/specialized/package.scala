@@ -91,7 +91,6 @@ object `package` {
    */
   def impl_specialized[T](c: Context)(types: c.Expr[Specializable]*)(expr_f: c.Expr[Any])(classTag: c.Expr[ClassTag[T]])(implicit typetagT: c.WeakTypeTag[T]): c.Expr[Any] = {
     import c.universe._
-    c.resetAllAttrs(expr_f.tree)
 
     // TYPE PARAMETER CHECKS
     val typeOf_T = typetagT.tpe
@@ -146,12 +145,7 @@ object `package` {
 
     val manifestsExpr = getManifestExprMap(c)
 
-    val Match(_, List(CaseDef(wildcard, _, _))) = reify { 0 match { case _ => () } }.tree // TODO: Find direct way to get the wildcard Tree
-
-    val caseDefs = callMethods.keys.toList map (tpe => CaseDef(manifestsExpr(tpe).tree, EmptyTree, callMethods(tpe).tree))
-    val caseDefsWithDefault = caseDefs ::: CaseDef(wildcard, EmptyTree, callGenericMethod.tree) :: Nil
-
-    val callersBlock = Match(classTag.tree, caseDefsWithDefault)
+    val callersBlock = callMethods.keys.foldRight[c.Expr[Any]](callGenericMethod)((tpe, expr) => reify { if (classTag.splice == manifestsExpr(tpe).splice) callMethods(tpe).splice else expr.splice }).tree
 
     // CREATE SPECIALIZED METHOD TREE
     object fieldToIdents extends Transformer {
@@ -170,19 +164,24 @@ object `package` {
     val vparamss_str = (mapping.values.toList map { case (param_name, param_type, _) => f"$param_name: $param_type" }).mkString(", ")
     val at_spec_params_str = typesToTypeTree.keys.map(_.toString.drop(13)).mkString(", ")
     val cast_back_str = if (typeOf_f.contains(typeOf_T.typeSymbol)) s".asInstanceOf[$typeOf_f]" else ""
-    val at_spec_bounds_str = ">: Nothing <: Any" // FIXME: Change for bounds of typeOf_T
+
+    // TODO: Wrapping the spec method inside an object is a workaround issue SI-7344, this should be removed as soon as the issue is resolved.
+    val spec_obj = c.fresh("SpecObject").toString
 
     // JOIN EVERYTHING TOGETHER
     // Here parse is used instead of reify to ensure that all symbols are erased from the tree
     val newTreeStr = s"""{
-	    	import scala.reflect.ManifestFactory
-			def $specMethodName[@specialized($at_spec_params_str) $typeOf_T $at_spec_bounds_str]($vparamss_str): $typeOf_f = { $newBody }
+        	object $spec_obj {
+				def $specMethodName[@specialized($at_spec_params_str) $typeOf_T]($vparamss_str): $typeOf_f = { $newBody }
+			}
+			import $spec_obj._
+			import scala.reflect.ManifestFactory
 			$callersBlock
     	}$cast_back_str""".replaceAllLiterally("scala.this.Predef.", "")
 
     val newExpr = c.Expr[Any](c.typeCheck(c.parse(newTreeStr), typeOf_f))
     // c.warning(classTag.tree.pos, "new expr: " + show(newExpr))
-    // c.warning(classTag.tree.pos, "new expr: " + showRes(newExpr))
+    // c.warning(classTag.tree.pos, "new expr: " + showRaw(newExpr))
     newExpr
   }
 
