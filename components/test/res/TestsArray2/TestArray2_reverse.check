@@ -1,4 +1,4 @@
-[[syntax trees at end of                     typer]] // newSource1
+[[syntax trees at end of                     typer]] // newSource1.scala
 package <empty> {
   import scala.reflect.ClassTag;
   import ch.epfl.lamp.specialized._;
@@ -13,98 +13,103 @@ package <empty> {
     private[this] val arrB: Array[T] = TestArray2Reverse.this.classTag.newArray(scala.this.Predef.genericArrayOps[T](TestArray2Reverse.this.arr).size);
     <stable> <accessor> def arrB: Array[T] = TestArray2Reverse.this.arrB;
     def reverse: Unit = {
-      def reverse_spec_Generic1(): Unit = {
-        val temp: T = TestArray2Reverse.this.arr.apply(0);
-        TestArray2Reverse.this.arrB.update(0, TestArray2Reverse.this.arr.apply(1));
-        TestArray2Reverse.this.arrB.update(1, temp)
+      object SpecObject1 extends scala.AnyRef {
+        def <init>(): SpecObject1.type = {
+          SpecObject1.super.<init>();
+          ()
+        };
+        def reverse_specialized1[@specialized(scala.Boolean, scala.Double, scala.Int) T >: Nothing <: Any](TestArray2Reverse_this_arr1: Array[T], TestArray2Reverse_this_arrB1: Array[T]): Unit = {
+          val temp: T = TestArray2Reverse_this_arr1.apply(0);
+          TestArray2Reverse_this_arrB1.update(0, TestArray2Reverse_this_arr1.apply(1));
+          TestArray2Reverse_this_arrB1.update(1, temp)
+        }
       };
-      def reverse_spec_Boolean1(TestArray2Reverse_this_arr1: Array[Boolean], TestArray2Reverse_this_arrB1: Array[Boolean]): Unit = {
-        val temp: Boolean = TestArray2Reverse_this_arr1.apply(0);
-        TestArray2Reverse_this_arrB1.update(0, TestArray2Reverse_this_arr1.apply(1));
-        TestArray2Reverse_this_arrB1.update(1, temp)
-      };
-      def reverse_spec_Double1(TestArray2Reverse_this_arr1: Array[Double], TestArray2Reverse_this_arrB1: Array[Double]): Unit = {
-        val temp: Double = TestArray2Reverse_this_arr1.apply(0);
-        TestArray2Reverse_this_arrB1.update(0, TestArray2Reverse_this_arr1.apply(1));
-        TestArray2Reverse_this_arrB1.update(1, temp)
-      };
-      def reverse_spec_Int1(TestArray2Reverse_this_arr1: Array[Int], TestArray2Reverse_this_arrB1: Array[Int]): Unit = {
-        val temp: Int = TestArray2Reverse_this_arr1.apply(0);
-        TestArray2Reverse_this_arrB1.update(0, TestArray2Reverse_this_arr1.apply(1));
-        TestArray2Reverse_this_arrB1.update(1, temp)
-      };
-      if (TestArray2Reverse.this.classTag.==(ManifestFactory.Boolean))
-  reverse_spec_Boolean1(TestArray2Reverse.this.arr.asInstanceOf[Array[Boolean]], TestArray2Reverse.this.arrB.asInstanceOf[Array[Boolean]])
-else
-  if (TestArray2Reverse.this.classTag.==(ManifestFactory.Double))
-    reverse_spec_Double1(TestArray2Reverse.this.arr.asInstanceOf[Array[Double]], TestArray2Reverse.this.arrB.asInstanceOf[Array[Double]])
-  else
-    if (TestArray2Reverse.this.classTag.==(ManifestFactory.Int))
-      reverse_spec_Int1(TestArray2Reverse.this.arr.asInstanceOf[Array[Int]], TestArray2Reverse.this.arrB.asInstanceOf[Array[Int]])
-    else
-      reverse_spec_Generic1().asInstanceOf[Unit]
+      import SpecObject1._;
+      import scala.reflect.ManifestFactory;
+      if (TestArray2Reverse.this.classTag.==(scala.reflect.ManifestFactory.Boolean))
+        SpecObject1.reverse_specialized1[Boolean](TestArray2Reverse.this.arr.asInstanceOf[Array[Boolean]], TestArray2Reverse.this.arrB.asInstanceOf[Array[Boolean]])
+      else
+        if (TestArray2Reverse.this.classTag.==(scala.reflect.ManifestFactory.Double))
+          SpecObject1.reverse_specialized1[Double](TestArray2Reverse.this.arr.asInstanceOf[Array[Double]], TestArray2Reverse.this.arrB.asInstanceOf[Array[Double]])
+        else
+          if (TestArray2Reverse.this.classTag.==(scala.reflect.ManifestFactory.Int))
+            SpecObject1.reverse_specialized1[Int](TestArray2Reverse.this.arr.asInstanceOf[Array[Int]], TestArray2Reverse.this.arrB.asInstanceOf[Array[Int]])
+          else
+            SpecObject1.reverse_specialized1[T](TestArray2Reverse.this.arr, TestArray2Reverse.this.arrB)
     }
   }
 }
 
-[[syntax trees at end of                       jvm]] // newSource1
+[[syntax trees at end of                       jvm]] // newSource1.scala
 package <empty> {
   class TestArray2Reverse extends Object {
+    private def SpecObject1$1$lzycompute(x$1: runtime.VolatileObjectRef): TestArray2Reverse#TestArray2Reverse$SpecObject1$2.type = {
+      {
+        TestArray2Reverse.this.synchronized({
+          if (x$1.elem.eq(null))
+            {
+              x$1.elem = new TestArray2Reverse#TestArray2Reverse$SpecObject1$2.type(TestArray2Reverse.this);
+              ()
+            };
+          scala.runtime.BoxedUnit.UNIT
+        });
+        null
+      };
+      x$1.elem.$asInstanceOf[TestArray2Reverse#TestArray2Reverse$SpecObject1$2.type]()
+    };
     implicit <paramaccessor> private[this] val classTag: reflect.ClassTag = _;
     private[this] val arr: Object = _;
     <stable> <accessor> def arr(): Object = TestArray2Reverse.this.arr;
     private[this] val arrB: Object = _;
     <stable> <accessor> def arrB(): Object = TestArray2Reverse.this.arrB;
     def reverse(): Unit = {
-      (if (TestArray2Reverse.this.classTag.==(ManifestFactory.Boolean()))
-        {
-          TestArray2Reverse.this.reverse_spec_Boolean1$1(TestArray2Reverse.this.arr().$asInstanceOf[Array[Boolean]](), TestArray2Reverse.this.arrB().$asInstanceOf[Array[Boolean]]());
-          scala.runtime.BoxedUnit.UNIT
-        }
+      @volatile var SpecObject1$module: runtime.VolatileObjectRef = new runtime.VolatileObjectRef(null);
+      if (TestArray2Reverse.this.classTag.==(scala.reflect.ManifestFactory.Boolean()))
+        TestArray2Reverse.this.SpecObject1$1(SpecObject1$module).reverse_specialized1$mZc$sp(TestArray2Reverse.this.arr().$asInstanceOf[Array[Boolean]](), TestArray2Reverse.this.arrB().$asInstanceOf[Array[Boolean]]())
       else
-        if (TestArray2Reverse.this.classTag.==(ManifestFactory.Double()))
-          {
-            TestArray2Reverse.this.reverse_spec_Double1$1(TestArray2Reverse.this.arr().$asInstanceOf[Array[Double]](), TestArray2Reverse.this.arrB().$asInstanceOf[Array[Double]]());
-            scala.runtime.BoxedUnit.UNIT
-          }
+        if (TestArray2Reverse.this.classTag.==(scala.reflect.ManifestFactory.Double()))
+          TestArray2Reverse.this.SpecObject1$1(SpecObject1$module).reverse_specialized1$mDc$sp(TestArray2Reverse.this.arr().$asInstanceOf[Array[Double]](), TestArray2Reverse.this.arrB().$asInstanceOf[Array[Double]]())
         else
-          if (TestArray2Reverse.this.classTag.==(ManifestFactory.Int()))
-            {
-              TestArray2Reverse.this.reverse_spec_Int1$1(TestArray2Reverse.this.arr().$asInstanceOf[Array[Int]](), TestArray2Reverse.this.arrB().$asInstanceOf[Array[Int]]());
-              scala.runtime.BoxedUnit.UNIT
-            }
+          if (TestArray2Reverse.this.classTag.==(scala.reflect.ManifestFactory.Int()))
+            TestArray2Reverse.this.SpecObject1$1(SpecObject1$module).reverse_specialized1$mIc$sp(TestArray2Reverse.this.arr().$asInstanceOf[Array[Int]](), TestArray2Reverse.this.arrB().$asInstanceOf[Array[Int]]())
           else
-            {
-              TestArray2Reverse.this.reverse_spec_Generic1$1();
-              scala.runtime.BoxedUnit.UNIT
-            }: runtime.BoxedUnit);
-      ()
+            TestArray2Reverse.this.SpecObject1$1(SpecObject1$module).reverse_specialized1(TestArray2Reverse.this.arr(), TestArray2Reverse.this.arrB())
     };
-    final private[this] def reverse_spec_Generic1$1(): Unit = {
-      val temp: Object = runtime.this.ScalaRunTime.array_apply(TestArray2Reverse.this.arr(), 0);
-      runtime.this.ScalaRunTime.array_update(TestArray2Reverse.this.arrB(), 0, runtime.this.ScalaRunTime.array_apply(TestArray2Reverse.this.arr(), 1));
-      runtime.this.ScalaRunTime.array_update(TestArray2Reverse.this.arrB(), 1, temp)
-    };
-    final private[this] def reverse_spec_Boolean1$1(TestArray2Reverse_this_arr1: Array[Boolean], TestArray2Reverse_this_arrB1: Array[Boolean]): Unit = {
-      val temp: Boolean = TestArray2Reverse_this_arr1.apply(0);
-      TestArray2Reverse_this_arrB1.update(0, TestArray2Reverse_this_arr1.apply(1));
-      TestArray2Reverse_this_arrB1.update(1, temp)
-    };
-    final private[this] def reverse_spec_Double1$1(TestArray2Reverse_this_arr1: Array[Double], TestArray2Reverse_this_arrB1: Array[Double]): Unit = {
-      val temp: Double = TestArray2Reverse_this_arr1.apply(0);
-      TestArray2Reverse_this_arrB1.update(0, TestArray2Reverse_this_arr1.apply(1));
-      TestArray2Reverse_this_arrB1.update(1, temp)
-    };
-    final private[this] def reverse_spec_Int1$1(TestArray2Reverse_this_arr1: Array[Int], TestArray2Reverse_this_arrB1: Array[Int]): Unit = {
-      val temp: Int = TestArray2Reverse_this_arr1.apply(0);
-      TestArray2Reverse_this_arrB1.update(0, TestArray2Reverse_this_arr1.apply(1));
-      TestArray2Reverse_this_arrB1.update(1, temp)
-    };
+    final <stable> private[this] def SpecObject1$1(SpecObject1$module$1: runtime.VolatileObjectRef): TestArray2Reverse#TestArray2Reverse$SpecObject1$2.type = if (SpecObject1$module$1.elem.eq(null))
+      TestArray2Reverse.this.SpecObject1$1$lzycompute(SpecObject1$module$1)
+    else
+      SpecObject1$module$1.elem.$asInstanceOf[TestArray2Reverse#TestArray2Reverse$SpecObject1$2.type]();
     def <init>(implicit classTag: reflect.ClassTag): TestArray2Reverse = {
       TestArray2Reverse.this.classTag = classTag;
       TestArray2Reverse.super.<init>();
       TestArray2Reverse.this.arr = classTag.newArray(2);
       TestArray2Reverse.this.arrB = classTag.newArray(scala.this.Predef.genericArrayOps(TestArray2Reverse.this.arr()).size());
+      ()
+    }
+  };
+  object TestArray2Reverse$SpecObject1$2 extends Object {
+    def reverse_specialized1(TestArray2Reverse_this_arr1: Object, TestArray2Reverse_this_arrB1: Object): Unit = {
+      val temp: Object = runtime.this.ScalaRunTime.array_apply(TestArray2Reverse_this_arr1, 0);
+      runtime.this.ScalaRunTime.array_update(TestArray2Reverse_this_arrB1, 0, runtime.this.ScalaRunTime.array_apply(TestArray2Reverse_this_arr1, 1));
+      runtime.this.ScalaRunTime.array_update(TestArray2Reverse_this_arrB1, 1, temp)
+    };
+    <specialized> def reverse_specialized1$mZc$sp(TestArray2Reverse_this_arr1: Array[Boolean], TestArray2Reverse_this_arrB1: Array[Boolean]): Unit = {
+      val temp: Boolean = TestArray2Reverse_this_arr1.apply(0);
+      TestArray2Reverse_this_arrB1.update(0, TestArray2Reverse_this_arr1.apply(1));
+      TestArray2Reverse_this_arrB1.update(1, temp)
+    };
+    <specialized> def reverse_specialized1$mDc$sp(TestArray2Reverse_this_arr1: Array[Double], TestArray2Reverse_this_arrB1: Array[Double]): Unit = {
+      val temp: Double = TestArray2Reverse_this_arr1.apply(0);
+      TestArray2Reverse_this_arrB1.update(0, TestArray2Reverse_this_arr1.apply(1));
+      TestArray2Reverse_this_arrB1.update(1, temp)
+    };
+    <specialized> def reverse_specialized1$mIc$sp(TestArray2Reverse_this_arr1: Array[Int], TestArray2Reverse_this_arrB1: Array[Int]): Unit = {
+      val temp: Int = TestArray2Reverse_this_arr1.apply(0);
+      TestArray2Reverse_this_arrB1.update(0, TestArray2Reverse_this_arr1.apply(1));
+      TestArray2Reverse_this_arrB1.update(1, temp)
+    };
+    def <init>($outer: TestArray2Reverse): TestArray2Reverse#TestArray2Reverse$SpecObject1$2.type = {
+      TestArray2Reverse$SpecObject1$2.super.<init>();
       ()
     }
   }

@@ -34,28 +34,14 @@ class Tests {
       val test = SpecializedDirectTest(code, flags)
       test.show()
       val output = test.output
-      println(output)
-      
-      // FIXME: 
-      //[error] Test ch.epfl.lamp.specialized.test.Tests.test failed: difflib/DiffUtils
-      //[error]     at scala.tools.partest.nest.FileUtil$class.compareContents(FileManager.scala:43)
-      //[error]     at scala.tools.partest.nest.FileUtil$.compareContents(FileManager.scala:48)
-      //[error]     at ch.epfl.lamp.specialized.test.Tests$$anonfun$test$1.apply(Tests.scala:37)
-      //[error]     at ch.epfl.lamp.specialized.test.Tests$$anonfun$test$1.apply(Tests.scala:29)
-      //[error]     at scala.collection.mutable.ResizableArray$class.foreach(ResizableArray.scala:59)
-      //[error]     at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:47)
-      //[error]     at ch.epfl.lamp.specialized.test.Tests.test(Tests.scala:29)
-      //[error]     ...
-//      val diff = compareContents(output.split("\n"), check_output.split("\n"))
-//      if (!diff.isEmpty()) {
-//        System.err.println("\n\n\nDifference in test for: " + source)
-//        System.err.println("\nCompiler output:\n" + output)
-//        System.err.println("\nExpected output:\n" + check_output)
-//        System.err.println("\nDiff:\n" + diff)
-//        crash = true
-//      }
+
+      if (!output.trim.equals(check_output.trim)) {
+        System.err.println("\n\n\nDifference in test for: " + source)
+        System.err.println("\nCompiler output:\n" + output)
+        System.err.println("\nExpected output:\n" + check_output)
+        crash = true
+      }
     }
-    assert(crash, "Tests finished") //TODO: remove me
     assert(!crash, "Tests failed")
   }
 }

@@ -2,41 +2,41 @@
 import ch.epfl.lamp.specialized._
 import scala.reflect.ClassTag
 
-class C[T: ClassTag] {
+class C[T: ClassTag](val dummy: T) {
 
    def mPrimitives() = {
       specialized[T](Specializable.Primitives) {
-         println
+         dummy
       }
    }
    
    def mEverything() = {
       specialized[T](Specializable.Everything) {
-         println
+         dummy
       }
    }
 
    def mBits32AndUp() = {
       specialized[T](Specializable.Bits32AndUp) {
-         println
+         dummy
       }
    }
    
    def mIntegral() = {
       specialized[T](Specializable.Integral) {
-         println
+         dummy
       }
    }
    
    def mAllNumeric() = {
       specialized[T](Specializable.AllNumeric) {
-         println
+         dummy
       }
    }
    
    def mBestOfBreed() = {
       specialized[T](Specializable.BestOfBreed) {
-         println
+         dummy
       }
    }
 }

@@ -1,4 +1,4 @@
-[[syntax trees at end of                     typer]] // newSource1
+[[syntax trees at end of                     typer]] // newSource1.scala
 package <empty> {
   import scala.reflect.ClassTag;
   import scala.annotation.tailrec;
@@ -18,51 +18,52 @@ package <empty> {
       ()
     };
     def applyFunction: T = {
-      def applyFunction_spec_Generic1(): T = {
-        def rec(n: Int, beforelast: T, last: T): T = if (n.==(0))
-          last
-        else
-          rec(n.-(1), last, TestFunction2ApplyNTimesRec.this.func.apply(beforelast, last));
-        rec(TestFunction2ApplyNTimesRec.this.times, TestFunction2ApplyNTimesRec.this.init0, TestFunction2ApplyNTimesRec.this.init1)
-      };
-      def applyFunction_spec_Boolean1(TestFunction2ApplyNTimesRec_this_func1: (Boolean, Boolean) => Boolean, TestFunction2ApplyNTimesRec_this_init01: Boolean, TestFunction2ApplyNTimesRec_this_init11: Boolean): Boolean = {
-        def rec(n: Int, beforelast: Boolean, last: Boolean): Boolean = if (n.==(0))
-          last
-        else
-          rec(n.-(1), last, TestFunction2ApplyNTimesRec_this_func1.apply(beforelast, last));
-        rec(TestFunction2ApplyNTimesRec.this.times, TestFunction2ApplyNTimesRec_this_init01, TestFunction2ApplyNTimesRec_this_init11)
-      };
-      def applyFunction_spec_Double1(TestFunction2ApplyNTimesRec_this_func1: (Double, Double) => Double, TestFunction2ApplyNTimesRec_this_init01: Double, TestFunction2ApplyNTimesRec_this_init11: Double): Double = {
-        def rec(n: Int, beforelast: Double, last: Double): Double = if (n.==(0))
-          last
-        else
-          rec(n.-(1), last, TestFunction2ApplyNTimesRec_this_func1.apply(beforelast, last));
-        rec(TestFunction2ApplyNTimesRec.this.times, TestFunction2ApplyNTimesRec_this_init01, TestFunction2ApplyNTimesRec_this_init11)
-      };
-      def applyFunction_spec_Int1(TestFunction2ApplyNTimesRec_this_func1: (Int, Int) => Int, TestFunction2ApplyNTimesRec_this_init01: Int, TestFunction2ApplyNTimesRec_this_init11: Int): Int = {
-        def rec(n: Int, beforelast: Int, last: Int): Int = if (n.==(0))
-          last
-        else
-          rec(n.-(1), last, TestFunction2ApplyNTimesRec_this_func1.apply(beforelast, last));
-        rec(TestFunction2ApplyNTimesRec.this.times, TestFunction2ApplyNTimesRec_this_init01, TestFunction2ApplyNTimesRec_this_init11)
-      };
-      if (TestFunction2ApplyNTimesRec.this.evidence$1.==(ManifestFactory.Boolean))
-  applyFunction_spec_Boolean1(TestFunction2ApplyNTimesRec.this.func.asInstanceOf[(Boolean, Boolean) => Boolean], TestFunction2ApplyNTimesRec.this.init0.asInstanceOf[Boolean], TestFunction2ApplyNTimesRec.this.init1.asInstanceOf[Boolean])
-else
-  if (TestFunction2ApplyNTimesRec.this.evidence$1.==(ManifestFactory.Double))
-    applyFunction_spec_Double1(TestFunction2ApplyNTimesRec.this.func.asInstanceOf[(Double, Double) => Double], TestFunction2ApplyNTimesRec.this.init0.asInstanceOf[Double], TestFunction2ApplyNTimesRec.this.init1.asInstanceOf[Double])
-  else
-    if (TestFunction2ApplyNTimesRec.this.evidence$1.==(ManifestFactory.Int))
-      applyFunction_spec_Int1(TestFunction2ApplyNTimesRec.this.func.asInstanceOf[(Int, Int) => Int], TestFunction2ApplyNTimesRec.this.init0.asInstanceOf[Int], TestFunction2ApplyNTimesRec.this.init1.asInstanceOf[Int])
-    else
-      applyFunction_spec_Generic1().asInstanceOf[T]
+  object SpecObject1 extends scala.AnyRef {
+    def <init>(): SpecObject1.type = {
+      SpecObject1.super.<init>();
+      ()
+    };
+    def applyFunction_specialized1[@specialized(scala.Boolean, scala.Double, scala.Int) T >: Nothing <: Any](TestFunction2ApplyNTimesRec_this_func1: (T, T) => T, TestFunction2ApplyNTimesRec_this_init01: T, TestFunction2ApplyNTimesRec_this_init11: T): T = {
+      def rec(n: Int, beforelast: T, last: T): T = if (n.==(0))
+        last
+      else
+        rec(n.-(1), last, TestFunction2ApplyNTimesRec_this_func1.apply(beforelast, last));
+      rec(TestFunction2ApplyNTimesRec.this.times, TestFunction2ApplyNTimesRec_this_init01, TestFunction2ApplyNTimesRec_this_init11)
     }
+  };
+  import SpecObject1._;
+  import scala.reflect.ManifestFactory;
+  if (TestFunction2ApplyNTimesRec.this.evidence$1.==(scala.reflect.ManifestFactory.Boolean))
+    SpecObject1.applyFunction_specialized1[Boolean](TestFunction2ApplyNTimesRec.this.func.asInstanceOf[(Boolean, Boolean) => Boolean], TestFunction2ApplyNTimesRec.this.init0.asInstanceOf[Boolean], TestFunction2ApplyNTimesRec.this.init1.asInstanceOf[Boolean])
+  else
+    if (TestFunction2ApplyNTimesRec.this.evidence$1.==(scala.reflect.ManifestFactory.Double))
+      SpecObject1.applyFunction_specialized1[Double](TestFunction2ApplyNTimesRec.this.func.asInstanceOf[(Double, Double) => Double], TestFunction2ApplyNTimesRec.this.init0.asInstanceOf[Double], TestFunction2ApplyNTimesRec.this.init1.asInstanceOf[Double])
+    else
+      if (TestFunction2ApplyNTimesRec.this.evidence$1.==(scala.reflect.ManifestFactory.Int))
+        SpecObject1.applyFunction_specialized1[Int](TestFunction2ApplyNTimesRec.this.func.asInstanceOf[(Int, Int) => Int], TestFunction2ApplyNTimesRec.this.init0.asInstanceOf[Int], TestFunction2ApplyNTimesRec.this.init1.asInstanceOf[Int])
+      else
+        SpecObject1.applyFunction_specialized1[T](TestFunction2ApplyNTimesRec.this.func, TestFunction2ApplyNTimesRec.this.init0, TestFunction2ApplyNTimesRec.this.init1)
+}.asInstanceOf[T]
   }
 }
 
-[[syntax trees at end of                       jvm]] // newSource1
+[[syntax trees at end of                       jvm]] // newSource1.scala
 package <empty> {
   class TestFunction2ApplyNTimesRec extends Object {
+    private def SpecObject1$1$lzycompute(x$1: runtime.VolatileObjectRef): TestFunction2ApplyNTimesRec#TestFunction2ApplyNTimesRec$SpecObject1$2.type = {
+      {
+        TestFunction2ApplyNTimesRec.this.synchronized({
+          if (x$1.elem.eq(null))
+            {
+              x$1.elem = new TestFunction2ApplyNTimesRec#TestFunction2ApplyNTimesRec$SpecObject1$2.type(TestFunction2ApplyNTimesRec.this);
+              ()
+            };
+          scala.runtime.BoxedUnit.UNIT
+        });
+        null
+      };
+      x$1.elem.$asInstanceOf[TestFunction2ApplyNTimesRec#TestFunction2ApplyNTimesRec$SpecObject1$2.type]()
+    };
     <paramaccessor> private[this] val times: Int = _;
     <stable> <accessor> <paramaccessor> def times(): Int = TestFunction2ApplyNTimesRec.this.times;
     <paramaccessor> private[this] val init0: Object = _;
@@ -72,56 +73,23 @@ package <empty> {
     <paramaccessor> private[this] val func: Function2 = _;
     <stable> <accessor> <paramaccessor> def func(): Function2 = TestFunction2ApplyNTimesRec.this.func;
     implicit <synthetic> <paramaccessor> private[this] val evidence$1: reflect.ClassTag = _;
-    def applyFunction(): Object = if (TestFunction2ApplyNTimesRec.this.evidence$1.==(ManifestFactory.Boolean()))
-      scala.Boolean.box(TestFunction2ApplyNTimesRec.this.applyFunction_spec_Boolean1$1(TestFunction2ApplyNTimesRec.this.func(), scala.Boolean.unbox(TestFunction2ApplyNTimesRec.this.init0()), scala.Boolean.unbox(TestFunction2ApplyNTimesRec.this.init1())))
-    else
-      if (TestFunction2ApplyNTimesRec.this.evidence$1.==(ManifestFactory.Double()))
-        scala.Double.box(TestFunction2ApplyNTimesRec.this.applyFunction_spec_Double1$1(TestFunction2ApplyNTimesRec.this.func(), scala.Double.unbox(TestFunction2ApplyNTimesRec.this.init0()), scala.Double.unbox(TestFunction2ApplyNTimesRec.this.init1())))
+    def applyFunction(): Object = {
+      @volatile var SpecObject1$module: runtime.VolatileObjectRef = new runtime.VolatileObjectRef(null);
+      if (TestFunction2ApplyNTimesRec.this.evidence$1.==(scala.reflect.ManifestFactory.Boolean()))
+        scala.Boolean.box(TestFunction2ApplyNTimesRec.this.SpecObject1$1(SpecObject1$module).applyFunction_specialized1$mZc$sp(TestFunction2ApplyNTimesRec.this.func(), scala.Boolean.unbox(TestFunction2ApplyNTimesRec.this.init0()), scala.Boolean.unbox(TestFunction2ApplyNTimesRec.this.init1())))
       else
-        if (TestFunction2ApplyNTimesRec.this.evidence$1.==(ManifestFactory.Int()))
-          scala.Int.box(TestFunction2ApplyNTimesRec.this.applyFunction_spec_Int1$1(TestFunction2ApplyNTimesRec.this.func(), scala.Int.unbox(TestFunction2ApplyNTimesRec.this.init0()), scala.Int.unbox(TestFunction2ApplyNTimesRec.this.init1())))
+        if (TestFunction2ApplyNTimesRec.this.evidence$1.==(scala.reflect.ManifestFactory.Double()))
+          scala.Double.box(TestFunction2ApplyNTimesRec.this.SpecObject1$1(SpecObject1$module).applyFunction_specialized1$mDc$sp(TestFunction2ApplyNTimesRec.this.func(), scala.Double.unbox(TestFunction2ApplyNTimesRec.this.init0()), scala.Double.unbox(TestFunction2ApplyNTimesRec.this.init1())))
         else
-          TestFunction2ApplyNTimesRec.this.applyFunction_spec_Generic1$1();
-    final private[this] def rec$1(n: Int, beforelast: Object, last: Object): Object = {
-      <synthetic> val _$this: TestFunction2ApplyNTimesRec = TestFunction2ApplyNTimesRec.this;
-      _rec(_$this: TestFunction2ApplyNTimesRec, n: Int, beforelast: Object, last: Object){
-        if (n.==(0))
-          last
-        else
-          _rec(TestFunction2ApplyNTimesRec.this, n.-(1), last, TestFunction2ApplyNTimesRec.this.func().apply(beforelast, last))
-      }
+          if (TestFunction2ApplyNTimesRec.this.evidence$1.==(scala.reflect.ManifestFactory.Int()))
+            scala.Int.box(TestFunction2ApplyNTimesRec.this.SpecObject1$1(SpecObject1$module).applyFunction_specialized1$mIc$sp(TestFunction2ApplyNTimesRec.this.func(), scala.Int.unbox(TestFunction2ApplyNTimesRec.this.init0()), scala.Int.unbox(TestFunction2ApplyNTimesRec.this.init1())))
+          else
+            TestFunction2ApplyNTimesRec.this.SpecObject1$1(SpecObject1$module).applyFunction_specialized1(TestFunction2ApplyNTimesRec.this.func(), TestFunction2ApplyNTimesRec.this.init0(), TestFunction2ApplyNTimesRec.this.init1())
     };
-    final private[this] def applyFunction_spec_Generic1$1(): Object = TestFunction2ApplyNTimesRec.this.rec$1(TestFunction2ApplyNTimesRec.this.times(), TestFunction2ApplyNTimesRec.this.init0(), TestFunction2ApplyNTimesRec.this.init1());
-    final private[this] def rec$2(n: Int, beforelast: Boolean, last: Boolean, TestFunction2ApplyNTimesRec_this_func1$1: Function2): Boolean = {
-      <synthetic> val _$this: TestFunction2ApplyNTimesRec = TestFunction2ApplyNTimesRec.this;
-      _rec(_$this: TestFunction2ApplyNTimesRec, n: Int, beforelast: Boolean, last: Boolean){
-        if (n.==(0))
-          last
-        else
-          _rec(TestFunction2ApplyNTimesRec.this, n.-(1), last, scala.Boolean.unbox(TestFunction2ApplyNTimesRec_this_func1$1.apply(scala.Boolean.box(beforelast), scala.Boolean.box(last))))
-      }
-    };
-    final private[this] def applyFunction_spec_Boolean1$1(TestFunction2ApplyNTimesRec_this_func1: Function2, TestFunction2ApplyNTimesRec_this_init01: Boolean, TestFunction2ApplyNTimesRec_this_init11: Boolean): Boolean = TestFunction2ApplyNTimesRec.this.rec$2(TestFunction2ApplyNTimesRec.this.times(), TestFunction2ApplyNTimesRec_this_init01, TestFunction2ApplyNTimesRec_this_init11, TestFunction2ApplyNTimesRec_this_func1);
-    final private[this] def rec$3(n: Int, beforelast: Double, last: Double, TestFunction2ApplyNTimesRec_this_func1$2: Function2): Double = {
-      <synthetic> val _$this: TestFunction2ApplyNTimesRec = TestFunction2ApplyNTimesRec.this;
-      _rec(_$this: TestFunction2ApplyNTimesRec, n: Int, beforelast: Double, last: Double){
-        if (n.==(0))
-          last
-        else
-          _rec(TestFunction2ApplyNTimesRec.this, n.-(1), last, TestFunction2ApplyNTimesRec_this_func1$2.apply$mcDDD$sp(beforelast, last))
-      }
-    };
-    final private[this] def applyFunction_spec_Double1$1(TestFunction2ApplyNTimesRec_this_func1: Function2, TestFunction2ApplyNTimesRec_this_init01: Double, TestFunction2ApplyNTimesRec_this_init11: Double): Double = TestFunction2ApplyNTimesRec.this.rec$3(TestFunction2ApplyNTimesRec.this.times(), TestFunction2ApplyNTimesRec_this_init01, TestFunction2ApplyNTimesRec_this_init11, TestFunction2ApplyNTimesRec_this_func1);
-    final private[this] def rec$4(n: Int, beforelast: Int, last: Int, TestFunction2ApplyNTimesRec_this_func1$3: Function2): Int = {
-      <synthetic> val _$this: TestFunction2ApplyNTimesRec = TestFunction2ApplyNTimesRec.this;
-      _rec(_$this: TestFunction2ApplyNTimesRec, n: Int, beforelast: Int, last: Int){
-        if (n.==(0))
-          last
-        else
-          _rec(TestFunction2ApplyNTimesRec.this, n.-(1), last, TestFunction2ApplyNTimesRec_this_func1$3.apply$mcIII$sp(beforelast, last))
-      }
-    };
-    final private[this] def applyFunction_spec_Int1$1(TestFunction2ApplyNTimesRec_this_func1: Function2, TestFunction2ApplyNTimesRec_this_init01: Int, TestFunction2ApplyNTimesRec_this_init11: Int): Int = TestFunction2ApplyNTimesRec.this.rec$4(TestFunction2ApplyNTimesRec.this.times(), TestFunction2ApplyNTimesRec_this_init01, TestFunction2ApplyNTimesRec_this_init11, TestFunction2ApplyNTimesRec_this_func1);
+    final <stable> private[this] def SpecObject1$1(SpecObject1$module$1: runtime.VolatileObjectRef): TestFunction2ApplyNTimesRec#TestFunction2ApplyNTimesRec$SpecObject1$2.type = if (SpecObject1$module$1.elem.eq(null))
+      TestFunction2ApplyNTimesRec.this.SpecObject1$1$lzycompute(SpecObject1$module$1)
+    else
+      SpecObject1$module$1.elem.$asInstanceOf[TestFunction2ApplyNTimesRec#TestFunction2ApplyNTimesRec$SpecObject1$2.type]();
     def <init>(times: Int, init0: Object, init1: Object, func: Function2, evidence$1: reflect.ClassTag): TestFunction2ApplyNTimesRec = {
       TestFunction2ApplyNTimesRec.this.times = times;
       TestFunction2ApplyNTimesRec.this.init0 = init0;
@@ -129,6 +97,57 @@ package <empty> {
       TestFunction2ApplyNTimesRec.this.func = func;
       TestFunction2ApplyNTimesRec.this.evidence$1 = evidence$1;
       TestFunction2ApplyNTimesRec.super.<init>();
+      ()
+    }
+  };
+  object TestFunction2ApplyNTimesRec$SpecObject1$2 extends Object {
+    def applyFunction_specialized1(TestFunction2ApplyNTimesRec_this_func1: Function2, TestFunction2ApplyNTimesRec_this_init01: Object, TestFunction2ApplyNTimesRec_this_init11: Object): Object = TestFunction2ApplyNTimesRec$SpecObject1$2.this.rec$1(TestFunction2ApplyNTimesRec$SpecObject1$2.this.$outer.times(), TestFunction2ApplyNTimesRec_this_init01, TestFunction2ApplyNTimesRec_this_init11, TestFunction2ApplyNTimesRec_this_func1);
+    <specialized> def applyFunction_specialized1$mZc$sp(TestFunction2ApplyNTimesRec_this_func1: Function2, TestFunction2ApplyNTimesRec_this_init01: Boolean, TestFunction2ApplyNTimesRec_this_init11: Boolean): Boolean = TestFunction2ApplyNTimesRec$SpecObject1$2.this.rec$2(TestFunction2ApplyNTimesRec$SpecObject1$2.this.$outer.times(), TestFunction2ApplyNTimesRec_this_init01, TestFunction2ApplyNTimesRec_this_init11, TestFunction2ApplyNTimesRec_this_func1);
+    <specialized> def applyFunction_specialized1$mDc$sp(TestFunction2ApplyNTimesRec_this_func1: Function2, TestFunction2ApplyNTimesRec_this_init01: Double, TestFunction2ApplyNTimesRec_this_init11: Double): Double = TestFunction2ApplyNTimesRec$SpecObject1$2.this.rec$3(TestFunction2ApplyNTimesRec$SpecObject1$2.this.$outer.times(), TestFunction2ApplyNTimesRec_this_init01, TestFunction2ApplyNTimesRec_this_init11, TestFunction2ApplyNTimesRec_this_func1);
+    <specialized> def applyFunction_specialized1$mIc$sp(TestFunction2ApplyNTimesRec_this_func1: Function2, TestFunction2ApplyNTimesRec_this_init01: Int, TestFunction2ApplyNTimesRec_this_init11: Int): Int = TestFunction2ApplyNTimesRec$SpecObject1$2.this.rec$4(TestFunction2ApplyNTimesRec$SpecObject1$2.this.$outer.times(), TestFunction2ApplyNTimesRec_this_init01, TestFunction2ApplyNTimesRec_this_init11, TestFunction2ApplyNTimesRec_this_func1);
+    <synthetic> <paramaccessor> private[this] val $outer: TestFunction2ApplyNTimesRec = _;
+    final private[this] def rec$1(n: Int, beforelast: Object, last: Object, TestFunction2ApplyNTimesRec_this_func1$1: Function2): Object = {
+      <synthetic> val _$this: TestFunction2ApplyNTimesRec#TestFunction2ApplyNTimesRec$SpecObject1$2.type = TestFunction2ApplyNTimesRec$SpecObject1$2.this;
+      _rec(_$this: TestFunction2ApplyNTimesRec#TestFunction2ApplyNTimesRec$SpecObject1$2.type, n: Int, beforelast: Object, last: Object){
+        if (n.==(0))
+          last
+        else
+          _rec(TestFunction2ApplyNTimesRec$SpecObject1$2.this, n.-(1), last, TestFunction2ApplyNTimesRec_this_func1$1.apply(beforelast, last))
+      }
+    };
+    final private[this] def rec$2(n: Int, beforelast: Boolean, last: Boolean, TestFunction2ApplyNTimesRec_this_func1$2: Function2): Boolean = {
+      <synthetic> val _$this: TestFunction2ApplyNTimesRec#TestFunction2ApplyNTimesRec$SpecObject1$2.type = TestFunction2ApplyNTimesRec$SpecObject1$2.this;
+      _rec(_$this: TestFunction2ApplyNTimesRec#TestFunction2ApplyNTimesRec$SpecObject1$2.type, n: Int, beforelast: Boolean, last: Boolean){
+        if (n.==(0))
+          last
+        else
+          _rec(TestFunction2ApplyNTimesRec$SpecObject1$2.this, n.-(1), last, scala.Boolean.unbox(TestFunction2ApplyNTimesRec_this_func1$2.apply(scala.Boolean.box(beforelast), scala.Boolean.box(last))))
+      }
+    };
+    final private[this] def rec$3(n: Int, beforelast: Double, last: Double, TestFunction2ApplyNTimesRec_this_func1$3: Function2): Double = {
+      <synthetic> val _$this: TestFunction2ApplyNTimesRec#TestFunction2ApplyNTimesRec$SpecObject1$2.type = TestFunction2ApplyNTimesRec$SpecObject1$2.this;
+      _rec(_$this: TestFunction2ApplyNTimesRec#TestFunction2ApplyNTimesRec$SpecObject1$2.type, n: Int, beforelast: Double, last: Double){
+        if (n.==(0))
+          last
+        else
+          _rec(TestFunction2ApplyNTimesRec$SpecObject1$2.this, n.-(1), last, TestFunction2ApplyNTimesRec_this_func1$3.apply$mcDDD$sp(beforelast, last))
+      }
+    };
+    final private[this] def rec$4(n: Int, beforelast: Int, last: Int, TestFunction2ApplyNTimesRec_this_func1$4: Function2): Int = {
+      <synthetic> val _$this: TestFunction2ApplyNTimesRec#TestFunction2ApplyNTimesRec$SpecObject1$2.type = TestFunction2ApplyNTimesRec$SpecObject1$2.this;
+      _rec(_$this: TestFunction2ApplyNTimesRec#TestFunction2ApplyNTimesRec$SpecObject1$2.type, n: Int, beforelast: Int, last: Int){
+        if (n.==(0))
+          last
+        else
+          _rec(TestFunction2ApplyNTimesRec$SpecObject1$2.this, n.-(1), last, TestFunction2ApplyNTimesRec_this_func1$4.apply$mcIII$sp(beforelast, last))
+      }
+    };
+    def <init>($outer: TestFunction2ApplyNTimesRec): TestFunction2ApplyNTimesRec#TestFunction2ApplyNTimesRec$SpecObject1$2.type = {
+      if ($outer.eq(null))
+        throw new NullPointerException()
+      else
+        TestFunction2ApplyNTimesRec$SpecObject1$2.this.$outer = $outer;
+      TestFunction2ApplyNTimesRec$SpecObject1$2.super.<init>();
       ()
     }
   }

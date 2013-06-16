@@ -1,10 +1,10 @@
-newSource1:8: error: ambiguous implicit values:
+newSource1.scala:8: error: ambiguous implicit values:
  both value evidence$2 in class C of type scala.reflect.ClassTag[U]
  and value evidence$1 in class C of type scala.reflect.ClassTag[T]
  match expected type scala.reflect.ClassTag[T]
       specialized(Int, Double, Boolean) {
                                         ^
-[[syntax trees at end of                     typer]] // newSource1
+[[syntax trees at end of                     typer]] // newSource1.scala
 package <empty> {
   import ch.epfl.lamp.specialized._;
   import scala.reflect.ClassTag;

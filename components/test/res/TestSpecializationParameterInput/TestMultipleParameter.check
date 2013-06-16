@@ -1,100 +1,116 @@
-[[syntax trees at end of                     typer]] // newSource1
+[[syntax trees at end of                     typer]] // newSource1.scala
 package <empty> {
   import ch.epfl.lamp.specialized._;
   import scala.reflect.ClassTag;
   class C[T >: Nothing <: Any] extends scala.AnyRef {
+    <paramaccessor> private[this] val dummy: T = _;
+    <stable> <accessor> <paramaccessor> def dummy: T = C.this.dummy;
     implicit <synthetic> <paramaccessor> private[this] val evidence$1: scala.reflect.ClassTag[T] = _;
-    def <init>()(implicit evidence$1: scala.reflect.ClassTag[T]): C[T] = {
+    def <init>(dummy: T)(implicit evidence$1: scala.reflect.ClassTag[T]): C[T] = {
       C.super.<init>();
       ()
     };
-    def mIntLongShort(): Unit = {
-      def mIntLongShort_spec_Generic1(): Unit = scala.this.Predef.println();
-      def mIntLongShort_spec_Int1(): Unit = scala.this.Predef.println();
-      def mIntLongShort_spec_Long1(): Unit = scala.this.Predef.println();
-      def mIntLongShort_spec_Short1(): Unit = scala.this.Predef.println();
-      if (C.this.evidence$1.==(ManifestFactory.Int))
-  mIntLongShort_spec_Int1()
-else
-  if (C.this.evidence$1.==(ManifestFactory.Long))
-    mIntLongShort_spec_Long1()
-  else
-    if (C.this.evidence$1.==(ManifestFactory.Short))
-      mIntLongShort_spec_Short1()
-    else
-      mIntLongShort_spec_Generic1().asInstanceOf[Unit]
+    def mIntLongShort(): T = {
+  object SpecObject1 extends scala.AnyRef {
+    def <init>(): SpecObject1.type = {
+      SpecObject1.super.<init>();
+      ()
     };
-    def mDoubleFloat(): Unit = {
-      def mDoubleFloat_spec_Generic1(): Unit = scala.this.Predef.println();
-      def mDoubleFloat_spec_Double1(): Unit = scala.this.Predef.println();
-      def mDoubleFloat_spec_Float1(): Unit = scala.this.Predef.println();
-      if (C.this.evidence$1.==(ManifestFactory.Double))
-  mDoubleFloat_spec_Double1()
-else
-  if (C.this.evidence$1.==(ManifestFactory.Float))
-    mDoubleFloat_spec_Float1()
+    def mIntLongShort_specialized1[@specialized(scala.Int, scala.Long, scala.Short) T >: Nothing <: Any](C_this_dummy1: T): T = C_this_dummy1
+  };
+  import SpecObject1._;
+  import scala.reflect.ManifestFactory;
+  if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Int))
+    SpecObject1.mIntLongShort_specialized1[Int](C.this.dummy.asInstanceOf[Int])
   else
-    mDoubleFloat_spec_Generic1().asInstanceOf[Unit]
-    };
-    def mNumbers(): Unit = {
-      def mNumbers_spec_Generic1(): Unit = scala.this.Predef.println();
-      def mNumbers_spec_Double1(): Unit = scala.this.Predef.println();
-      def mNumbers_spec_Float1(): Unit = scala.this.Predef.println();
-      def mNumbers_spec_Int1(): Unit = scala.this.Predef.println();
-      def mNumbers_spec_Long1(): Unit = scala.this.Predef.println();
-      def mNumbers_spec_Short1(): Unit = scala.this.Predef.println();
-      if (C.this.evidence$1.==(ManifestFactory.Double))
-  mNumbers_spec_Double1()
-else
-  if (C.this.evidence$1.==(ManifestFactory.Float))
-    mNumbers_spec_Float1()
-  else
-    if (C.this.evidence$1.==(ManifestFactory.Int))
-      mNumbers_spec_Int1()
+    if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Long))
+      SpecObject1.mIntLongShort_specialized1[Long](C.this.dummy.asInstanceOf[Long])
     else
-      if (C.this.evidence$1.==(ManifestFactory.Long))
-        mNumbers_spec_Long1()
+      if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Short))
+        SpecObject1.mIntLongShort_specialized1[Short](C.this.dummy.asInstanceOf[Short])
       else
-        if (C.this.evidence$1.==(ManifestFactory.Short))
-          mNumbers_spec_Short1()
-        else
-          mNumbers_spec_Generic1().asInstanceOf[Unit]
+        SpecObject1.mIntLongShort_specialized1[T](C.this.dummy)
+}.asInstanceOf[T];
+    def mDoubleFloat(): T = {
+  object SpecObject2 extends scala.AnyRef {
+    def <init>(): SpecObject2.type = {
+      SpecObject2.super.<init>();
+      ()
     };
-    def mEverything(): Unit = {
-      def mEverything_spec_Generic1(): Unit = scala.this.Predef.println();
-      def mEverything_spec_Boolean1(): Unit = scala.this.Predef.println();
-      def mEverything_spec_Char1(): Unit = scala.this.Predef.println();
-      def mEverything_spec_Double1(): Unit = scala.this.Predef.println();
-      def mEverything_spec_Float1(): Unit = scala.this.Predef.println();
-      def mEverything_spec_Int1(): Unit = scala.this.Predef.println();
-      def mEverything_spec_Long1(): Unit = scala.this.Predef.println();
-      def mEverything_spec_Short1(): Unit = scala.this.Predef.println();
-      def mEverything_spec_Unit1(): Unit = scala.this.Predef.println();
-      if (C.this.evidence$1.==(ManifestFactory.Boolean))
-  mEverything_spec_Boolean1()
-else
-  if (C.this.evidence$1.==(ManifestFactory.Char))
-    mEverything_spec_Char1()
+    def mDoubleFloat_specialized1[@specialized(scala.Double, scala.Float) T >: Nothing <: Any](C_this_dummy2: T): T = C_this_dummy2
+  };
+  import SpecObject2._;
+  import scala.reflect.ManifestFactory;
+  if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Double))
+    SpecObject2.mDoubleFloat_specialized1[Double](C.this.dummy.asInstanceOf[Double])
   else
-    if (C.this.evidence$1.==(ManifestFactory.Double))
-      mEverything_spec_Double1()
+    if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Float))
+      SpecObject2.mDoubleFloat_specialized1[Float](C.this.dummy.asInstanceOf[Float])
     else
-      if (C.this.evidence$1.==(ManifestFactory.Float))
-        mEverything_spec_Float1()
+      SpecObject2.mDoubleFloat_specialized1[T](C.this.dummy)
+}.asInstanceOf[T];
+    def mNumbers(): T = {
+  object SpecObject3 extends scala.AnyRef {
+    def <init>(): SpecObject3.type = {
+      SpecObject3.super.<init>();
+      ()
+    };
+    def mNumbers_specialized1[@specialized(scala.Double, scala.Short, scala.Long, scala.Float, scala.Int) T >: Nothing <: Any](C_this_dummy3: T): T = C_this_dummy3
+  };
+  import SpecObject3._;
+  import scala.reflect.ManifestFactory;
+  if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Double))
+    SpecObject3.mNumbers_specialized1[Double](C.this.dummy.asInstanceOf[Double])
+  else
+    if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Float))
+      SpecObject3.mNumbers_specialized1[Float](C.this.dummy.asInstanceOf[Float])
+    else
+      if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Int))
+        SpecObject3.mNumbers_specialized1[Int](C.this.dummy.asInstanceOf[Int])
       else
-        if (C.this.evidence$1.==(ManifestFactory.Int))
-          mEverything_spec_Int1()
+        if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Long))
+          SpecObject3.mNumbers_specialized1[Long](C.this.dummy.asInstanceOf[Long])
         else
-          if (C.this.evidence$1.==(ManifestFactory.Long))
-            mEverything_spec_Long1()
+          if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Short))
+            SpecObject3.mNumbers_specialized1[Short](C.this.dummy.asInstanceOf[Short])
           else
-            if (C.this.evidence$1.==(ManifestFactory.Short))
-              mEverything_spec_Short1()
+            SpecObject3.mNumbers_specialized1[T](C.this.dummy)
+}.asInstanceOf[T];
+    def mEverything(): T = {
+  object SpecObject4 extends scala.AnyRef {
+    def <init>(): SpecObject4.type = {
+      SpecObject4.super.<init>();
+      ()
+    };
+    def mEverything_specialized1[@specialized(scala.Boolean, scala.Double, scala.Short, scala.Long, scala.Float, scala.Int, scala.Char, scala.Unit) T >: Nothing <: Any](C_this_dummy4: T): T = C_this_dummy4
+  };
+  import SpecObject4._;
+  import scala.reflect.ManifestFactory;
+  if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Boolean))
+    SpecObject4.mEverything_specialized1[Boolean](C.this.dummy.asInstanceOf[Boolean])
+  else
+    if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Char))
+      SpecObject4.mEverything_specialized1[Char](C.this.dummy.asInstanceOf[Char])
+    else
+      if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Double))
+        SpecObject4.mEverything_specialized1[Double](C.this.dummy.asInstanceOf[Double])
+      else
+        if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Float))
+          SpecObject4.mEverything_specialized1[Float](C.this.dummy.asInstanceOf[Float])
+        else
+          if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Int))
+            SpecObject4.mEverything_specialized1[Int](C.this.dummy.asInstanceOf[Int])
+          else
+            if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Long))
+              SpecObject4.mEverything_specialized1[Long](C.this.dummy.asInstanceOf[Long])
             else
-              if (C.this.evidence$1.==(ManifestFactory.Unit))
-                mEverything_spec_Unit1()
+              if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Short))
+                SpecObject4.mEverything_specialized1[Short](C.this.dummy.asInstanceOf[Short])
               else
-                mEverything_spec_Generic1().asInstanceOf[Unit]
-    }
+                if (C.this.evidence$1.==(scala.reflect.ManifestFactory.Unit))
+                  SpecObject4.mEverything_specialized1[Unit](C.this.dummy.asInstanceOf[Unit])
+                else
+                  SpecObject4.mEverything_specialized1[T](C.this.dummy)
+}.asInstanceOf[T]
   }
 }

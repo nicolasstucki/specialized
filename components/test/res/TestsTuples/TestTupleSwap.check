@@ -1,4 +1,4 @@
-[[syntax trees at end of                     typer]] // newSource1
+[[syntax trees at end of                     typer]] // newSource1.scala
 package <empty> {
   import scala.reflect.ClassTag;
   import ch.epfl.lamp.specialized._;
@@ -11,48 +11,80 @@ package <empty> {
       ()
     };
     def swapTuple: (T, T) = {
-      def swapTuple_spec_Generic1(): (T, T) = TestTuplesSwap.this.tup.swap;
-      def swapTuple_spec_Boolean1(TestTuplesSwap_this_tup1: (Boolean, Boolean)): (Boolean, Boolean) = TestTuplesSwap_this_tup1.swap;
-      def swapTuple_spec_Double1(TestTuplesSwap_this_tup1: (Double, Double)): (Double, Double) = TestTuplesSwap_this_tup1.swap;
-      def swapTuple_spec_Int1(TestTuplesSwap_this_tup1: (Int, Int)): (Int, Int) = TestTuplesSwap_this_tup1.swap;
-      if (TestTuplesSwap.this.evidence$1.==(ManifestFactory.Boolean))
-  swapTuple_spec_Boolean1(TestTuplesSwap.this.tup.asInstanceOf[(Boolean, Boolean)])
-else
-  if (TestTuplesSwap.this.evidence$1.==(ManifestFactory.Double))
-    swapTuple_spec_Double1(TestTuplesSwap.this.tup.asInstanceOf[(Double, Double)])
+  object SpecObject1 extends scala.AnyRef {
+    def <init>(): SpecObject1.type = {
+      SpecObject1.super.<init>();
+      ()
+    };
+    def swapTuple_specialized1[@specialized(scala.Boolean, scala.Double, scala.Int) T >: Nothing <: Any](TestTuplesSwap_this_tup1: (T, T)): (T, T) = TestTuplesSwap_this_tup1.swap
+  };
+  import SpecObject1._;
+  import scala.reflect.ManifestFactory;
+  if (TestTuplesSwap.this.evidence$1.==(scala.reflect.ManifestFactory.Boolean))
+    SpecObject1.swapTuple_specialized1[Boolean](TestTuplesSwap.this.tup.asInstanceOf[(Boolean, Boolean)])
   else
-    if (TestTuplesSwap.this.evidence$1.==(ManifestFactory.Int))
-      swapTuple_spec_Int1(TestTuplesSwap.this.tup.asInstanceOf[(Int, Int)])
+    if (TestTuplesSwap.this.evidence$1.==(scala.reflect.ManifestFactory.Double))
+      SpecObject1.swapTuple_specialized1[Double](TestTuplesSwap.this.tup.asInstanceOf[(Double, Double)])
     else
-      swapTuple_spec_Generic1().asInstanceOf[(T, T)]
-    }
+      if (TestTuplesSwap.this.evidence$1.==(scala.reflect.ManifestFactory.Int))
+        SpecObject1.swapTuple_specialized1[Int](TestTuplesSwap.this.tup.asInstanceOf[(Int, Int)])
+      else
+        SpecObject1.swapTuple_specialized1[T](TestTuplesSwap.this.tup)
+}.asInstanceOf[(T, T)]
   }
 }
 
-[[syntax trees at end of                       jvm]] // newSource1
+[[syntax trees at end of                       jvm]] // newSource1.scala
 package <empty> {
   class TestTuplesSwap extends Object {
+    private def SpecObject1$1$lzycompute(x$1: runtime.VolatileObjectRef): TestTuplesSwap#TestTuplesSwap$SpecObject1$2.type = {
+      {
+        TestTuplesSwap.this.synchronized({
+          if (x$1.elem.eq(null))
+            {
+              x$1.elem = new TestTuplesSwap#TestTuplesSwap$SpecObject1$2.type(TestTuplesSwap.this);
+              ()
+            };
+          scala.runtime.BoxedUnit.UNIT
+        });
+        null
+      };
+      x$1.elem.$asInstanceOf[TestTuplesSwap#TestTuplesSwap$SpecObject1$2.type]()
+    };
     <paramaccessor> private[this] val tup: Tuple2 = _;
     <stable> <accessor> <paramaccessor> def tup(): Tuple2 = TestTuplesSwap.this.tup;
     implicit <synthetic> <paramaccessor> private[this] val evidence$1: reflect.ClassTag = _;
-    def swapTuple(): Tuple2 = if (TestTuplesSwap.this.evidence$1.==(ManifestFactory.Boolean()))
-      TestTuplesSwap.this.swapTuple_spec_Boolean1$1(TestTuplesSwap.this.tup())
-    else
-      if (TestTuplesSwap.this.evidence$1.==(ManifestFactory.Double()))
-        TestTuplesSwap.this.swapTuple_spec_Double1$1(TestTuplesSwap.this.tup())
+    def swapTuple(): Tuple2 = {
+      @volatile var SpecObject1$module: runtime.VolatileObjectRef = new runtime.VolatileObjectRef(null);
+      if (TestTuplesSwap.this.evidence$1.==(scala.reflect.ManifestFactory.Boolean()))
+        TestTuplesSwap.this.SpecObject1$1(SpecObject1$module).swapTuple_specialized1$mZc$sp(TestTuplesSwap.this.tup())
       else
-        if (TestTuplesSwap.this.evidence$1.==(ManifestFactory.Int()))
-          TestTuplesSwap.this.swapTuple_spec_Int1$1(TestTuplesSwap.this.tup())
+        if (TestTuplesSwap.this.evidence$1.==(scala.reflect.ManifestFactory.Double()))
+          TestTuplesSwap.this.SpecObject1$1(SpecObject1$module).swapTuple_specialized1$mDc$sp(TestTuplesSwap.this.tup())
         else
-          TestTuplesSwap.this.swapTuple_spec_Generic1$1();
-    final private[this] def swapTuple_spec_Generic1$1(): Tuple2 = TestTuplesSwap.this.tup().swap();
-    final private[this] def swapTuple_spec_Boolean1$1(TestTuplesSwap_this_tup1: Tuple2): Tuple2 = TestTuplesSwap_this_tup1.swap$mcZZ$sp();
-    final private[this] def swapTuple_spec_Double1$1(TestTuplesSwap_this_tup1: Tuple2): Tuple2 = TestTuplesSwap_this_tup1.swap$mcDD$sp();
-    final private[this] def swapTuple_spec_Int1$1(TestTuplesSwap_this_tup1: Tuple2): Tuple2 = TestTuplesSwap_this_tup1.swap$mcII$sp();
+          if (TestTuplesSwap.this.evidence$1.==(scala.reflect.ManifestFactory.Int()))
+            TestTuplesSwap.this.SpecObject1$1(SpecObject1$module).swapTuple_specialized1$mIc$sp(TestTuplesSwap.this.tup())
+          else
+            TestTuplesSwap.this.SpecObject1$1(SpecObject1$module).swapTuple_specialized1(TestTuplesSwap.this.tup())
+    };
+    final <stable> private[this] def SpecObject1$1(SpecObject1$module$1: runtime.VolatileObjectRef): TestTuplesSwap#TestTuplesSwap$SpecObject1$2.type = if (SpecObject1$module$1.elem.eq(null))
+      TestTuplesSwap.this.SpecObject1$1$lzycompute(SpecObject1$module$1)
+    else
+      SpecObject1$module$1.elem.$asInstanceOf[TestTuplesSwap#TestTuplesSwap$SpecObject1$2.type]();
     def <init>(tup: Tuple2, evidence$1: reflect.ClassTag): TestTuplesSwap = {
       TestTuplesSwap.this.tup = tup;
       TestTuplesSwap.this.evidence$1 = evidence$1;
       TestTuplesSwap.super.<init>();
+      ()
+    }
+  };
+  object TestTuplesSwap$SpecObject1$2 extends Object {
+    def swapTuple_specialized1(TestTuplesSwap_this_tup1: Tuple2): Tuple2 = TestTuplesSwap_this_tup1.swap();
+    <specialized> def swapTuple_specialized1$mZc$sp(TestTuplesSwap_this_tup1: Tuple2): Tuple2 = TestTuplesSwap_this_tup1.swap$mcZZ$sp();
+    <specialized> def swapTuple_specialized1$mDc$sp(TestTuplesSwap_this_tup1: Tuple2): Tuple2 = TestTuplesSwap_this_tup1.swap$mcDD$sp();
+    <specialized> def swapTuple_specialized1$mIc$sp(TestTuplesSwap_this_tup1: Tuple2): Tuple2 = TestTuplesSwap_this_tup1.swap$mcII$sp();
+    def <init>($outer: TestTuplesSwap): TestTuplesSwap#TestTuplesSwap$SpecObject1$2.type = {
+      TestTuplesSwap$SpecObject1$2.super.<init>();
       ()
     }
   }
