@@ -2,17 +2,17 @@
 import ch.epfl.lamp.specialized._
 import scala.reflect.ClassTag
 
-class C[T: ClassTag] {
+class C[T: ClassTag](val dummy: T) {
 
    def m1() = {
       specialized[T]() {
-         println
+         dummy
       }
    }
    
    def m2() = {
       specialized[T] {
-         println
+         dummy
       }
    }
 }

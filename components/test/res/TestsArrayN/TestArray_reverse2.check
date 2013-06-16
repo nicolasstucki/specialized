@@ -1,0 +1,174 @@
+[[syntax trees at end of                     typer]] // newSource1.scala
+package <empty> {
+  import scala.reflect.ClassTag;
+  import ch.epfl.lamp.specialized._;
+  class TestArray[T >: Nothing <: Any] extends scala.AnyRef {
+    <paramaccessor> private[this] val arr: Array[T] = _;
+    implicit <paramaccessor> private[this] val classTag: scala.reflect.ClassTag[T] = _;
+    def <init>(arr: Array[T])(implicit classTag: scala.reflect.ClassTag[T]): TestArray[T] = {
+      TestArray.super.<init>();
+      ()
+    };
+    def reverse2: Unit = {
+      object SpecObject1 extends scala.AnyRef {
+        def <init>(): SpecObject1.type = {
+          SpecObject1.super.<init>();
+          ()
+        };
+        def reverse2_specialized1[@specialized(scala.Boolean, scala.Double, scala.Int) T >: Nothing <: Any](TestArray_this_arr1: Array[T]): Unit = {
+          var i: Int = 0;
+          while$1(){
+            if (i.<(TestArray_this_arr1.length./(2)))
+              {
+                {
+                  val j: Int = TestArray_this_arr1.length.-(i).-(1);
+                  val temp: T = TestArray_this_arr1.apply(j);
+                  TestArray_this_arr1.update(j, TestArray_this_arr1.apply(i));
+                  TestArray_this_arr1.update(i, temp);
+                  i = i.+(1)
+                };
+                while$1()
+              }
+            else
+              ()
+          }
+        }
+      };
+      import SpecObject1._;
+      import scala.reflect.ManifestFactory;
+      if (TestArray.this.classTag.==(scala.reflect.ManifestFactory.Boolean))
+        SpecObject1.reverse2_specialized1[Boolean](TestArray.this.arr.asInstanceOf[Array[Boolean]])
+      else
+        if (TestArray.this.classTag.==(scala.reflect.ManifestFactory.Double))
+          SpecObject1.reverse2_specialized1[Double](TestArray.this.arr.asInstanceOf[Array[Double]])
+        else
+          if (TestArray.this.classTag.==(scala.reflect.ManifestFactory.Int))
+            SpecObject1.reverse2_specialized1[Int](TestArray.this.arr.asInstanceOf[Array[Int]])
+          else
+            SpecObject1.reverse2_specialized1[T](TestArray.this.arr)
+    }
+  }
+}
+
+[[syntax trees at end of                       jvm]] // newSource1.scala
+package <empty> {
+  class TestArray extends Object {
+    private def SpecObject1$1$lzycompute(x$1: runtime.VolatileObjectRef): TestArray#TestArray$SpecObject1$2.type = {
+      {
+        TestArray.this.synchronized({
+          if (x$1.elem.eq(null))
+            {
+              x$1.elem = new TestArray#TestArray$SpecObject1$2.type(TestArray.this);
+              ()
+            };
+          scala.runtime.BoxedUnit.UNIT
+        });
+        null
+      };
+      x$1.elem.$asInstanceOf[TestArray#TestArray$SpecObject1$2.type]()
+    };
+    <paramaccessor> private[this] val arr: Object = _;
+    implicit <paramaccessor> private[this] val classTag: reflect.ClassTag = _;
+    def reverse2(): Unit = {
+      @volatile var SpecObject1$module: runtime.VolatileObjectRef = new runtime.VolatileObjectRef(null);
+      if (TestArray.this.classTag.==(scala.reflect.ManifestFactory.Boolean()))
+        TestArray.this.SpecObject1$1(SpecObject1$module).reverse2_specialized1$mZc$sp(TestArray.this.arr.$asInstanceOf[Array[Boolean]]())
+      else
+        if (TestArray.this.classTag.==(scala.reflect.ManifestFactory.Double()))
+          TestArray.this.SpecObject1$1(SpecObject1$module).reverse2_specialized1$mDc$sp(TestArray.this.arr.$asInstanceOf[Array[Double]]())
+        else
+          if (TestArray.this.classTag.==(scala.reflect.ManifestFactory.Int()))
+            TestArray.this.SpecObject1$1(SpecObject1$module).reverse2_specialized1$mIc$sp(TestArray.this.arr.$asInstanceOf[Array[Int]]())
+          else
+            TestArray.this.SpecObject1$1(SpecObject1$module).reverse2_specialized1(TestArray.this.arr)
+    };
+    final <stable> private[this] def SpecObject1$1(SpecObject1$module$1: runtime.VolatileObjectRef): TestArray#TestArray$SpecObject1$2.type = if (SpecObject1$module$1.elem.eq(null))
+      TestArray.this.SpecObject1$1$lzycompute(SpecObject1$module$1)
+    else
+      SpecObject1$module$1.elem.$asInstanceOf[TestArray#TestArray$SpecObject1$2.type]();
+    def <init>(arr: Object, classTag: reflect.ClassTag): TestArray = {
+      TestArray.this.arr = arr;
+      TestArray.this.classTag = classTag;
+      TestArray.super.<init>();
+      ()
+    }
+  };
+  object TestArray$SpecObject1$2 extends Object {
+    def reverse2_specialized1(TestArray_this_arr1: Object): Unit = {
+      var i: Int = 0;
+      while$1(){
+        if (i.<(runtime.this.ScalaRunTime.array_length(TestArray_this_arr1)./(2)))
+          {
+            {
+              val j: Int = runtime.this.ScalaRunTime.array_length(TestArray_this_arr1).-(i).-(1);
+              val temp: Object = runtime.this.ScalaRunTime.array_apply(TestArray_this_arr1, j);
+              runtime.this.ScalaRunTime.array_update(TestArray_this_arr1, j, runtime.this.ScalaRunTime.array_apply(TestArray_this_arr1, i));
+              runtime.this.ScalaRunTime.array_update(TestArray_this_arr1, i, temp);
+              i = i.+(1)
+            };
+            while$1()
+          }
+        else
+          ()
+      }
+    };
+    <specialized> def reverse2_specialized1$mZc$sp(TestArray_this_arr1: Array[Boolean]): Unit = {
+      var i: Int = 0;
+      while$1(){
+        if (i.<(TestArray_this_arr1.length()./(2)))
+          {
+            {
+              val j: Int = TestArray_this_arr1.length().-(i).-(1);
+              val temp: Boolean = TestArray_this_arr1.apply(j);
+              TestArray_this_arr1.update(j, TestArray_this_arr1.apply(i));
+              TestArray_this_arr1.update(i, temp);
+              i = i.+(1)
+            };
+            while$1()
+          }
+        else
+          ()
+      }
+    };
+    <specialized> def reverse2_specialized1$mDc$sp(TestArray_this_arr1: Array[Double]): Unit = {
+      var i: Int = 0;
+      while$1(){
+        if (i.<(TestArray_this_arr1.length()./(2)))
+          {
+            {
+              val j: Int = TestArray_this_arr1.length().-(i).-(1);
+              val temp: Double = TestArray_this_arr1.apply(j);
+              TestArray_this_arr1.update(j, TestArray_this_arr1.apply(i));
+              TestArray_this_arr1.update(i, temp);
+              i = i.+(1)
+            };
+            while$1()
+          }
+        else
+          ()
+      }
+    };
+    <specialized> def reverse2_specialized1$mIc$sp(TestArray_this_arr1: Array[Int]): Unit = {
+      var i: Int = 0;
+      while$1(){
+        if (i.<(TestArray_this_arr1.length()./(2)))
+          {
+            {
+              val j: Int = TestArray_this_arr1.length().-(i).-(1);
+              val temp: Int = TestArray_this_arr1.apply(j);
+              TestArray_this_arr1.update(j, TestArray_this_arr1.apply(i));
+              TestArray_this_arr1.update(i, temp);
+              i = i.+(1)
+            };
+            while$1()
+          }
+        else
+          ()
+      }
+    };
+    def <init>($outer: TestArray): TestArray#TestArray$SpecObject1$2.type = {
+      TestArray$SpecObject1$2.super.<init>();
+      ()
+    }
+  }
+}

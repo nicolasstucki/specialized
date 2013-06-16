@@ -1,7 +1,7 @@
-newSource1:7: error: Specify type parameter using: specialized[T] {...}, T must be a type parameter of the enclosing context and it must have a ClassTag. Type patameter must be on top level, example: if you want to specialize an Array[T] use specialize[T] {...}.
+newSource1.scala:7: error: Specify type parameter using: specialized[T] {...}, T must be a type parameter of the enclosing context and it must have a ClassTag. Type patameter must be on top level, example: if you want to specialize an Array[T] use specialize[T] {...}.
       specialized[Any](Int, Double, Boolean) {
                                              ^
-[[syntax trees at end of                     typer]] // newSource1
+[[syntax trees at end of                     typer]] // newSource1.scala
 package <empty> {
   import ch.epfl.lamp.specialized._;
   class C[T >: Nothing <: Any, U >: Nothing <: Any] extends scala.AnyRef {

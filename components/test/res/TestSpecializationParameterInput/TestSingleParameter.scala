@@ -2,59 +2,59 @@
 import ch.epfl.lamp.specialized._
 import scala.reflect.ClassTag
 
-class C[T: ClassTag] {
+class C[T: ClassTag](val dummy: T) {
 
    def mBoolean() = {
       specialized[T](Boolean) {
-         println
+         dummy
       }
    }
 
    def mByte() = {
       specialized[T](Byte) {
-         println
+         dummy
       }
    }
 
    def mChar() = {
       specialized[T](Char) {
-         println
+         dummy
       }
    }
 
    def mDouble() = {
       specialized[T](Double) {
-         println
+         dummy
       }
    }
 
    def mFloat() = {
       specialized[T](Float) {
-         println
+         dummy
       }
    }
 
    def mInt() = {
       specialized[T](Int) {
-         println
+         dummy
       }
    }
 
    def mLong() = {
       specialized[T](Long) {
-         println
+         dummy
       }
    }
 
    def mShort() = {
       specialized[T](Short) {
-         println
+         dummy
       }
    }
    
    def mUnit() = {
       specialized[T](Unit) {
-         println
+         dummy
       }
    }
 }

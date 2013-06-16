@@ -2,29 +2,29 @@
 import ch.epfl.lamp.specialized._
 import scala.reflect.ClassTag
 
-class C[T: ClassTag] {
-
+class C[T: ClassTag](val dummy: T) {
+	
    def mIntLongShort() = {
       specialized[T](Int, Long, Short) {
-         println
+         dummy
       }
    }
 
    def mDoubleFloat() = {
       specialized[T](Double, Float) {
-         println
+         dummy
       }
    }
    
    def mNumbers() = {
       specialized[T](Int, Long, Short, Double, Float) {
-         println
+         dummy
       }
    }
    
    def mEverything() = {
       specialized[T](Int, Long, Short, Double, Float, Boolean, Char, Unit) {
-         println
+         dummy
       }
    }
 }

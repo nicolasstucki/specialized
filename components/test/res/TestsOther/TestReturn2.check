@@ -1,0 +1,28 @@
+newSource1.scala:8: error: method return1 has return statement; needs result type
+        return dummy
+        ^
+[[syntax trees at end of                     typer]] // newSource1.scala
+package <empty> {
+  import scala.reflect.ClassTag;
+  import ch.epfl.lamp.specialized._;
+  class TestReturn[T >: Nothing <: Any] extends scala.AnyRef {
+    <paramaccessor> private[this] val dummy: T = _;
+    implicit <synthetic> <paramaccessor> private[this] val evidence$1: scala.reflect.ClassTag[T] = _;
+    def <init>(dummy: T)(implicit evidence$1: scala.reflect.ClassTag[T]): TestReturn[T] = {
+      TestReturn.super.<init>();
+      ()
+    };
+    def return1: <error> = ch.epfl.lamp.specialized.`package`.specialized[T](scala.Int, scala.Double, scala.Boolean)({
+      while$1(){
+        if (true)
+          {
+            return dummy;
+            while$1()
+          }
+        else
+          ()
+      };
+      TestReturn.this.dummy
+    })(TestReturn.this.evidence$1)
+  }
+}
