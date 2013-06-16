@@ -55,7 +55,7 @@ object SpecializedBenchmark extends PerformanceTest {
     }
   }
 
-  for (n <- Seq(5000000 /*200000, 500000, 1000000, 2000000*/ )) {
+  for (n <- Seq(1000000)) {
     bench(Gen.single("BenchmarkArrayReverse[Int]")(n).map(new BenchmarkArrayReverse[Int](_)))
     bench(Gen.single("BenchmarkArrayReverse[Double]")(n).map(new BenchmarkArrayReverse[Double](_)))
     bench(Gen.single("BenchmarkArrayReverse[Boolean]")(n).map(new BenchmarkArrayReverse[Boolean](_)))
@@ -84,22 +84,16 @@ object SpecializedBenchmark extends PerformanceTest {
     bench(Gen.single("BenchmarkArrayMapOverFunction[Int]")(n).map(new BenchmarkArrayMapOverFunction[Int](_)((x: Int) => x)))
     bench(Gen.single("BenchmarkArrayMapOverFunction[Double]")(n).map(new BenchmarkArrayMapOverFunction[Double](_)((x: Double) => x)))
     bench(Gen.single("BenchmarkArrayMapOverFunction[Boolean]")(n).map(new BenchmarkArrayMapOverFunction[Boolean](_)((x: Boolean) => x)))
-    bench(Gen.single("BenchmarkArrayMapOverFunction[Any]")(n).map(new BenchmarkArrayMapOverFunction[Any](_)((x: Any) => x.hashCode)))
 
     bench(Gen.single("BenchmarkArrayTabulate[Int]")(n).map(new BenchmarkArrayTabulate[Int](_)((x: Int) => 4 * x)))
     bench(Gen.single("BenchmarkArrayTabulate[Double]")(n).map(new BenchmarkArrayTabulate[Double](_)((x: Int) => 4 * x)))
     bench(Gen.single("BenchmarkArrayTabulate[Boolean]")(n).map(new BenchmarkArrayTabulate[Boolean](_)((x: Int) => x % 2 == 0)))
     bench(Gen.single("BenchmarkArrayTabulate[Any]")(n).map(new BenchmarkArrayTabulate[Any](_)((x: Int) => 4 * x)))
 
-    bench(Gen.single("BenchmarkFunctionApplyNTimesRecOverTuples[Int]")(n).map(new BenchmarkFunctionApplyNTimesRecOverTuples[Int](_)((7, 4), (x: Int) => x * 5)))
-    bench(Gen.single("BenchmarkFunctionApplyNTimesRecOverTuples[Double]")(n).map(new BenchmarkFunctionApplyNTimesRecOverTuples[Double](_)((2.3, 3.5), (x: Double) => x * 2.3d)))
-    bench(Gen.single("BenchmarkFunctionApplyNTimesRecOverTuples[Boolean]")(n).map(new BenchmarkFunctionApplyNTimesRecOverTuples[Boolean](_)((false, true), (x: Boolean) => !x)))
-    bench(Gen.single("BenchmarkFunctionApplyNTimesRecOverTuples[Any]")(n).map(new BenchmarkFunctionApplyNTimesRecOverTuples[Any](_)(("f", BigInt("3")), (x: Any) => x.hashCode)))
-
-    bench(Gen.single("BenchmarkArrayOfTuplesSwap[Int]")(n).map(new BenchmarkArrayOfTuplesSwap[Int](_)))
-    bench(Gen.single("BenchmarkArrayOfTuplesSwap[Double]")(n).map(new BenchmarkArrayOfTuplesSwap[Double](_)))
-    bench(Gen.single("BenchmarkArrayOfTuplesSwap[Boolean]")(n).map(new BenchmarkArrayOfTuplesSwap[Boolean](_)))
-    bench(Gen.single("BenchmarkArrayOfTuplesSwap[Any]")(n).map(new BenchmarkArrayOfTuplesSwap[Any](_)))
+    bench(Gen.single("BenchmarkTuplesSwap[Int]")(n).map(new BenchmarkTuplesSwap[Int](_)((1, 3))))
+    bench(Gen.single("BenchmarkTuplesSwap[Double]")(n).map(new BenchmarkTuplesSwap[Double](_)(1L, 3L)))
+    bench(Gen.single("BenchmarkTuplesSwap[Boolean]")(n).map(new BenchmarkTuplesSwap[Boolean](_)((true, false))))
+    bench(Gen.single("BenchmarkTuplesSwap[Any]")(n).map(new BenchmarkTuplesSwap[Any](_)((1, "f"))))
   }
 
   def bench(test: Gen[BenchmarkApi]): Unit = {
@@ -108,10 +102,10 @@ object SpecializedBenchmark extends PerformanceTest {
     val c2Flags = ("c2 ", "-XX:-TieredCompilation -XX:CompileThreshold=1 -server")
     val sameVMFlags = ("same", "-Xint")
 
-    val samples = 3
-    val minWarmupRuns = 3
+    val samples = 1
+    val minWarmupRuns = 20
 
-    for ((flagtype, flags) <- Seq(/*interpFlags,*/ c1Flags, c2Flags/*, sameVMFlags*/)) {
+    for ((flagtype, flags) <- Seq( /*interpFlags,*/ c1Flags, c2Flags /*, sameVMFlags*/ )) {
 
       // The four measures are needed for the formating of the reporter
       measure method "%s".format(flagtype) in {

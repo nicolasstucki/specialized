@@ -202,10 +202,12 @@ object `package` {
     }
 
     val newTree = bodyInliner.transform(c.parse(newTreeTemplate_str))
+    // c.warning(classTag.tree.pos, "newTree: " + show(newTree))
+    // c.warning(classTag.tree.pos, "newTree: " + showRaw(newTree))
 
     val newExpr = c.Expr[Any](c.typeCheck(newTree, typeOf_f))
-    // c.warning(classTag.tree.pos, "new expr: " + show(newExpr))
-    // c.warning(classTag.tree.pos, "new expr: " + showRaw(newExpr))
+    // c.warning(classTag.tree.pos, "newExpr: " + show(newExpr))
+    // c.warning(classTag.tree.pos, "newExpr: " + showRaw(newExpr))
     newExpr
   }
 
