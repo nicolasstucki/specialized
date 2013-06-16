@@ -115,6 +115,20 @@ object `package` {
       }
     }
 
+    // Do not let the use of Return statements
+    object findReturns extends Traverser {
+      var found = false
+      override def traverse(tree: Tree) = tree match {
+        case Return(_) => found = true
+        case _ if !found => super.traverse(tree)
+      }
+    }
+    findReturns.traverse(expr_f.tree)
+    if (findReturns.found) {
+      c.error(classTag.tree.pos, "specialized[T] {...} doesn't suport 'return'")
+      return expr_f
+    }
+
     // RETRIEVE DEFINITIONS AND USES OF TERMS THAT HAVE T IN THE TYPE
     val mapping = getTemsMapping(c)(expr_f, typeOf_T)
 
