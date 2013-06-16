@@ -1,10 +1,10 @@
-package ch.epfl.lamp.specialized.benchmark.tests
+package ch.epfl.lamp.specialized.benchmark.cases
 
 import scala.reflect.ClassTag
 import ch.epfl.lamp.specialized._
 import scala.reflect.ManifestFactory
 
-class TestArrayOfTuplesSwap[T](val size: Int)(implicit classTag: ClassTag[T]) extends TestApi {
+class BenchmarkArrayOfTuplesSwap[T](val size: Int)(implicit classTag: ClassTag[T]) extends BenchmarkApi {
   val arr = new Array[(T, T)](size)
 
   /**

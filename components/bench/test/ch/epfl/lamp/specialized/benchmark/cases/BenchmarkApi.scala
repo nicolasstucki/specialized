@@ -1,6 +1,6 @@
-package ch.epfl.lamp.specialized.benchmark.tests
+package ch.epfl.lamp.specialized.benchmark.cases
 
-trait TestApi {
+trait BenchmarkApi {
    def test: Any
    def testUnrolled: Any
    def testSpecialized: Any
