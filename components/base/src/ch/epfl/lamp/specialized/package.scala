@@ -145,7 +145,7 @@ object `package` {
 
     val manifestsExpr = getManifestExprMap(c)
 
-    val callersBlock = callMethods.keys.foldRight[c.Expr[Any]](callGenericMethod)((tpe, expr) => reify { if (classTag.splice == manifestsExpr(tpe).splice) callMethods(tpe).splice else expr.splice }).tree
+    val callersBlockTree = callMethods.keys.foldRight[c.Expr[Any]](callGenericMethod)((tpe, expr) => reify { if (classTag.splice == manifestsExpr(tpe).splice) callMethods(tpe).splice else expr.splice }).tree
 
     // CREATE SPECIALIZED METHOD TREE
     object fieldToIdents extends Transformer {
@@ -159,8 +159,9 @@ object `package` {
       }
     }
 
-    val newBody = fieldToIdents.transform(expr_f.tree)
+    val newBodyTree = fieldToIdents.transform(expr_f.tree)
 
+    // These parts are Strings because they will be used inside a c.parse
     val vparamss_str = (mapping.values.toList map { case (param_name, param_type, _) => f"$param_name: $param_type" }).mkString(", ")
     val at_spec_params_str = typesToTypeTree.keys.map(_.toString.drop(13)).mkString(", ")
     val cast_back_str = if (typeOf_f.contains(typeOf_T.typeSymbol)) s".asInstanceOf[$typeOf_f]" else ""
@@ -170,16 +171,25 @@ object `package` {
 
     // JOIN EVERYTHING TOGETHER
     // Here parse is used instead of reify to ensure that all symbols are erased from the tree
-    val newTreeStr = s"""{
+    val newTreeTemplate_str = s"""{
         	object $spec_obj {
-				def $specMethodName[@specialized($at_spec_params_str) $typeOf_T]($vparamss_str): $typeOf_f = { $newBody }
+				def $specMethodName[@specialized($at_spec_params_str) $typeOf_T]($vparamss_str): $typeOf_f = { ??? }
 			}
 			import $spec_obj._
 			import scala.reflect.ManifestFactory
-			$callersBlock
+			${callersBlockTree}
     	}$cast_back_str""".replaceAllLiterally("scala.this.Predef.", "")
 
-    val newExpr = c.Expr[Any](c.typeCheck(c.parse(newTreeStr), typeOf_f))
+    object bodyInliner extends Transformer {
+      override def transform(tree: Tree): Tree = tree match {
+        case Ident(name) if name.toString == "$qmark$qmark$qmark" => c.resetAllAttrs(newBodyTree)
+        case _ => super.transform(tree)
+      }
+    }
+
+    val newTree = bodyInliner.transform(c.parse(newTreeTemplate_str))
+
+    val newExpr = c.Expr[Any](c.typeCheck(newTree, typeOf_f))
     // c.warning(classTag.tree.pos, "new expr: " + show(newExpr))
     // c.warning(classTag.tree.pos, "new expr: " + showRaw(newExpr))
     newExpr
