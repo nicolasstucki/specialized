@@ -1,4 +1,4 @@
-package ch.epfl.lamp.specialized.benchmark.tests
+package ch.epfl.lamp.specialized.benchmark.cases
 
 import scala.util.control.Exception
 import scala.reflect.ClassTag
@@ -6,7 +6,7 @@ import scala.annotation.tailrec
 import ch.epfl.lamp.specialized._
 import scala.reflect.ManifestFactory
 
-class TestFunctionApplyNTimesRec[T](val times: Int)(val init: T, val func: T => T)(implicit classTag: ClassTag[T]) extends TestApi {
+class BenchmarkFunctionApplyNTimesRec[T](val times: Int)(val init: T, val func: T => T)(implicit classTag: ClassTag[T]) extends BenchmarkApi {
 
   def test = {
     @tailrec def rec(n: Int, last: T): T = {

@@ -1,4 +1,4 @@
-package ch.epfl.lamp.specialized.benchmark.tests
+package ch.epfl.lamp.specialized.benchmark.cases
 
 import scala.util.control.Exception
 import scala.reflect.ClassTag
@@ -6,7 +6,7 @@ import scala.annotation.tailrec
 import ch.epfl.lamp.specialized._
 import scala.reflect.ManifestFactory
 
-class TestFunctionApplyNTimesRecOverTuples[T](val times: Int)(val init: (T, T), val func: T => T)(implicit classTag: ClassTag[T]) extends TestApi {
+class BenchmarkFunctionApplyNTimesRecOverTuples[T](val times: Int)(val init: (T, T), val func: T => T)(implicit classTag: ClassTag[T]) extends BenchmarkApi {
 
   def test = {
     @tailrec def rec(n: Int, last: (T, T)): (T, T) = {
@@ -17,13 +17,13 @@ class TestFunctionApplyNTimesRecOverTuples[T](val times: Int)(val init: (T, T), 
   }
 
   def testSpecializedBlock = {
-    specialized[T] {
-      @tailrec def rec(n: Int, last: (T, T)): (T, T) = {
-        if (n == 0) last
-        else rec(n - 1, (func(last._1), func(last._2)))
-      }
-      rec(times, init)
-    }
+//    specialized[T] {
+//      @tailrec def rec(n: Int, last: (T, T)): (T, T) = {
+//        if (n == 0) last
+//        else rec(n - 1, (func(last._1), func(last._2)))
+//      }
+//      rec(times, init)
+//    }
   }
 
   def testUnrolled = {

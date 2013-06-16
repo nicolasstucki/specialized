@@ -1,11 +1,11 @@
-package ch.epfl.lamp.specialized.benchmark.tests
+package ch.epfl.lamp.specialized.benchmark.cases
 
 import scala.util.control.Exception
 import scala.reflect.ClassTag
 import ch.epfl.lamp.specialized._
 import scala.reflect.ManifestFactory
 
-class TestArrayMapOverFunction[T](val size: Int)(val func: T => T)(implicit classTag: ClassTag[T]) extends TestApi {
+class BenchmarkArrayMapOverFunction[T](val size: Int)(val func: T => T)(implicit classTag: ClassTag[T]) extends BenchmarkApi {
   val arr = new Array[T](size)
 
   def test = {
