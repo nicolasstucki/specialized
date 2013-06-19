@@ -55,7 +55,7 @@ object SpecializedBenchmark extends PerformanceTest {
     }
   }
 
-  for (n <- Seq(1000000)) {
+  for (n <- Seq(1000000, 2000000, 5000000)) {
     bench(Gen.single("BenchmarkArrayReverse[Int]")(n).map(new BenchmarkArrayReverse[Int](_)))
     bench(Gen.single("BenchmarkArrayReverse[Double]")(n).map(new BenchmarkArrayReverse[Double](_)))
     bench(Gen.single("BenchmarkArrayReverse[Boolean]")(n).map(new BenchmarkArrayReverse[Boolean](_)))
