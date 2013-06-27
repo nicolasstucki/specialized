@@ -1,0 +1,77 @@
+[[syntax trees at end of                specialize]] // newSource1.scala
+package <empty> {
+  class Target[@specialized(scala.Int) T >: Nothing <: Any] extends Object {
+    def <init>(): Target[T] = {
+      Target.super.<init>();
+      ()
+    };
+    def foo(): Int = 1
+  };
+  object Test extends Object {
+    def <init>(): Test.type = {
+      Test.super.<init>();
+      ()
+    };
+    def spec_mapper[@specialized(scala.Int) T >: Nothing <: Any](t: T): Int = {
+      class X extends Target[T] {
+        def <init>(): X = {
+          X.super.<init>();
+          ()
+        }
+      };
+      new X().foo()
+    };
+    <specialized> def spec_mapper$mIc$sp(t: Int): Int = {
+      class X extends Target$mcI$sp {
+        def <init>(): X = {
+          X.super.<init>();
+          ()
+        }
+      };
+      new X().foo()
+    }
+  };
+  <specialized> class Target$mcI$sp extends Target[Int] {
+    <specialized> def <init>(): Target$mcI$sp = {
+      Target$mcI$sp.super.<init>();
+      ()
+    }
+  }
+}
+
+[[syntax trees at end of                       jvm]] // newSource1.scala
+package <empty> {
+  class Target extends Object {
+    def foo(): Int = 1;
+    def <init>(): Target = {
+      Target.super.<init>();
+      ()
+    }
+  };
+  object Test extends Object {
+    def spec_mapper(t: Object): Int = new Test$X$2().foo();
+    <specialized> def spec_mapper$mIc$sp(t: Int): Int = new Test$X$1().foo();
+    def <init>(): Test.type = {
+      Test.super.<init>();
+      ()
+    }
+  };
+  <specialized> class Target$mcI$sp extends Target {
+    <specialized> def <init>(): Target$mcI$sp = {
+      Target$mcI$sp.super.<init>();
+      ()
+    }
+  };
+  class Test$X$2 extends Target {
+    def <init>(): Test$X$2 = {
+      Test$X$2.super.<init>();
+      ()
+    }
+  };
+  class Test$X$1 extends Target$mcI$sp {
+    def <init>(): Test$X$1 = {
+      Test$X$1.super.<init>();
+      ()
+    }
+  }
+}

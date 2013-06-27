@@ -100,8 +100,9 @@ package <empty> {
       ()
     }
   };
-  final <synthetic> class TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mZc$sp$1 extends runtime.AbstractFunction1 with Serializable {
-    final def apply(i: Int): Unit = {
+  final <synthetic> class TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mZc$sp$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(i: Int): Unit = TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mZc$sp$1.this.apply$mcVI$sp(i);
+    <specialized> def apply$mcVI$sp(i: Int): Unit = {
       val j: Int = TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mZc$sp$1.this.TestArray_this_arr1$2.length().-(i).-(1);
       val temp: Boolean = TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mZc$sp$1.this.TestArray_this_arr1$2.apply(j);
       TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mZc$sp$1.this.TestArray_this_arr1$2.update(j, TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mZc$sp$1.this.TestArray_this_arr1$2.apply(i));
@@ -118,8 +119,9 @@ package <empty> {
       ()
     }
   };
-  final <synthetic> class TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mDc$sp$1 extends runtime.AbstractFunction1 with Serializable {
-    final def apply(i: Int): Unit = {
+  final <synthetic> class TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mDc$sp$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(i: Int): Unit = TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mDc$sp$1.this.apply$mcVI$sp(i);
+    <specialized> def apply$mcVI$sp(i: Int): Unit = {
       val j: Int = TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mDc$sp$1.this.TestArray_this_arr1$3.length().-(i).-(1);
       val temp: Double = TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mDc$sp$1.this.TestArray_this_arr1$3.apply(j);
       TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mDc$sp$1.this.TestArray_this_arr1$3.update(j, TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mDc$sp$1.this.TestArray_this_arr1$3.apply(i));
@@ -136,8 +138,9 @@ package <empty> {
       ()
     }
   };
-  final <synthetic> class TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mIc$sp$1 extends runtime.AbstractFunction1 with Serializable {
-    final def apply(i: Int): Unit = {
+  final <synthetic> class TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mIc$sp$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(i: Int): Unit = TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mIc$sp$1.this.apply$mcVI$sp(i);
+    <specialized> def apply$mcVI$sp(i: Int): Unit = {
       val j: Int = TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mIc$sp$1.this.TestArray_this_arr1$4.length().-(i).-(1);
       val temp: Int = TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mIc$sp$1.this.TestArray_this_arr1$4.apply(j);
       TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mIc$sp$1.this.TestArray_this_arr1$4.update(j, TestArray$SpecObject1$2$$anonfun$reverse_specialized1$mIc$sp$1.this.TestArray_this_arr1$4.apply(i));

@@ -104,8 +104,9 @@ package <empty> {
       ()
     }
   };
-  final <synthetic> class TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mZc$sp$1 extends runtime.AbstractFunction1 with Serializable {
-    final def apply(i: Int): Unit = TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mZc$sp$1.this.TestArrayApplyFunction_this_arr1$2.update(i, scala.Boolean.unbox(TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mZc$sp$1.this.TestArrayApplyFunction_this_func1$2.apply(scala.Boolean.box(TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mZc$sp$1.this.TestArrayApplyFunction_this_arr1$2.apply(i)))));
+  final <synthetic> class TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mZc$sp$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(i: Int): Unit = TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mZc$sp$1.this.apply$mcVI$sp(i);
+    <specialized> def apply$mcVI$sp(i: Int): Unit = TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mZc$sp$1.this.TestArrayApplyFunction_this_arr1$2.update(i, scala.Boolean.unbox(TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mZc$sp$1.this.TestArrayApplyFunction_this_func1$2.apply(scala.Boolean.box(TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mZc$sp$1.this.TestArrayApplyFunction_this_arr1$2.apply(i)))));
     final <bridge> def apply(v1: Object): Object = {
       TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mZc$sp$1.this.apply(scala.Int.unbox(v1));
       scala.runtime.BoxedUnit.UNIT
@@ -119,8 +120,9 @@ package <empty> {
       ()
     }
   };
-  final <synthetic> class TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mDc$sp$1 extends runtime.AbstractFunction1 with Serializable {
-    final def apply(i: Int): Unit = TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mDc$sp$1.this.TestArrayApplyFunction_this_arr1$3.update(i, TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mDc$sp$1.this.TestArrayApplyFunction_this_func1$3.apply$mcDD$sp(TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mDc$sp$1.this.TestArrayApplyFunction_this_arr1$3.apply(i)));
+  final <synthetic> class TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mDc$sp$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(i: Int): Unit = TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mDc$sp$1.this.apply$mcVI$sp(i);
+    <specialized> def apply$mcVI$sp(i: Int): Unit = TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mDc$sp$1.this.TestArrayApplyFunction_this_arr1$3.update(i, TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mDc$sp$1.this.TestArrayApplyFunction_this_func1$3.apply$mcDD$sp(TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mDc$sp$1.this.TestArrayApplyFunction_this_arr1$3.apply(i)));
     final <bridge> def apply(v1: Object): Object = {
       TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mDc$sp$1.this.apply(scala.Int.unbox(v1));
       scala.runtime.BoxedUnit.UNIT
@@ -134,8 +136,9 @@ package <empty> {
       ()
     }
   };
-  final <synthetic> class TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mIc$sp$1 extends runtime.AbstractFunction1 with Serializable {
-    final def apply(i: Int): Unit = TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mIc$sp$1.this.TestArrayApplyFunction_this_arr1$4.update(i, TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mIc$sp$1.this.TestArrayApplyFunction_this_func1$4.apply$mcII$sp(TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mIc$sp$1.this.TestArrayApplyFunction_this_arr1$4.apply(i)));
+  final <synthetic> class TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mIc$sp$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(i: Int): Unit = TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mIc$sp$1.this.apply$mcVI$sp(i);
+    <specialized> def apply$mcVI$sp(i: Int): Unit = TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mIc$sp$1.this.TestArrayApplyFunction_this_arr1$4.update(i, TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mIc$sp$1.this.TestArrayApplyFunction_this_func1$4.apply$mcII$sp(TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mIc$sp$1.this.TestArrayApplyFunction_this_arr1$4.apply(i)));
     final <bridge> def apply(v1: Object): Object = {
       TestArrayApplyFunction$SpecObject1$2$$anonfun$applyFunc_specialized1$mIc$sp$1.this.apply(scala.Int.unbox(v1));
       scala.runtime.BoxedUnit.UNIT
