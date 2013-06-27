@@ -97,8 +97,8 @@ object `package` {
     val typeOf_f = expr_f.actualType
 
     val typesList = types.toList match {
-      case list @ _ :: _ => list map (tpExpr => c eval c.Expr[Specializable](c resetAllAttrs tpExpr.tree))
       case Nil => List(Byte, Short, Int, Long, Char, Float, Double, Boolean, Unit)
+      case list => list map (tpExpr => c eval c.Expr[Specializable](c resetAllAttrs tpExpr.tree))
     }
 
     // Check if T is a valid type parameter
@@ -184,37 +184,77 @@ object `package` {
     val spec_obj = c.fresh("SpecObject").toString
 
     // JOIN EVERYTHING TOGETHER
-    // Here parse is used instead of reify to ensure that all symbols are erased from the tree
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // THIS IS AN ALTERNATE SOLUTION THAT HAS PRLOBLEMS ERASING ALL SYMBOLS, BUT USED LESS PARSING
+    // AND MORE TREE TRANSFORMATION 
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    //// Here parse is used instead of reify to ensure that all symbols are erased from the tree
+    //    val newTreeTemplate_str = s"""{
+    //            	object $spec_obj {
+    //    				def $specMethodName[@specialized($at_spec_params_str) $typeOf_T]($vparamss_str): $typeOf_f = { ??? }
+    //    			}
+    //    			import $spec_obj._
+    //    			import scala.reflect.ManifestFactory
+    //    			${callersBlockTree}
+    //        	}$cast_back_str""".replaceAllLiterally("scala.this.Predef.", "")
+    //
+    //    object resetTree extends Transformer {
+    //      override def transform(tree: Tree): Tree = tree match {
+    //        case Ident(name: TermName) => Ident(newTermName(name.toString))
+    //        case Ident(name: TypeName) => Ident(newTypeName(name.toString))
+    //        case _ => super.transform(tree)
+    //      }
+    //    }
+    //
+    //    object bodyInliner extends Transformer {
+    //      override def transform(tree: Tree): Tree = tree match {
+    //        case Ident(name) if name.toString == "$qmark$qmark$qmark" => resetTree.transform(c.resetAllAttrs(newBodyTree))
+    //        case _ => super.transform(tree)
+    //      }
+    //    }
+    //
+    //    val newTree = bodyInliner.transform(c.parse(newTreeTemplate_str))
+    //
+    // c.echo(classTag.tree.pos, "newTree: " + show(newTree))
+    // c.echo(classTag.tree.pos, "newTree: " + showRaw(newTree))
+    //
+    //    val newExpr = c.Expr[Any](c.typeCheck(newTree, typeOf_f))
+    //
+    // c.echo(classTag.tree.pos, "newExpr: " + show(newExpr))
+    // c.echo(classTag.tree.pos, "newExpr: " + showRaw(newExpr))
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
     val newTreeTemplate_str = s"""{
         	object $spec_obj {
-				def $specMethodName[@specialized($at_spec_params_str) $typeOf_T]($vparamss_str): $typeOf_f = { ??? }
+				def $specMethodName[@specialized($at_spec_params_str) $typeOf_T]($vparamss_str): $typeOf_f = { ${newBodyTree} }
 			}
 			import $spec_obj._
 			import scala.reflect.ManifestFactory
 			${callersBlockTree}
     	}$cast_back_str""".replaceAllLiterally("scala.this.Predef.", "")
 
-    object bodyInliner extends Transformer {
-      override def transform(tree: Tree): Tree = tree match {
-        case Ident(name) if name.toString == "$qmark$qmark$qmark" => c.resetAllAttrs(newBodyTree)
-        case _ => super.transform(tree)
-      }
+    if (newTreeTemplate_str.contains("while")) {
+      //      c.warning(classTag.tree.pos, "newTree: " + show(newBodyTree))
+      c.warning(classTag.tree.pos, "specialized[T] {...} does not support while loops")
+      return expr_f
     }
 
-    val newTree = bodyInliner.transform(c.parse(newTreeTemplate_str))
-    // c.warning(classTag.tree.pos, "newTree: " + show(newTree))
-    // c.warning(classTag.tree.pos, "newTree: " + showRaw(newTree))
-
+    // Here parse is used instead of reify to ensure that all symbols are erased from the tree
+    val newTree = c.parse(newTreeTemplate_str)
+    //      c.echo(classTag.tree.pos, "newTree: " + show(newTree))
+    //      c.echo(classTag.tree.pos, "newTree: " + showRaw(newTree))
     val newExpr = c.Expr[Any](c.typeCheck(newTree, typeOf_f))
-    // c.warning(classTag.tree.pos, "newExpr: " + show(newExpr))
-    // c.warning(classTag.tree.pos, "newExpr: " + showRaw(newExpr))
+    //      c.echo(classTag.tree.pos, "newExpr: " + show(newExpr))
+    //      c.echo(classTag.tree.pos, "newExpr: " + showRaw(newExpr))
     newExpr
+
   }
 
   /**
    * Mapping that contains all information needed about the all the arguments that will be needed for the specialized methods.
    * The keys of the mapping contain the original names of the argument. Each is mapped into a 3-tuple that contains
-   * the new name (or the same as the key if renaming is unecesary), the widen type of the argument and the reference to the argument itself.
+   * the new name (or the same as the key if renaming is unnecessary), the widen type of the argument and the reference to the argument itself.
    * @param c: context of the macro
    * @param expr: the body of the specialized expression.
    * @param typeOf_T: the type being specialized.
@@ -291,8 +331,10 @@ object `package` {
 
     // TODO: may need to go also in the enclosing method of the enclosing method if it exists
     enclosingMethodTraverser.traverse(c.enclosingMethod)
-    val ClassDef(_, _, _, Template(parents, self, body)) = c.enclosingClass
-    val vardefsInClass = body collect { case ValDef(mods, name, _, _) if mods.hasFlag(Flag.MUTABLE) => name.toString }
+    val vardefsInClass = c.enclosingClass match {
+      case ClassDef(_, _, _, Template(parents, self, body)) => body collect { case ValDef(mods, name, _, _) if mods.hasFlag(Flag.MUTABLE) => name.toString }
+      case _ => Nil
+    }
 
     fieldsMapping --= vardefs.keys
     fieldsMapping --= vardefsInClass
