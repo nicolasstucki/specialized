@@ -1,0 +1,678 @@
+[[syntax trees at end of                     typer]] // newSource1.scala
+package <empty> {
+  import scala.reflect.ClassTag;
+  import ch.epfl.lamp.specialized._;
+  object MatrixUtil extends scala.AnyRef {
+    def <init>(): MatrixUtil.type = {
+      MatrixUtil.super.<init>();
+      ()
+    };
+    type Matrix[K >: Nothing <: Any] = Array[Array[K]];
+    def power[T >: Nothing <: Any](A: MatrixUtil.Matrix[T], n: Int)(implicit evidence$1: scala.reflect.ClassTag[T], numeric: Numeric[T]): MatrixUtil.Matrix[T] = if (n.%(2).==(0))
+      {
+        val B: MatrixUtil.Matrix[T] = MatrixUtil.this.power[T](A, n./(2))(evidence$1, numeric);
+        MatrixUtil.this.square[T](B)(evidence$1, numeric)
+      }
+    else
+      MatrixUtil.this.matrixMult[T](MatrixUtil.this.power[T](A, n.-(1))(evidence$1, numeric), A)(evidence$1, numeric);
+    def square[T >: Nothing <: Any](A: MatrixUtil.Matrix[T])(implicit evidence$2: scala.reflect.ClassTag[T], numeric: Numeric[T]): MatrixUtil.Matrix[T] = MatrixUtil.this.matrixMult[T](A, A)(evidence$2, numeric);
+    def matrixMult[T >: Nothing <: Any](A: MatrixUtil.Matrix[T], B: MatrixUtil.Matrix[T])(implicit evidence$3: scala.reflect.ClassTag[T], numeric: Numeric[T]): MatrixUtil.Matrix[T] = {
+      val C: Array[Array[T]] = scala.Array.ofDim[T](A.length, B.apply(0).length)(evidence$3);
+      MatrixUtil.this._matrixMult[T](A, B, C)(evidence$3, numeric);
+      C
+    };
+    private def _matrixMult[T >: Nothing <: Any](A: MatrixUtil.Matrix[T], B: MatrixUtil.Matrix[T], C: MatrixUtil.Matrix[T])(implicit evidence$4: scala.reflect.ClassTag[T], numeric: Numeric[T]): Unit = {
+      import numeric._;
+      val I: Int = A.length;
+      val J: Int = B.length;
+      val K: Int = C.apply(0).length;
+      scala.this.Predef.intWrapper(0).until(I).foreach[Unit](((i: Int) => scala.this.Predef.intWrapper(0).until(K).foreach[Unit](((k: Int) => {
+        C.apply(i).update(k, numeric.zero);
+        {
+          object SpecObject1 extends scala.AnyRef {
+            def <init>(): SpecObject1.type = {
+              SpecObject1.super.<init>();
+              ()
+            };
+            def _matrixMult_specialized1[@specialized(scala.Boolean, scala.Double, scala.Short, scala.Long, scala.Float, scala.Int, scala.Char, scala.Byte, scala.Unit) T >: Nothing <: Any](B: MatrixUtil.Matrix[T], C: MatrixUtil.Matrix[T], numeric: Numeric[T]): Unit = scala.this.Predef.intWrapper(0).until(J).foreach[Unit](((j: Int) => C.apply(i).update(k, numeric.plus(C.apply(i).apply(k), numeric.times(C.apply(i).apply(j), B.apply(j).apply(k))))))
+          };
+          import SpecObject1._;
+          import scala.reflect.ManifestFactory;
+          if (evidence$4.==(scala.reflect.ManifestFactory.Boolean))
+            SpecObject1._matrixMult_specialized1[Boolean](B.asInstanceOf[MatrixUtil.Matrix[Boolean]], C.asInstanceOf[MatrixUtil.Matrix[Boolean]], numeric.asInstanceOf[Numeric[Boolean]])
+          else
+            if (evidence$4.==(scala.reflect.ManifestFactory.Byte))
+              SpecObject1._matrixMult_specialized1[Byte](B.asInstanceOf[MatrixUtil.Matrix[Byte]], C.asInstanceOf[MatrixUtil.Matrix[Byte]], numeric.asInstanceOf[Numeric[Byte]])
+            else
+              if (evidence$4.==(scala.reflect.ManifestFactory.Char))
+                SpecObject1._matrixMult_specialized1[Char](B.asInstanceOf[MatrixUtil.Matrix[Char]], C.asInstanceOf[MatrixUtil.Matrix[Char]], numeric.asInstanceOf[Numeric[Char]])
+              else
+                if (evidence$4.==(scala.reflect.ManifestFactory.Double))
+                  SpecObject1._matrixMult_specialized1[Double](B.asInstanceOf[MatrixUtil.Matrix[Double]], C.asInstanceOf[MatrixUtil.Matrix[Double]], numeric.asInstanceOf[Numeric[Double]])
+                else
+                  if (evidence$4.==(scala.reflect.ManifestFactory.Float))
+                    SpecObject1._matrixMult_specialized1[Float](B.asInstanceOf[MatrixUtil.Matrix[Float]], C.asInstanceOf[MatrixUtil.Matrix[Float]], numeric.asInstanceOf[Numeric[Float]])
+                  else
+                    if (evidence$4.==(scala.reflect.ManifestFactory.Int))
+                      SpecObject1._matrixMult_specialized1[Int](B.asInstanceOf[MatrixUtil.Matrix[Int]], C.asInstanceOf[MatrixUtil.Matrix[Int]], numeric.asInstanceOf[Numeric[Int]])
+                    else
+                      if (evidence$4.==(scala.reflect.ManifestFactory.Long))
+                        SpecObject1._matrixMult_specialized1[Long](B.asInstanceOf[MatrixUtil.Matrix[Long]], C.asInstanceOf[MatrixUtil.Matrix[Long]], numeric.asInstanceOf[Numeric[Long]])
+                      else
+                        if (evidence$4.==(scala.reflect.ManifestFactory.Short))
+                          SpecObject1._matrixMult_specialized1[Short](B.asInstanceOf[MatrixUtil.Matrix[Short]], C.asInstanceOf[MatrixUtil.Matrix[Short]], numeric.asInstanceOf[Numeric[Short]])
+                        else
+                          if (evidence$4.==(scala.reflect.ManifestFactory.Unit))
+                            SpecObject1._matrixMult_specialized1[Unit](B.asInstanceOf[MatrixUtil.Matrix[Unit]], C.asInstanceOf[MatrixUtil.Matrix[Unit]], numeric.asInstanceOf[Numeric[Unit]])
+                          else
+                            SpecObject1._matrixMult_specialized1[T](B, C, numeric)
+        }
+      }))))
+    }
+  }
+}
+
+[[syntax trees at end of                specialize]] // newSource1.scala
+package <empty> {
+  object MatrixUtil extends Object {
+    def <init>(): MatrixUtil.type = {
+      MatrixUtil.super.<init>();
+      ()
+    };
+    type Matrix[K >: Nothing <: Any] = Array[Array[K]];
+    def power[T >: Nothing <: Any](A: Array[Array[T]], n: Int, evidence$1: scala.reflect.ClassTag[T], numeric: scala.math.Numeric[T]): Array[Array[T]] = if (n.%(2).==(0))
+      {
+        val B: Array[Array[T]] = MatrixUtil.this.power[T](A, n./(2), evidence$1, numeric);
+        MatrixUtil.this.square[T](B, evidence$1, numeric)
+      }
+    else
+      MatrixUtil.this.matrixMult[T](MatrixUtil.this.power[T](A, n.-(1), evidence$1, numeric), A, evidence$1, numeric);
+    def square[T >: Nothing <: Any](A: Array[Array[T]], evidence$2: scala.reflect.ClassTag[T], numeric: scala.math.Numeric[T]): Array[Array[T]] = MatrixUtil.this.matrixMult[T](A, A, evidence$2, numeric);
+    def matrixMult[T >: Nothing <: Any](A: Array[Array[T]], B: Array[Array[T]], evidence$3: scala.reflect.ClassTag[T], numeric: scala.math.Numeric[T]): Array[Array[T]] = {
+      val C: Array[Array[T]] = scala.Array.ofDim[T](A.length(), B.apply(0).length(), evidence$3);
+      MatrixUtil.this._matrixMult[T](A, B, C, evidence$3, numeric);
+      C
+    };
+    private def _matrixMult[T >: Nothing <: Any](A: Array[Array[T]], B: Array[Array[T]], C: Array[Array[T]], evidence$4: scala.reflect.ClassTag[T], numeric: scala.math.Numeric[T]): Unit = {
+      val I: Int = A.length();
+      val J: Int = B.length();
+      val K: Int = C.apply(0).length();
+      scala.this.Predef.intWrapper(0).until(I).foreach$mVc$sp({
+        @SerialVersionUID(0) final <synthetic> class $anonfun extends scala.runtime.AbstractFunction1$mcVI$sp with Serializable {
+          def <init>(): anonymous class $anonfun = {
+            $anonfun.super.<init>();
+            ()
+          };
+          final def apply(i: Int): Unit = $anonfun.this.apply$mcVI$sp(i);
+          <specialized> def apply$mcVI$sp(i: Int): Unit = scala.this.Predef.intWrapper(0).until(K).foreach$mVc$sp({
+            @SerialVersionUID(0) final <synthetic> class $anonfun extends scala.runtime.AbstractFunction1$mcVI$sp with Serializable {
+              def <init>(): anonymous class $anonfun = {
+                $anonfun.super.<init>();
+                ()
+              };
+              final def apply(k: Int): Unit = $anonfun.this.apply$mcVI$sp(k);
+              <specialized> def apply$mcVI$sp(k: Int): Unit = {
+                C.apply(i).update(k, numeric.zero());
+                {
+                  object SpecObject1 extends Object {
+                    def <init>(): SpecObject1.type = {
+                      SpecObject1.super.<init>();
+                      ()
+                    };
+                    def _matrixMult_specialized1[@specialized(scala.Boolean, scala.Double, scala.Short, scala.Long, scala.Float, scala.Int, scala.Char, scala.Byte, scala.Unit) T >: Nothing <: Any](B: Array[Array[T]], C: Array[Array[T]], numeric: scala.math.Numeric[T]): Unit = scala.this.Predef.intWrapper(0).until(J).foreach$mVc$sp({
+                      @SerialVersionUID(0) final <synthetic> class $anonfun extends scala.runtime.AbstractFunction1$mcVI$sp with Serializable {
+                        def <init>(): anonymous class $anonfun = {
+                          $anonfun.super.<init>();
+                          ()
+                        };
+                        final def apply(j: Int): Unit = $anonfun.this.apply$mcVI$sp(j);
+                        <specialized> def apply$mcVI$sp(j: Int): Unit = C.apply(i).update(k, numeric.plus(C.apply(i).apply(k), numeric.times(C.apply(i).apply(j), B.apply(j).apply(k))))
+                      };
+                      (new anonymous class $anonfun(): Int => Unit)
+                    });
+                    <specialized> def _matrixMult_specialized1$mZc$sp(B: Array[Array[Boolean]], C: Array[Array[Boolean]], numeric: scala.math.Numeric[Boolean]): Unit = scala.this.Predef.intWrapper(0).until(J).foreach$mVc$sp({
+                      final <synthetic> class $anonfun extends scala.runtime.AbstractFunction1$mcVI$sp with Serializable {
+                        def <init>(): anonymous class $anonfun = {
+                          $anonfun.super.<init>();
+                          ()
+                        };
+                        final def apply(j: Int): Unit = $anonfun.this.apply$mcVI$sp(j);
+                        <specialized> def apply$mcVI$sp(j: Int): Unit = C.apply(i).update(k, numeric.plus(C.apply(i).apply(k), numeric.times(C.apply(i).apply(j), B.apply(j).apply(k))))
+                      };
+                      (new anonymous class $anonfun(): Int => Unit)
+                    });
+                    <specialized> def _matrixMult_specialized1$mBc$sp(B: Array[Array[Byte]], C: Array[Array[Byte]], numeric: scala.math.Numeric[Byte]): Unit = scala.this.Predef.intWrapper(0).until(J).foreach$mVc$sp({
+                      final <synthetic> class $anonfun extends scala.runtime.AbstractFunction1$mcVI$sp with Serializable {
+                        def <init>(): anonymous class $anonfun = {
+                          $anonfun.super.<init>();
+                          ()
+                        };
+                        final def apply(j: Int): Unit = $anonfun.this.apply$mcVI$sp(j);
+                        <specialized> def apply$mcVI$sp(j: Int): Unit = C.apply(i).update(k, numeric.plus(C.apply(i).apply(k), numeric.times(C.apply(i).apply(j), B.apply(j).apply(k))))
+                      };
+                      (new anonymous class $anonfun(): Int => Unit)
+                    });
+                    <specialized> def _matrixMult_specialized1$mCc$sp(B: Array[Array[Char]], C: Array[Array[Char]], numeric: scala.math.Numeric[Char]): Unit = scala.this.Predef.intWrapper(0).until(J).foreach$mVc$sp({
+                      final <synthetic> class $anonfun extends scala.runtime.AbstractFunction1$mcVI$sp with Serializable {
+                        def <init>(): anonymous class $anonfun = {
+                          $anonfun.super.<init>();
+                          ()
+                        };
+                        final def apply(j: Int): Unit = $anonfun.this.apply$mcVI$sp(j);
+                        <specialized> def apply$mcVI$sp(j: Int): Unit = C.apply(i).update(k, numeric.plus(C.apply(i).apply(k), numeric.times(C.apply(i).apply(j), B.apply(j).apply(k))))
+                      };
+                      (new anonymous class $anonfun(): Int => Unit)
+                    });
+                    <specialized> def _matrixMult_specialized1$mDc$sp(B: Array[Array[Double]], C: Array[Array[Double]], numeric: scala.math.Numeric[Double]): Unit = scala.this.Predef.intWrapper(0).until(J).foreach$mVc$sp({
+                      final <synthetic> class $anonfun extends scala.runtime.AbstractFunction1$mcVI$sp with Serializable {
+                        def <init>(): anonymous class $anonfun = {
+                          $anonfun.super.<init>();
+                          ()
+                        };
+                        final def apply(j: Int): Unit = $anonfun.this.apply$mcVI$sp(j);
+                        <specialized> def apply$mcVI$sp(j: Int): Unit = C.apply(i).update(k, numeric.plus(C.apply(i).apply(k), numeric.times(C.apply(i).apply(j), B.apply(j).apply(k))))
+                      };
+                      (new anonymous class $anonfun(): Int => Unit)
+                    });
+                    <specialized> def _matrixMult_specialized1$mFc$sp(B: Array[Array[Float]], C: Array[Array[Float]], numeric: scala.math.Numeric[Float]): Unit = scala.this.Predef.intWrapper(0).until(J).foreach$mVc$sp({
+                      final <synthetic> class $anonfun extends scala.runtime.AbstractFunction1$mcVI$sp with Serializable {
+                        def <init>(): anonymous class $anonfun = {
+                          $anonfun.super.<init>();
+                          ()
+                        };
+                        final def apply(j: Int): Unit = $anonfun.this.apply$mcVI$sp(j);
+                        <specialized> def apply$mcVI$sp(j: Int): Unit = C.apply(i).update(k, numeric.plus(C.apply(i).apply(k), numeric.times(C.apply(i).apply(j), B.apply(j).apply(k))))
+                      };
+                      (new anonymous class $anonfun(): Int => Unit)
+                    });
+                    <specialized> def _matrixMult_specialized1$mIc$sp(B: Array[Array[Int]], C: Array[Array[Int]], numeric: scala.math.Numeric[Int]): Unit = scala.this.Predef.intWrapper(0).until(J).foreach$mVc$sp({
+                      final <synthetic> class $anonfun extends scala.runtime.AbstractFunction1$mcVI$sp with Serializable {
+                        def <init>(): anonymous class $anonfun = {
+                          $anonfun.super.<init>();
+                          ()
+                        };
+                        final def apply(j: Int): Unit = $anonfun.this.apply$mcVI$sp(j);
+                        <specialized> def apply$mcVI$sp(j: Int): Unit = C.apply(i).update(k, numeric.plus(C.apply(i).apply(k), numeric.times(C.apply(i).apply(j), B.apply(j).apply(k))))
+                      };
+                      (new anonymous class $anonfun(): Int => Unit)
+                    });
+                    <specialized> def _matrixMult_specialized1$mJc$sp(B: Array[Array[Long]], C: Array[Array[Long]], numeric: scala.math.Numeric[Long]): Unit = scala.this.Predef.intWrapper(0).until(J).foreach$mVc$sp({
+                      final <synthetic> class $anonfun extends scala.runtime.AbstractFunction1$mcVI$sp with Serializable {
+                        def <init>(): anonymous class $anonfun = {
+                          $anonfun.super.<init>();
+                          ()
+                        };
+                        final def apply(j: Int): Unit = $anonfun.this.apply$mcVI$sp(j);
+                        <specialized> def apply$mcVI$sp(j: Int): Unit = C.apply(i).update(k, numeric.plus(C.apply(i).apply(k), numeric.times(C.apply(i).apply(j), B.apply(j).apply(k))))
+                      };
+                      (new anonymous class $anonfun(): Int => Unit)
+                    });
+                    <specialized> def _matrixMult_specialized1$mSc$sp(B: Array[Array[Short]], C: Array[Array[Short]], numeric: scala.math.Numeric[Short]): Unit = scala.this.Predef.intWrapper(0).until(J).foreach$mVc$sp({
+                      final <synthetic> class $anonfun extends scala.runtime.AbstractFunction1$mcVI$sp with Serializable {
+                        def <init>(): anonymous class $anonfun = {
+                          $anonfun.super.<init>();
+                          ()
+                        };
+                        final def apply(j: Int): Unit = $anonfun.this.apply$mcVI$sp(j);
+                        <specialized> def apply$mcVI$sp(j: Int): Unit = C.apply(i).update(k, numeric.plus(C.apply(i).apply(k), numeric.times(C.apply(i).apply(j), B.apply(j).apply(k))))
+                      };
+                      (new anonymous class $anonfun(): Int => Unit)
+                    });
+                    <specialized> def _matrixMult_specialized1$mVc$sp(B: Array[Array[Unit]], C: Array[Array[Unit]], numeric: scala.math.Numeric[Unit]): Unit = scala.this.Predef.intWrapper(0).until(J).foreach$mVc$sp({
+                      final <synthetic> class $anonfun extends scala.runtime.AbstractFunction1$mcVI$sp with Serializable {
+                        def <init>(): anonymous class $anonfun = {
+                          $anonfun.super.<init>();
+                          ()
+                        };
+                        final def apply(j: Int): Unit = $anonfun.this.apply$mcVI$sp(j);
+                        <specialized> def apply$mcVI$sp(j: Int): Unit = C.apply(i).update(k, numeric.plus(C.apply(i).apply(k), numeric.times(C.apply(i).apply(j), B.apply(j).apply(k))))
+                      };
+                      (new anonymous class $anonfun(): Int => Unit)
+                    })
+                  };
+                  @volatile var SpecObject1$module: SpecObject1.type = _;
+                  <stable> def SpecObject1(): SpecObject1.type = {
+                    SpecObject1$module = new SpecObject1.type();
+                    SpecObject1$module
+                  };
+                  if (evidence$4.==(scala.reflect.ManifestFactory.Boolean()))
+                    SpecObject1()._matrixMult_specialized1$mZc$sp(B.asInstanceOf[Array[Array[Boolean]]](), C.asInstanceOf[Array[Array[Boolean]]](), numeric.asInstanceOf[scala.math.Numeric[Boolean]]())
+                  else
+                    if (evidence$4.==(scala.reflect.ManifestFactory.Byte()))
+                      SpecObject1()._matrixMult_specialized1$mBc$sp(B.asInstanceOf[Array[Array[Byte]]](), C.asInstanceOf[Array[Array[Byte]]](), numeric.asInstanceOf[scala.math.Numeric[Byte]]())
+                    else
+                      if (evidence$4.==(scala.reflect.ManifestFactory.Char()))
+                        SpecObject1()._matrixMult_specialized1$mCc$sp(B.asInstanceOf[Array[Array[Char]]](), C.asInstanceOf[Array[Array[Char]]](), numeric.asInstanceOf[scala.math.Numeric[Char]]())
+                      else
+                        if (evidence$4.==(scala.reflect.ManifestFactory.Double()))
+                          SpecObject1()._matrixMult_specialized1$mDc$sp(B.asInstanceOf[Array[Array[Double]]](), C.asInstanceOf[Array[Array[Double]]](), numeric.asInstanceOf[scala.math.Numeric[Double]]())
+                        else
+                          if (evidence$4.==(scala.reflect.ManifestFactory.Float()))
+                            SpecObject1()._matrixMult_specialized1$mFc$sp(B.asInstanceOf[Array[Array[Float]]](), C.asInstanceOf[Array[Array[Float]]](), numeric.asInstanceOf[scala.math.Numeric[Float]]())
+                          else
+                            if (evidence$4.==(scala.reflect.ManifestFactory.Int()))
+                              SpecObject1()._matrixMult_specialized1$mIc$sp(B.asInstanceOf[Array[Array[Int]]](), C.asInstanceOf[Array[Array[Int]]](), numeric.asInstanceOf[scala.math.Numeric[Int]]())
+                            else
+                              if (evidence$4.==(scala.reflect.ManifestFactory.Long()))
+                                SpecObject1()._matrixMult_specialized1$mJc$sp(B.asInstanceOf[Array[Array[Long]]](), C.asInstanceOf[Array[Array[Long]]](), numeric.asInstanceOf[scala.math.Numeric[Long]]())
+                              else
+                                if (evidence$4.==(scala.reflect.ManifestFactory.Short()))
+                                  SpecObject1()._matrixMult_specialized1$mSc$sp(B.asInstanceOf[Array[Array[Short]]](), C.asInstanceOf[Array[Array[Short]]](), numeric.asInstanceOf[scala.math.Numeric[Short]]())
+                                else
+                                  if (evidence$4.==(scala.reflect.ManifestFactory.Unit()))
+                                    SpecObject1()._matrixMult_specialized1$mVc$sp(B.asInstanceOf[Array[Array[Unit]]](), C.asInstanceOf[Array[Array[Unit]]](), numeric.asInstanceOf[scala.math.Numeric[Unit]]())
+                                  else
+                                    SpecObject1()._matrixMult_specialized1[T](B, C, numeric)
+                }
+              }
+            };
+            (new anonymous class $anonfun(): Int => Unit)
+          })
+        };
+        (new anonymous class $anonfun(): Int => Unit)
+      })
+    }
+  }
+}
+
+[[syntax trees at end of                       jvm]] // newSource1.scala
+package <empty> {
+  object MatrixUtil extends Object {
+    def power(A: Array[Object], n: Int, evidence$1: reflect.ClassTag, numeric: math.Numeric): Array[Object] = if (n.%(2).==(0))
+      {
+        val B: Array[Object] = MatrixUtil.this.power(A, n./(2), evidence$1, numeric);
+        MatrixUtil.this.square(B, evidence$1, numeric)
+      }
+    else
+      MatrixUtil.this.matrixMult(MatrixUtil.this.power(A, n.-(1), evidence$1, numeric), A, evidence$1, numeric);
+    def square(A: Array[Object], evidence$2: reflect.ClassTag, numeric: math.Numeric): Array[Object] = MatrixUtil.this.matrixMult(A, A, evidence$2, numeric);
+    def matrixMult(A: Array[Object], B: Array[Object], evidence$3: reflect.ClassTag, numeric: math.Numeric): Array[Object] = {
+      val C: Array[Object] = scala.Array.ofDim(A.length(), runtime.this.ScalaRunTime.array_length(B.apply(0)), evidence$3);
+      MatrixUtil.this._matrixMult(A, B, C, evidence$3, numeric);
+      C
+    };
+    private def _matrixMult(A: Array[Object], B: Array[Object], C: Array[Object], evidence$4: reflect.ClassTag, numeric: math.Numeric): Unit = {
+      val I: Int = A.length();
+      val J: Int = B.length();
+      val K: Int = runtime.this.ScalaRunTime.array_length(C.apply(0));
+      RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), I).foreach$mVc$sp({
+        (new anonymous class anonfun$_matrixMult$1(B, C, evidence$4, numeric, J, K): Function1)
+      })
+    };
+    def <init>(): MatrixUtil.type = {
+      MatrixUtil.super.<init>();
+      ()
+    }
+  };
+  @SerialVersionUID(0) final <synthetic> class MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.apply$mcVI$sp(j);
+    <specialized> def apply$mcVI$sp(j: Int): Unit = runtime.this.ScalaRunTime.array_update(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.C$2.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.$outer.k$1, MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.numeric$2.plus(runtime.this.ScalaRunTime.array_apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.C$2.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.$outer.k$1), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.numeric$2.times(runtime.this.ScalaRunTime.array_apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.C$2.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1), j), runtime.this.ScalaRunTime.array_apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.B$2.apply(j), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.$outer.k$1))));
+    <synthetic> <paramaccessor> private[this] val $outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2 = _;
+    final <bridge> def apply(v1: Object): Object = {
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> private[this] val B$2: Array[Object] = _;
+    <synthetic> <paramaccessor> private[this] val C$2: Array[Object] = _;
+    <synthetic> <paramaccessor> private[this] val numeric$2: math.Numeric = _;
+    def <init>($outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2, B$2: Array[Object], C$2: Array[Object], numeric$2: math.Numeric): anonymous class anonfun$_matrixMult_specialized1$1 = {
+      if ($outer.eq(null))
+        throw new NullPointerException()
+      else
+        MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.$outer = $outer;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.B$2 = B$2;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.C$2 = C$2;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.this.numeric$2 = numeric$2;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$1.super.<init>();
+      ()
+    }
+  };
+  final <synthetic> class MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.apply$mcVI$sp(j);
+    <specialized> def apply$mcVI$sp(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.C$3.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).update(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.$outer.k$1, scala.Boolean.unbox(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.numeric$3.plus(scala.Boolean.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.C$3.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.$outer.k$1)), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.numeric$3.times(scala.Boolean.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.C$3.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(j)), scala.Boolean.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.B$3.apply(j).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.$outer.k$1))))));
+    <synthetic> <paramaccessor> private[this] val $outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2 = _;
+    final <bridge> def apply(v1: Object): Object = {
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> private[this] val B$3: Array[Array[Boolean]] = _;
+    <synthetic> <paramaccessor> private[this] val C$3: Array[Array[Boolean]] = _;
+    <synthetic> <paramaccessor> private[this] val numeric$3: math.Numeric = _;
+    def <init>($outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2, B$3: Array[Array[Boolean]], C$3: Array[Array[Boolean]], numeric$3: math.Numeric): anonymous class anonfun$_matrixMult_specialized1$mZc$sp$1 = {
+      if ($outer.eq(null))
+        throw new NullPointerException()
+      else
+        MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.$outer = $outer;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.B$3 = B$3;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.C$3 = C$3;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.this.numeric$3 = numeric$3;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mZc$sp$1.super.<init>();
+      ()
+    }
+  };
+  final <synthetic> class MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.apply$mcVI$sp(j);
+    <specialized> def apply$mcVI$sp(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.C$4.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).update(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.$outer.k$1, scala.Byte.unbox(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.numeric$4.plus(scala.Byte.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.C$4.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.$outer.k$1)), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.numeric$4.times(scala.Byte.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.C$4.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(j)), scala.Byte.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.B$4.apply(j).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.$outer.k$1))))));
+    <synthetic> <paramaccessor> private[this] val $outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2 = _;
+    final <bridge> def apply(v1: Object): Object = {
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> private[this] val B$4: Array[Array[Byte]] = _;
+    <synthetic> <paramaccessor> private[this] val C$4: Array[Array[Byte]] = _;
+    <synthetic> <paramaccessor> private[this] val numeric$4: math.Numeric = _;
+    def <init>($outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2, B$4: Array[Array[Byte]], C$4: Array[Array[Byte]], numeric$4: math.Numeric): anonymous class anonfun$_matrixMult_specialized1$mBc$sp$1 = {
+      if ($outer.eq(null))
+        throw new NullPointerException()
+      else
+        MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.$outer = $outer;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.B$4 = B$4;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.C$4 = C$4;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.this.numeric$4 = numeric$4;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mBc$sp$1.super.<init>();
+      ()
+    }
+  };
+  final <synthetic> class MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.apply$mcVI$sp(j);
+    <specialized> def apply$mcVI$sp(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.C$5.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).update(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.$outer.k$1, scala.Char.unbox(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.numeric$5.plus(scala.Char.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.C$5.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.$outer.k$1)), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.numeric$5.times(scala.Char.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.C$5.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(j)), scala.Char.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.B$5.apply(j).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.$outer.k$1))))));
+    <synthetic> <paramaccessor> private[this] val $outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2 = _;
+    final <bridge> def apply(v1: Object): Object = {
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> private[this] val B$5: Array[Array[Char]] = _;
+    <synthetic> <paramaccessor> private[this] val C$5: Array[Array[Char]] = _;
+    <synthetic> <paramaccessor> private[this] val numeric$5: math.Numeric = _;
+    def <init>($outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2, B$5: Array[Array[Char]], C$5: Array[Array[Char]], numeric$5: math.Numeric): anonymous class anonfun$_matrixMult_specialized1$mCc$sp$1 = {
+      if ($outer.eq(null))
+        throw new NullPointerException()
+      else
+        MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.$outer = $outer;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.B$5 = B$5;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.C$5 = C$5;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.this.numeric$5 = numeric$5;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mCc$sp$1.super.<init>();
+      ()
+    }
+  };
+  final <synthetic> class MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.apply$mcVI$sp(j);
+    <specialized> def apply$mcVI$sp(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.C$6.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).update(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.$outer.k$1, scala.Double.unbox(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.numeric$6.plus(scala.Double.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.C$6.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.$outer.k$1)), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.numeric$6.times(scala.Double.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.C$6.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(j)), scala.Double.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.B$6.apply(j).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.$outer.k$1))))));
+    <synthetic> <paramaccessor> private[this] val $outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2 = _;
+    final <bridge> def apply(v1: Object): Object = {
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> private[this] val B$6: Array[Array[Double]] = _;
+    <synthetic> <paramaccessor> private[this] val C$6: Array[Array[Double]] = _;
+    <synthetic> <paramaccessor> private[this] val numeric$6: math.Numeric = _;
+    def <init>($outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2, B$6: Array[Array[Double]], C$6: Array[Array[Double]], numeric$6: math.Numeric): anonymous class anonfun$_matrixMult_specialized1$mDc$sp$1 = {
+      if ($outer.eq(null))
+        throw new NullPointerException()
+      else
+        MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.$outer = $outer;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.B$6 = B$6;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.C$6 = C$6;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.this.numeric$6 = numeric$6;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mDc$sp$1.super.<init>();
+      ()
+    }
+  };
+  final <synthetic> class MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.apply$mcVI$sp(j);
+    <specialized> def apply$mcVI$sp(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.C$7.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).update(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.$outer.k$1, scala.Float.unbox(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.numeric$7.plus(scala.Float.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.C$7.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.$outer.k$1)), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.numeric$7.times(scala.Float.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.C$7.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(j)), scala.Float.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.B$7.apply(j).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.$outer.k$1))))));
+    <synthetic> <paramaccessor> private[this] val $outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2 = _;
+    final <bridge> def apply(v1: Object): Object = {
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> private[this] val B$7: Array[Array[Float]] = _;
+    <synthetic> <paramaccessor> private[this] val C$7: Array[Array[Float]] = _;
+    <synthetic> <paramaccessor> private[this] val numeric$7: math.Numeric = _;
+    def <init>($outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2, B$7: Array[Array[Float]], C$7: Array[Array[Float]], numeric$7: math.Numeric): anonymous class anonfun$_matrixMult_specialized1$mFc$sp$1 = {
+      if ($outer.eq(null))
+        throw new NullPointerException()
+      else
+        MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.$outer = $outer;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.B$7 = B$7;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.C$7 = C$7;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.this.numeric$7 = numeric$7;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mFc$sp$1.super.<init>();
+      ()
+    }
+  };
+  final <synthetic> class MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.apply$mcVI$sp(j);
+    <specialized> def apply$mcVI$sp(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.C$8.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).update(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.$outer.k$1, scala.Int.unbox(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.numeric$8.plus(scala.Int.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.C$8.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.$outer.k$1)), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.numeric$8.times(scala.Int.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.C$8.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(j)), scala.Int.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.B$8.apply(j).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.$outer.k$1))))));
+    <synthetic> <paramaccessor> private[this] val $outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2 = _;
+    final <bridge> def apply(v1: Object): Object = {
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> private[this] val B$8: Array[Array[Int]] = _;
+    <synthetic> <paramaccessor> private[this] val C$8: Array[Array[Int]] = _;
+    <synthetic> <paramaccessor> private[this] val numeric$8: math.Numeric = _;
+    def <init>($outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2, B$8: Array[Array[Int]], C$8: Array[Array[Int]], numeric$8: math.Numeric): anonymous class anonfun$_matrixMult_specialized1$mIc$sp$1 = {
+      if ($outer.eq(null))
+        throw new NullPointerException()
+      else
+        MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.$outer = $outer;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.B$8 = B$8;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.C$8 = C$8;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.this.numeric$8 = numeric$8;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mIc$sp$1.super.<init>();
+      ()
+    }
+  };
+  final <synthetic> class MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.apply$mcVI$sp(j);
+    <specialized> def apply$mcVI$sp(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.C$9.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).update(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.$outer.k$1, scala.Long.unbox(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.numeric$9.plus(scala.Long.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.C$9.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.$outer.k$1)), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.numeric$9.times(scala.Long.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.C$9.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(j)), scala.Long.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.B$9.apply(j).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.$outer.k$1))))));
+    <synthetic> <paramaccessor> private[this] val $outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2 = _;
+    final <bridge> def apply(v1: Object): Object = {
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> private[this] val B$9: Array[Array[Long]] = _;
+    <synthetic> <paramaccessor> private[this] val C$9: Array[Array[Long]] = _;
+    <synthetic> <paramaccessor> private[this] val numeric$9: math.Numeric = _;
+    def <init>($outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2, B$9: Array[Array[Long]], C$9: Array[Array[Long]], numeric$9: math.Numeric): anonymous class anonfun$_matrixMult_specialized1$mJc$sp$1 = {
+      if ($outer.eq(null))
+        throw new NullPointerException()
+      else
+        MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.$outer = $outer;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.B$9 = B$9;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.C$9 = C$9;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.this.numeric$9 = numeric$9;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mJc$sp$1.super.<init>();
+      ()
+    }
+  };
+  final <synthetic> class MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.apply$mcVI$sp(j);
+    <specialized> def apply$mcVI$sp(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.C$10.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).update(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.$outer.k$1, scala.Short.unbox(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.numeric$10.plus(scala.Short.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.C$10.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.$outer.k$1)), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.numeric$10.times(scala.Short.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.C$10.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(j)), scala.Short.box(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.B$10.apply(j).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.$outer.k$1))))));
+    <synthetic> <paramaccessor> private[this] val $outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2 = _;
+    final <bridge> def apply(v1: Object): Object = {
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> private[this] val B$10: Array[Array[Short]] = _;
+    <synthetic> <paramaccessor> private[this] val C$10: Array[Array[Short]] = _;
+    <synthetic> <paramaccessor> private[this] val numeric$10: math.Numeric = _;
+    def <init>($outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2, B$10: Array[Array[Short]], C$10: Array[Array[Short]], numeric$10: math.Numeric): anonymous class anonfun$_matrixMult_specialized1$mSc$sp$1 = {
+      if ($outer.eq(null))
+        throw new NullPointerException()
+      else
+        MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.$outer = $outer;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.B$10 = B$10;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.C$10 = C$10;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.this.numeric$10 = numeric$10;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mSc$sp$1.super.<init>();
+      ()
+    }
+  };
+  final <synthetic> class MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.apply$mcVI$sp(j);
+    <specialized> def apply$mcVI$sp(j: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.C$11.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).update(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.$outer.k$1, MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.numeric$11.plus(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.C$11.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.$outer.k$1), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.numeric$11.times(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.C$11.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.$outer.MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer().i$1).apply(j), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.B$11.apply(j).apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.$outer.k$1))).$asInstanceOf[runtime.BoxedUnit]());
+    <synthetic> <paramaccessor> private[this] val $outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2 = _;
+    final <bridge> def apply(v1: Object): Object = {
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> private[this] val B$11: Array[Array[runtime.BoxedUnit]] = _;
+    <synthetic> <paramaccessor> private[this] val C$11: Array[Array[runtime.BoxedUnit]] = _;
+    <synthetic> <paramaccessor> private[this] val numeric$11: math.Numeric = _;
+    def <init>($outer: anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2, B$11: Array[Array[runtime.BoxedUnit]], C$11: Array[Array[runtime.BoxedUnit]], numeric$11: math.Numeric): anonymous class anonfun$_matrixMult_specialized1$mVc$sp$1 = {
+      if ($outer.eq(null))
+        throw new NullPointerException()
+      else
+        MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.$outer = $outer;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.B$11 = B$11;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.C$11 = C$11;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.this.numeric$11 = numeric$11;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2$$anonfun$_matrixMult_specialized1$mVc$sp$1.super.<init>();
+      ()
+    }
+  };
+  object MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2 extends Object {
+    def _matrixMult_specialized1(B: Array[Object], C: Array[Object], numeric: math.Numeric): Unit = RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this.$outer.MatrixUtil$$anonfun$$anonfun$$$outer().J$1).foreach$mVc$sp({
+      (new anonymous class anonfun$_matrixMult_specialized1$1(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this, B, C, numeric): Function1)
+    });
+    <specialized> def _matrixMult_specialized1$mZc$sp(B: Array[Array[Boolean]], C: Array[Array[Boolean]], numeric: math.Numeric): Unit = RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this.$outer.MatrixUtil$$anonfun$$anonfun$$$outer().J$1).foreach$mVc$sp({
+      (new anonymous class anonfun$_matrixMult_specialized1$mZc$sp$1(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this, B, C, numeric): Function1)
+    });
+    <specialized> def _matrixMult_specialized1$mBc$sp(B: Array[Array[Byte]], C: Array[Array[Byte]], numeric: math.Numeric): Unit = RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this.$outer.MatrixUtil$$anonfun$$anonfun$$$outer().J$1).foreach$mVc$sp({
+      (new anonymous class anonfun$_matrixMult_specialized1$mBc$sp$1(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this, B, C, numeric): Function1)
+    });
+    <specialized> def _matrixMult_specialized1$mCc$sp(B: Array[Array[Char]], C: Array[Array[Char]], numeric: math.Numeric): Unit = RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this.$outer.MatrixUtil$$anonfun$$anonfun$$$outer().J$1).foreach$mVc$sp({
+      (new anonymous class anonfun$_matrixMult_specialized1$mCc$sp$1(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this, B, C, numeric): Function1)
+    });
+    <specialized> def _matrixMult_specialized1$mDc$sp(B: Array[Array[Double]], C: Array[Array[Double]], numeric: math.Numeric): Unit = RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this.$outer.MatrixUtil$$anonfun$$anonfun$$$outer().J$1).foreach$mVc$sp({
+      (new anonymous class anonfun$_matrixMult_specialized1$mDc$sp$1(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this, B, C, numeric): Function1)
+    });
+    <specialized> def _matrixMult_specialized1$mFc$sp(B: Array[Array[Float]], C: Array[Array[Float]], numeric: math.Numeric): Unit = RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this.$outer.MatrixUtil$$anonfun$$anonfun$$$outer().J$1).foreach$mVc$sp({
+      (new anonymous class anonfun$_matrixMult_specialized1$mFc$sp$1(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this, B, C, numeric): Function1)
+    });
+    <specialized> def _matrixMult_specialized1$mIc$sp(B: Array[Array[Int]], C: Array[Array[Int]], numeric: math.Numeric): Unit = RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this.$outer.MatrixUtil$$anonfun$$anonfun$$$outer().J$1).foreach$mVc$sp({
+      (new anonymous class anonfun$_matrixMult_specialized1$mIc$sp$1(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this, B, C, numeric): Function1)
+    });
+    <specialized> def _matrixMult_specialized1$mJc$sp(B: Array[Array[Long]], C: Array[Array[Long]], numeric: math.Numeric): Unit = RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this.$outer.MatrixUtil$$anonfun$$anonfun$$$outer().J$1).foreach$mVc$sp({
+      (new anonymous class anonfun$_matrixMult_specialized1$mJc$sp$1(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this, B, C, numeric): Function1)
+    });
+    <specialized> def _matrixMult_specialized1$mSc$sp(B: Array[Array[Short]], C: Array[Array[Short]], numeric: math.Numeric): Unit = RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this.$outer.MatrixUtil$$anonfun$$anonfun$$$outer().J$1).foreach$mVc$sp({
+      (new anonymous class anonfun$_matrixMult_specialized1$mSc$sp$1(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this, B, C, numeric): Function1)
+    });
+    <specialized> def _matrixMult_specialized1$mVc$sp(B: Array[Array[runtime.BoxedUnit]], C: Array[Array[runtime.BoxedUnit]], numeric: math.Numeric): Unit = RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this.$outer.MatrixUtil$$anonfun$$anonfun$$$outer().J$1).foreach$mVc$sp({
+      (new anonymous class anonfun$_matrixMult_specialized1$mVc$sp$1(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this, B, C, numeric): Function1)
+    });
+    <synthetic> <paramaccessor> private[this] val $outer: anonymous class anonfun$apply$mcVI$sp$1 = _;
+    <synthetic> <stable> def MatrixUtil$$anonfun$$anonfun$SpecObject1$$$outer(): anonymous class anonfun$apply$mcVI$sp$1 = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this.$outer;
+    <synthetic> <paramaccessor> val k$1: Int = _;
+    def <init>($outer: anonymous class anonfun$apply$mcVI$sp$1, k$1: Int): anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2 = {
+      if ($outer.eq(null))
+        throw new NullPointerException()
+      else
+        MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this.$outer = $outer;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.this.k$1 = k$1;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1$SpecObject1$2.super.<init>();
+      ()
+    }
+  };
+  @SerialVersionUID(0) final <synthetic> class MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    private def SpecObject1$1$lzycompute(x$1: runtime.VolatileObjectRef, x$2: Int): anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2 = {
+      {
+        MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.synchronized({
+          if (x$1.elem.eq(null))
+            {
+              x$1.elem = new anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this, x$2);
+              ()
+            };
+          scala.runtime.BoxedUnit.UNIT
+        });
+        null
+      };
+      x$1.elem.$asInstanceOf[anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2]()
+    };
+    final def apply(k: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.apply$mcVI$sp(k);
+    <specialized> def apply$mcVI$sp(k: Int): Unit = {
+      runtime.this.ScalaRunTime.array_update(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.C$1.apply(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.i$1), k, MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.numeric$1.zero());
+      {
+        @volatile var SpecObject1$module: runtime.VolatileObjectRef = new runtime.VolatileObjectRef(null);
+        if (MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.evidence$4$1.==(scala.reflect.ManifestFactory.Boolean()))
+          MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.SpecObject1$1(SpecObject1$module, k)._matrixMult_specialized1$mZc$sp(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.B$1.$asInstanceOf[Array[Array[Boolean]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.C$1.$asInstanceOf[Array[Array[Boolean]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.numeric$1)
+        else
+          if (MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.evidence$4$1.==(scala.reflect.ManifestFactory.Byte()))
+            MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.SpecObject1$1(SpecObject1$module, k)._matrixMult_specialized1$mBc$sp(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.B$1.$asInstanceOf[Array[Array[Byte]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.C$1.$asInstanceOf[Array[Array[Byte]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.numeric$1)
+          else
+            if (MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.evidence$4$1.==(scala.reflect.ManifestFactory.Char()))
+              MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.SpecObject1$1(SpecObject1$module, k)._matrixMult_specialized1$mCc$sp(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.B$1.$asInstanceOf[Array[Array[Char]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.C$1.$asInstanceOf[Array[Array[Char]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.numeric$1)
+            else
+              if (MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.evidence$4$1.==(scala.reflect.ManifestFactory.Double()))
+                MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.SpecObject1$1(SpecObject1$module, k)._matrixMult_specialized1$mDc$sp(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.B$1.$asInstanceOf[Array[Array[Double]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.C$1.$asInstanceOf[Array[Array[Double]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.numeric$1)
+              else
+                if (MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.evidence$4$1.==(scala.reflect.ManifestFactory.Float()))
+                  MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.SpecObject1$1(SpecObject1$module, k)._matrixMult_specialized1$mFc$sp(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.B$1.$asInstanceOf[Array[Array[Float]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.C$1.$asInstanceOf[Array[Array[Float]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.numeric$1)
+                else
+                  if (MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.evidence$4$1.==(scala.reflect.ManifestFactory.Int()))
+                    MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.SpecObject1$1(SpecObject1$module, k)._matrixMult_specialized1$mIc$sp(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.B$1.$asInstanceOf[Array[Array[Int]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.C$1.$asInstanceOf[Array[Array[Int]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.numeric$1)
+                  else
+                    if (MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.evidence$4$1.==(scala.reflect.ManifestFactory.Long()))
+                      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.SpecObject1$1(SpecObject1$module, k)._matrixMult_specialized1$mJc$sp(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.B$1.$asInstanceOf[Array[Array[Long]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.C$1.$asInstanceOf[Array[Array[Long]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.numeric$1)
+                    else
+                      if (MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.evidence$4$1.==(scala.reflect.ManifestFactory.Short()))
+                        MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.SpecObject1$1(SpecObject1$module, k)._matrixMult_specialized1$mSc$sp(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.B$1.$asInstanceOf[Array[Array[Short]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.C$1.$asInstanceOf[Array[Array[Short]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.numeric$1)
+                      else
+                        if (MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.evidence$4$1.==(scala.reflect.ManifestFactory.Unit()))
+                          MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.SpecObject1$1(SpecObject1$module, k)._matrixMult_specialized1$mVc$sp(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.B$1.$asInstanceOf[Array[Array[runtime.BoxedUnit]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.C$1.$asInstanceOf[Array[Array[runtime.BoxedUnit]]](), MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.numeric$1)
+                        else
+                          MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.SpecObject1$1(SpecObject1$module, k)._matrixMult_specialized1(MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.B$1, MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.C$1, MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer.numeric$1)
+      }
+    };
+    <synthetic> <paramaccessor> private[this] val $outer: anonymous class anonfun$_matrixMult$1 = _;
+    <synthetic> <stable> def MatrixUtil$$anonfun$$anonfun$$$outer(): anonymous class anonfun$_matrixMult$1 = MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer;
+    final <bridge> def apply(v1: Object): Object = {
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> val i$1: Int = _;
+    final <stable> private[this] def SpecObject1$1(SpecObject1$module$1: runtime.VolatileObjectRef, k$1: Int): anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2 = if (SpecObject1$module$1.elem.eq(null))
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.SpecObject1$1$lzycompute(SpecObject1$module$1, k$1)
+    else
+      SpecObject1$module$1.elem.$asInstanceOf[anonymous class anonfun$apply$mcVI$sp$1$SpecObject1$2]();
+    def <init>($outer: anonymous class anonfun$_matrixMult$1, i$1: Int): anonymous class anonfun$apply$mcVI$sp$1 = {
+      if ($outer.eq(null))
+        throw new NullPointerException()
+      else
+        MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.$outer = $outer;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.this.i$1 = i$1;
+      MatrixUtil$$anonfun$_matrixMult$1$$anonfun$apply$mcVI$sp$1.super.<init>();
+      ()
+    }
+  };
+  @SerialVersionUID(0) final <synthetic> class MatrixUtil$$anonfun$_matrixMult$1 extends runtime.AbstractFunction1$mcVI$sp with Serializable {
+    final def apply(i: Int): Unit = MatrixUtil$$anonfun$_matrixMult$1.this.apply$mcVI$sp(i);
+    <specialized> def apply$mcVI$sp(i: Int): Unit = RichInt.this.until$extension0(scala.this.Predef.intWrapper(0), MatrixUtil$$anonfun$_matrixMult$1.this.K$1).foreach$mVc$sp({
+      (new anonymous class anonfun$apply$mcVI$sp$1(MatrixUtil$$anonfun$_matrixMult$1.this, i): Function1)
+    });
+    final <bridge> def apply(v1: Object): Object = {
+      MatrixUtil$$anonfun$_matrixMult$1.this.apply(scala.Int.unbox(v1));
+      scala.runtime.BoxedUnit.UNIT
+    };
+    <synthetic> <paramaccessor> val B$1: Array[Object] = _;
+    <synthetic> <paramaccessor> val C$1: Array[Object] = _;
+    <synthetic> <paramaccessor> val evidence$4$1: reflect.ClassTag = _;
+    <synthetic> <paramaccessor> val numeric$1: math.Numeric = _;
+    <synthetic> <paramaccessor> val J$1: Int = _;
+    <synthetic> <paramaccessor> private[this] val K$1: Int = _;
+    def <init>(B$1: Array[Object], C$1: Array[Object], evidence$4$1: reflect.ClassTag, numeric$1: math.Numeric, J$1: Int, K$1: Int): anonymous class anonfun$_matrixMult$1 = {
+      MatrixUtil$$anonfun$_matrixMult$1.this.B$1 = B$1;
+      MatrixUtil$$anonfun$_matrixMult$1.this.C$1 = C$1;
+      MatrixUtil$$anonfun$_matrixMult$1.this.evidence$4$1 = evidence$4$1;
+      MatrixUtil$$anonfun$_matrixMult$1.this.numeric$1 = numeric$1;
+      MatrixUtil$$anonfun$_matrixMult$1.this.J$1 = J$1;
+      MatrixUtil$$anonfun$_matrixMult$1.this.K$1 = K$1;
+      MatrixUtil$$anonfun$_matrixMult$1.super.<init>();
+      ()
+    }
+  }
+}

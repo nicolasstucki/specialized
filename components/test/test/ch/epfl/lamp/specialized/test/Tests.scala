@@ -36,12 +36,18 @@ class Tests {
       val output = test.output
 
       if (!output.trim.equals(check_output.trim)) {
-        System.err.println("\n\n\nDifference in test for: " + source)
-        System.err.println("\nCompiler output:\n" + output)
-        System.err.println("\nExpected output:\n" + check_output)
+
+        System.err.println("-" * 50 + "\nFound differences in test: " + source)
+
+        if (!crash) {
+          System.err.println("\n\n\nDifference in test for: " + source)
+          System.err.println("\nCompiler output:\n" + output)
+          System.err.println("\nExpected output:\n" + check_output)
+        }
         crash = true
       }
     }
+
     assert(!crash, "Tests failed")
   }
 }
