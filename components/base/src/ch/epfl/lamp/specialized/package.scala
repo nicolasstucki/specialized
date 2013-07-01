@@ -96,6 +96,8 @@ object `package` {
     val typeOf_T = typetagT.tpe
     val typeOf_f = expr_f.actualType
 
+    val pos = classTag.tree.pos
+
     val typesList = types.toList match {
       case Nil => List(Byte, Short, Int, Long, Char, Float, Double, Boolean, Unit)
       case list => list map (tpExpr => c eval c.Expr[Specializable](c resetAllAttrs tpExpr.tree))
@@ -109,7 +111,7 @@ object `package` {
         // 1. specialized {...} is used and there is no type parameter with a ClassTag in scope 
         // 2. or there is more than one type parameter have manifests and therefore the type could not be inferred.
         // 3. The type parameter is not a type parameter of the enclosing context, examples: specialized[Int] {...}, specialized[Any] {...}, specialized[Array[Int]] {...}, specialized[T] {...}, ...   
-        c.error(classTag.tree.pos, "Specify type parameter using: specialized[T] {...}, T must be a type parameter of the enclosing context and it must have a ClassTag." +
+        c.error(pos, "Specify type parameter using: specialized[T] {...}, T must be a type parameter of the enclosing context and it must have a ClassTag." +
           " Type patameter must be on top level, example: if you want to specialize an Array[T] use specialize[T] {...}.")
         return expr_f
       }
@@ -125,7 +127,7 @@ object `package` {
     }
     findReturns.traverse(expr_f.tree)
     if (findReturns.found) {
-      c.error(classTag.tree.pos, "specialized[T] {...} doesn't suport 'return'")
+      c.error(pos, "specialized[T] {...} doesn't suport 'return'")
       return expr_f
     }
 
@@ -181,72 +183,50 @@ object `package` {
     val cast_back_str = if (typeOf_f.contains(typeOf_T.typeSymbol)) s".asInstanceOf[$typeOf_f]" else ""
 
     // TODO: Wrapping the spec method inside an object is a workaround issue SI-7344, this should be removed as soon as the issue is resolved.
-    val spec_obj = c.fresh("SpecObject").toString
+    val spec_obj = c.fresh("SpecObject")
 
     // JOIN EVERYTHING TOGETHER
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // THIS IS AN ALTERNATE SOLUTION THAT HAS PRLOBLEMS ERASING ALL SYMBOLS, BUT USED LESS PARSING
-    // AND MORE TREE TRANSFORMATION 
-    /////////////////////////////////////////////////////////////////////////////////////////////////
     //// Here parse is used instead of reify to ensure that all symbols are erased from the tree
-    //    val newTreeTemplate_str = s"""{
-    //            	object $spec_obj {
-    //    				def $specMethodName[@specialized($at_spec_params_str) $typeOf_T]($vparamss_str): $typeOf_f = { ??? }
-    //    			}
-    //    			import $spec_obj._
-    //    			import scala.reflect.ManifestFactory
-    //    			${callersBlockTree}
-    //        	}$cast_back_str""".replaceAllLiterally("scala.this.Predef.", "")
-    //
-    //    object resetTree extends Transformer {
-    //      override def transform(tree: Tree): Tree = tree match {
-    //        case Ident(name: TermName) => Ident(newTermName(name.toString))
-    //        case Ident(name: TypeName) => Ident(newTypeName(name.toString))
-    //        case _ => super.transform(tree)
-    //      }
-    //    }
-    //
-    //    object bodyInliner extends Transformer {
-    //      override def transform(tree: Tree): Tree = tree match {
-    //        case Ident(name) if name.toString == "$qmark$qmark$qmark" => resetTree.transform(c.resetAllAttrs(newBodyTree))
-    //        case _ => super.transform(tree)
-    //      }
-    //    }
-    //
-    //    val newTree = bodyInliner.transform(c.parse(newTreeTemplate_str))
-    //
-    // c.echo(classTag.tree.pos, "newTree: " + show(newTree))
-    // c.echo(classTag.tree.pos, "newTree: " + showRaw(newTree))
-    //
-    //    val newExpr = c.Expr[Any](c.typeCheck(newTree, typeOf_f))
-    //
-    // c.echo(classTag.tree.pos, "newExpr: " + show(newExpr))
-    // c.echo(classTag.tree.pos, "newExpr: " + showRaw(newExpr))
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
     val newTreeTemplate_str = s"""{
-        	object $spec_obj {
-				def $specMethodName[@specialized($at_spec_params_str) $typeOf_T]($vparamss_str): $typeOf_f = { ${newBodyTree} }
-			}
-			import $spec_obj._
-			import scala.reflect.ManifestFactory
-			${callersBlockTree}
-    	}$cast_back_str""".replaceAllLiterally("scala.this.Predef.", "")
+                	object $spec_obj {
+        				def $specMethodName[@specialized($at_spec_params_str) $typeOf_T]($vparamss_str): $typeOf_f = { ??? }
+        			}
+        			import $spec_obj._
+        			import scala.reflect.ManifestFactory
+        			${callersBlockTree}
+            	}$cast_back_str""".replaceAllLiterally("scala.this.Predef.", "")
 
-    if (newTreeTemplate_str.contains("while")) {
-      //      c.warning(classTag.tree.pos, "newTree: " + show(newBodyTree))
-      c.warning(classTag.tree.pos, "specialized[T] {...} does not support while loops")
-      return expr_f
+    object bodyInliner extends Transformer {
+      override def transform(tree: Tree): Tree = tree match {
+        case Ident(name) if name.toString == "$qmark$qmark$qmark" => c.resetAllAttrs(newBodyTree)
+        case _ => super.transform(tree)
+      }
     }
 
-    // Here parse is used instead of reify to ensure that all symbols are erased from the tree
-    val newTree = c.parse(newTreeTemplate_str)
-    //      c.echo(classTag.tree.pos, "newTree: " + show(newTree))
-    //      c.echo(classTag.tree.pos, "newTree: " + showRaw(newTree))
+    // Reset all symbols
+    newBodyTree.foreach(t => {
+      t match {
+        case EmptyTree =>
+        case _ => t.tpe = null
+      }
+      t match {
+        case _: RefTree => t.symbol = null
+        case _ =>
+      }
+    })
+
+    // Inline the body in the place where ??? is in the  template
+    val newTree = bodyInliner.transform(c.parse(newTreeTemplate_str))
+
+    //    c.echo(pos, "newTree: " + show(newTree))
+    //    c.echo(pos, "newTree: " + showRaw(newTree))
+
     val newExpr = c.Expr[Any](c.typeCheck(newTree, typeOf_f))
-    //      c.echo(classTag.tree.pos, "newExpr: " + show(newExpr))
-    //      c.echo(classTag.tree.pos, "newExpr: " + showRaw(newExpr))
+
+    //    c.echo(pos, "newExpr: " + show(newExpr))
+    //    c.echo(pos, "newExpr: " + showRaw(newExpr))
+
     newExpr
 
   }
