@@ -4,15 +4,14 @@ import scala.reflect.ClassTag
 import ch.epfl.lamp.specialized._
 
 // Class used for quick testing of new changes
-class QuickTest[T, U](list: List[T])(implicit classTag: ClassTag[T]) {
+class QuickTest[T, U](tup: (T, T))(implicit classTag: ClassTag[T]) {
+
+  val times = 10
 
   def testMethod = {
-    //    specialized[T] {
-    list.headOption match {
-      case Some(head) => head
-      case None => null
-    }
-    //    }
+//    specialized[T] {
+//      val (a, b) = tup.swap
+//    }
   }
 
 }

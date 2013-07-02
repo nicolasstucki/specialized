@@ -6,52 +6,44 @@ import scala.reflect.ManifestFactory
 
 class BenchmarkTuplesSwap[T](val times: Int)(tup: (T, T))(implicit classTag: ClassTag[T]) extends BenchmarkApi {
 
-  /**
-   * Algorithm that inverses the order of all tuples in an array of tuples
-   * Tests get and update operations of an array
-   * and tests swap operation of tuples
-   */
+  /** Algorithm that inverses the order of all tuples in an array of tuples
+    * Tests get and update operations of an array
+    * and tests swap operation of tuples
+    */
   def test = {
     for (i <- 0 until times) {
-      val (a, b) = tup.swap
-      ()
+      val a = tup.swap._1
     }
   }
 
   def testSpecializedBlock = {
-    // FIXME: bug with tuples types
-    //    specialized[T] {
-    //      for (i <- 0 until times) {
-    //        val (a, b) = tup.swap
-    //        ()
-    //      }
-    //    }
+    specialized[T] {
+      for (i <- 0 until times) {
+        val a = tup.swap._1
+      }
+    }
   }
 
   def testUnrolled = {
     if (classTag == ManifestFactory.Boolean) {
       val tup_spec: (Boolean, Boolean) = tup.asInstanceOf[(Boolean, Boolean)]
       for (i <- 0 until times) {
-        val (a, b) = tup_spec.swap
-        ()
+        val a = tup_spec.swap._1
       }
     } else if (classTag == ManifestFactory.Double) {
       val tup_spec: (Double, Double) = tup.asInstanceOf[(Double, Double)]
       for (i <- 0 until times) {
-        val (a, b) = tup_spec.swap
-        ()
+        val a = tup_spec.swap._1
       }
     } else if (classTag == ManifestFactory.Int) {
       val tup_spec: (Int, Int) = tup.asInstanceOf[(Int, Int)]
       for (i <- 0 until times) {
-        val (a, b) = tup_spec.swap
-        ()
+        val a = tup_spec.swap._1
       }
     } else {
       val tup_spec = tup
       for (i <- 0 until times) {
-        val (a, b) = tup_spec.swap
-        ()
+        val a = tup_spec.swap._1
       }
     }
   }
@@ -70,8 +62,7 @@ class BenchmarkTuplesSwap[T](val times: Int)(tup: (T, T))(implicit classTag: Cla
 
   private def spec[@specialized U](tup: (U, U)) = {
     for (i <- 0 until times) {
-      val (a, b) = tup.swap
-      ()
+      val a = tup.swap._1
     }
   }
 }
