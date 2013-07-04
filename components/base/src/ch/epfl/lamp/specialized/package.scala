@@ -119,9 +119,12 @@ final object `package` {
     }
 
     // RETRIEVE DEFINITIONS AND USES OF TERMS THAT HAVE T IN THE TYPE
-    val variableMapping = getVariablesMapping(c)(expr_f, typeOf_T)
-
-    //    c.echo(pos, "mapping: " + variableMapping)
+    val (variableMapping, outsideVarUsedInside) = getVariablesMapping(c)(expr_f, typeOf_T)
+    if (outsideVarUsedInside) {
+      c.error(pos, "specialized[T] {...} can't access a var defined outside it.")
+      return expr_f
+    }
+    // c.echo(pos, "mapping: " + variableMapping)
 
     val typesToTypeTree = getSpecializableTypesMap(c) filterKeys (typesList.contains(_))
 
@@ -185,7 +188,7 @@ final object `package` {
         			import $spec_obj._
         			import scala.reflect.ManifestFactory
         			${callersBlockTree}
-            	}$cast_back_str""".replaceAllLiterally("scala.this.Predef.", "")
+            	}$cast_back_str"""
 
     object bodyInliner extends Transformer {
       override def transform(tree: Tree): Tree = tree match {
@@ -194,7 +197,7 @@ final object `package` {
       }
     }
 
-    //    c.echo(pos, "template: " + newTreeTemplate_str)
+    // c.echo(pos, "template: " + newTreeTemplate_str)
 
     // Reset all symbols from the tree
     clearAllSymbolsFromTree(c)(newBodyTree)
@@ -202,57 +205,47 @@ final object `package` {
     // Inline the body in the place where ??? is in the  template
     val newTree = bodyInliner.transform(c.parse(newTreeTemplate_str))
 
-    //    c.echo(pos, "newTree: " + show(newTree))
-    //    c.echo(pos, "newTree: " + showRaw(newTree))
+    // c.echo(pos, "newTree: " + show(newTree))
+    // c.echo(pos, "newTree: " + showRaw(newTree))
 
     // Typecheck new tree and wrap it in an expresion
     val newExpr = c.Expr[Any](c.typeCheck(newTree, typeOf_f))
 
-    //    c.echo(pos, "newExpr: " + show(newExpr))
-    //    c.echo(pos, "newExpr: " + showRaw(newExpr))
+    // c.echo(pos, "newExpr: " + show(newExpr))
+    // c.echo(pos, "newExpr: " + showRaw(newExpr))
 
     newExpr
 
   }
 
-  /** Mapping that contains all information needed about the all the arguments that will be needed for the specialized methods.
-    * The keys of the mapping contain the original names of the argument. Each is mapped into a 3-tuple that contains
-    * the new name (or the same as the key if renaming is unnecessary), the widen type of the argument and the reference to the argument itself.
-    * @param c: context of the macro
-    * @param expr: the body of the specialized expression.
-    * @param typeOf_T: the type being specialized.
-    * @return the mapping of all arguments needed for specialization
-    */
-  private[this] def getVariablesMapping[T](c: Context)(expr_f: c.Expr[Any], typeOf_T: c.Type): Map[String, (String, c.Type, c.Tree)] = {
+  private[this] def getVariablesMapping[T](c: Context)(expr_f: c.Expr[Any], typeOf_T: c.Type): (Map[String, (String, c.Type, c.Tree)], Boolean) = {
     import c.universe._
 
     val fieldsMapping = scala.collection.mutable.Map.empty[String, (String, Type, Tree)]
-    val valdefInside = scala.collection.mutable.Set.empty[String]
-    val vardefs = scala.collection.mutable.Map.empty[String, Type]
-    val defdefInside = scala.collection.mutable.Set.empty[String]
+    var outsideVarUsedInside = false
 
     def typeHasT(tree: Tree): Boolean = tree.tpe != null && tree.tpe.widen.exists(_ == typeOf_T)
 
     object bodyTraverser extends Traverser {
-      var valDefsInScope = Set.empty[String]
+      // Keeps track of all identifier definitions that where done 
+      // inside the expr_f and are visible at some sub-tree
+      var defsInScope = Set.empty[String]
 
       override def traverse(tree: Tree) = {
 
-        val oldValDefsInScope = valDefsInScope
+        val oldValDefsInScope = defsInScope
 
         tree match {
           case Block(stats, expr) =>
             stats foreach {
               case ValDef(_, name, _, rhs) =>
-                valdefInside += name.toString
-                valDefsInScope = valDefsInScope + name.toString
+                defsInScope = defsInScope + name.toString
                 traverse(rhs)
               case DefDef(_, name, _, vparamss, _, rhs) =>
-                defdefInside += name.toString
-                val old = valDefsInScope
-                valDefsInScope = valDefsInScope ++ (vparamss flatMap (_ map { case ValDef(_, name, _, _) => name.toString }))
+                val old = defsInScope
+                defsInScope = defsInScope ++ (vparamss flatMap (_ map { case ValDef(_, name, _, _) => name.toString }))
                 traverse(rhs)
-                valDefsInScope = old
+                defsInScope = old
               case tree =>
                 traverse(tree)
             }
@@ -265,63 +258,42 @@ final object `package` {
                   fieldsMapping += (strRep -> (c.fresh(newTermName(strRep.toString.replace(".", "_"))).toString, select.tpe.widen, select))
               case _ =>
             }
-          case select @ Select(Ident(termName), _) if typeHasT(select) && !valDefsInScope(termName.toString) =>
+          case select @ Select(Ident(termName), _) if typeHasT(select) && !defsInScope(termName.toString) =>
             select.tpe.widen match {
               case _: TypeRef =>
                 val strRep = select.toString
                 val strRepName = termName.toString
-                if (!fieldsMapping.contains(strRep) && !valDefsInScope.contains(strRepName)) {
+                if (!fieldsMapping.contains(strRep) && !defsInScope.contains(strRepName)) {
                   fieldsMapping += (strRep -> (c.fresh(newTermName(strRep)).toString, select.tpe.widen, select))
                 }
               case _ =>
             }
           case ValDef(_, name, _, _) =>
-            valdefInside += name.toString
-            valDefsInScope = valDefsInScope + name.toString
-          case ident @ Ident(name) if typeHasT(ident) =>
+            defsInScope = defsInScope + name.toString
+          case ident @ Ident(name) if typeHasT(ident) && ident.symbol.isTerm =>
             val strRep = name.toString
-            if (!fieldsMapping.contains(strRep) && !valDefsInScope.contains(strRep) && strRep != "_") {
-              fieldsMapping += (strRep -> (strRep, ident.tpe.widen, ident))
+            val term = ident.symbol.asTerm
+            if (!defsInScope.contains(strRep)) {
+              if (term.isVal && strRep != "_") {
+                fieldsMapping += (strRep -> (strRep, ident.tpe.widen, ident))
+              } else if (term.isVar) {
+                outsideVarUsedInside = true
+              }
             }
           case DefDef(_, name, _, vparamss, tpt, _) if typeHasT(tpt) =>
-            defdefInside += name.toString
-            valDefsInScope = valDefsInScope ++ (vparamss flatMap (_ map { case ValDef(_, name, _, _) => name.toString }))
+            defsInScope = defsInScope ++ (vparamss flatMap (_ map { case ValDef(_, name, _, _) => name.toString }))
           case _ =>
         }
 
         super.traverse(tree)
 
-        valDefsInScope = oldValDefsInScope
-      }
-    }
-
-    object enclosingMethodTraverser extends Traverser {
-      override def traverse(tree: Tree) = {
-        tree match {
-          case valDef @ ValDef(mod, name, tpt, rhs) if mod.hasFlag(Flag.MUTABLE) && !valdefInside(name.toString) => vardefs += (name.toString -> tpt.duplicate.tpe.widen)
-          case _ => showRaw(tree)
-        }
-
-        super.traverse(tree)
+        defsInScope = oldValDefsInScope
       }
     }
 
     bodyTraverser.traverse(expr_f.tree)
 
-    fieldsMapping --= valdefInside
-    fieldsMapping --= defdefInside
-
-    // TODO: may need to go also in the enclosing method of the enclosing method if it exists
-    enclosingMethodTraverser.traverse(c.enclosingMethod)
-    val vardefsInClass = c.enclosingClass match {
-      case ClassDef(_, _, _, Template(parents, self, body)) => body collect { case ValDef(mods, name, _, _) if mods.hasFlag(Flag.MUTABLE) => name.toString }
-      case _ => Nil
-    }
-
-    fieldsMapping --= vardefs.keys
-    fieldsMapping --= vardefsInClass
-
-    Map[String, (String, c.Type, c.Tree)](fieldsMapping.toList: _*)
+    (Map[String, (String, c.Type, c.Tree)](fieldsMapping.toList: _*), outsideVarUsedInside)
   }
 
   /** @param c
@@ -329,16 +301,8 @@ final object `package` {
     */
   private[this] def getSpecializableTypesMap(c: Context): Map[Specializable, c.Type] = {
     import c.universe._
-    Map[Specializable, Type](
-      Int -> typeOf[Int],
-      Long -> typeOf[Long],
-      Double -> typeOf[Double],
-      Float -> typeOf[Float],
-      Char -> typeOf[Char],
-      Short -> typeOf[Short],
-      Byte -> typeOf[Byte],
-      Boolean -> typeOf[Boolean],
-      Unit -> typeOf[Unit])
+    Map[Specializable, Type](Int -> typeOf[Int], Long -> typeOf[Long], Double -> typeOf[Double], Float -> typeOf[Float],
+      Char -> typeOf[Char], Short -> typeOf[Short], Byte -> typeOf[Byte], Boolean -> typeOf[Boolean], Unit -> typeOf[Unit])
   }
 
   /** @param c
@@ -347,15 +311,9 @@ final object `package` {
   private[this] def getManifestExprMap(c: Context): Map[Specializable, c.Expr[Any]] = {
     import c.universe._
     Map[Specializable, c.Expr[Any]](
-      Int -> reify { ManifestFactory.Int },
-      Long -> reify { ManifestFactory.Long },
-      Double -> reify { ManifestFactory.Double },
-      Float -> reify { ManifestFactory.Float },
-      Short -> reify { ManifestFactory.Short },
-      Char -> reify { ManifestFactory.Char },
-      Byte -> reify { ManifestFactory.Byte },
-      Boolean -> reify { ManifestFactory.Boolean },
-      Unit -> reify { ManifestFactory.Unit })
+      Int -> reify { ManifestFactory.Int }, Long -> reify { ManifestFactory.Long }, Double -> reify { ManifestFactory.Double },
+      Float -> reify { ManifestFactory.Float }, Short -> reify { ManifestFactory.Short }, Char -> reify { ManifestFactory.Char },
+      Byte -> reify { ManifestFactory.Byte }, Boolean -> reify { ManifestFactory.Boolean }, Unit -> reify { ManifestFactory.Unit })
   }
 
   /** Cast a c.Tree to a given type using isInstanceOf[] by wrapping the tree into it.

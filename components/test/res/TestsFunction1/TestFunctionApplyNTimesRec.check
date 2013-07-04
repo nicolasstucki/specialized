@@ -19,7 +19,7 @@ package <empty> {
       ()
     };
     def applyFunction_specialized1[@specialized(scala.Boolean, scala.Double, scala.Int) T >: Nothing <: Any](TestFunctionApplyNTimesRec_this_func1: T => T, TestFunctionApplyNTimesRec_this_init1: T): T = {
-      @scala.annotation.tailrec def rec(n: Int, last: T): T = if (n.==(0))
+      def rec(n: Int, last: T): T = if (n.==(0))
         last
       else
         rec(n.-(1), TestFunctionApplyNTimesRec_this_func1.apply(last));
@@ -95,7 +95,7 @@ package <empty> {
     <specialized> def applyFunction_specialized1$mDc$sp(TestFunctionApplyNTimesRec_this_func1: Function1, TestFunctionApplyNTimesRec_this_init1: Double): Double = TestFunctionApplyNTimesRec$SpecObject1$2.this.rec$3(TestFunctionApplyNTimesRec$SpecObject1$2.this.$outer.TestFunctionApplyNTimesRec$*, TestFunctionApplyNTimesRec_this_init1, TestFunctionApplyNTimesRec_this_func1);
     <specialized> def applyFunction_specialized1$mIc$sp(TestFunctionApplyNTimesRec_this_func1: Function1, TestFunctionApplyNTimesRec_this_init1: Int): Int = TestFunctionApplyNTimesRec$SpecObject1$2.this.rec$4(TestFunctionApplyNTimesRec$SpecObject1$2.this.$outer.TestFunctionApplyNTimesRec$*, TestFunctionApplyNTimesRec_this_init1, TestFunctionApplyNTimesRec_this_func1);
     <synthetic> <paramaccessor> private[this] val $outer: TestFunctionApplyNTimesRec = _;
-    @scala.annotation.tailrec final private[this] def rec$1(n: Int, last: Object, TestFunctionApplyNTimesRec_this_func1$1: Function1): Object = {
+    final private[this] def rec$1(n: Int, last: Object, TestFunctionApplyNTimesRec_this_func1$1: Function1): Object = {
       <synthetic> val _$this: TestFunctionApplyNTimesRec#TestFunctionApplyNTimesRec$SpecObject1$2.type = TestFunctionApplyNTimesRec$SpecObject1$2.this;
       _rec(_$this: TestFunctionApplyNTimesRec#TestFunctionApplyNTimesRec$SpecObject1$2.type, n: Int, last: Object){
         (if (n.==(0))

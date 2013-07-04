@@ -61,6 +61,7 @@ object SpecializedBenchmark extends PerformanceTest {
     bench(Gen.single("BenchmarkArrayReverse[Boolean]")(n).map(new BenchmarkArrayReverse[Boolean](_)))
     bench(Gen.single("BenchmarkArrayReverse[Any]")(n).map(new BenchmarkArrayReverse[Any](_)))
 
+    // Need bigger n to warm up correctly
     bench(Gen.single("BenchmarkArrayReverseWhile[Int]")(n).map(new BenchmarkArrayReverseWhile[Int](_)))
     bench(Gen.single("BenchmarkArrayReverseWhile[Double]")(n).map(new BenchmarkArrayReverseWhile[Double](_)))
     bench(Gen.single("BenchmarkArrayReverseWhile[Boolean]")(n).map(new BenchmarkArrayReverseWhile[Boolean](_)))
@@ -103,7 +104,7 @@ object SpecializedBenchmark extends PerformanceTest {
     val sameVMFlags = ("same", "-Xint")
 
     val samples = 1
-    val minWarmupRuns = 20
+    val minWarmupRuns = 30
 
     for ((flagtype, flags) <- Seq( /*interpFlags,*/ c1Flags, c2Flags /*, sameVMFlags*/ )) {
 
