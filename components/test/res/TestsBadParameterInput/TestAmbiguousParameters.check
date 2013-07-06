@@ -15,6 +15,6 @@ package <empty> {
       C.super.<init>();
       ()
     };
-    def m(): <error> = ch.epfl.lamp.specialized.`package`.specialized[T](scala.Int, scala.Double, scala.Boolean)(0)()
+    def m(): <error> = ch.epfl.lamp.specialized.`package`.specialized[T].apply[Int](scala.Int, scala.Double, scala.Boolean)(0)()
   }
 }

@@ -12,6 +12,6 @@ package <empty> {
       TestReturn.super.<init>();
       ()
     };
-    def return1: <error> = ch.epfl.lamp.specialized.`package`.specialized[T](scala.Int, scala.Double, scala.Boolean)(return dummy)(TestReturn.this.evidence$1)
+    def return1: <error> = ch.epfl.lamp.specialized.`package`.specialized[T].apply[R](scala.Int, scala.Double, scala.Boolean)(return dummy)
   }
 }

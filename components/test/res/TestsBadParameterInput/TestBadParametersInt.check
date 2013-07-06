@@ -9,6 +9,6 @@ package <empty> {
       C.super.<init>();
       ()
     };
-    def m(): <error> = ch.epfl.lamp.specialized.`package`.specialized[Int](scala.Int, scala.Double, scala.Boolean)(0)(ClassTag.Int)
+    def m(): <error> = ch.epfl.lamp.specialized.`package`.specialized[Int].apply[Int](scala.Int, scala.Double, scala.Boolean)(0)(ClassTag.Int)
   }
 }
