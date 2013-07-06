@@ -120,10 +120,8 @@ final object `package` {
       }
 
       // Do not let the use of Return statements
-      if (treeHasReturns(c)(code.tree)) {
-        c.error(pos, "specialized[T] {...} doesn't suport 'return'")
+      if (treeHasReturns(c)(code.tree))
         return code
-      }
 
       // RETRIEVE DEFINITIONS AND USES OF TERMS THAT HAVE T IN THE TYPE
       val (variableMapping, outsideVarUsedInside) = getVariablesMapping(c)(code, typeOfT)
@@ -177,10 +175,11 @@ final object `package` {
 
       val newBodyTree = fieldToIdents.transform(code.tree)
 
-      //        c.echo(pos, "tree: " + show(code.tree))
-      //    c.echo(pos, "tree: " + showRaw(code.tree))
+      // c.echo(pos, "tree: " + show(code.tree))
+      // c.echo(pos, "tree: " + showRaw(code.tree))
 
       // These parts are Strings because they will be used inside a c.parse
+      // TODO: Add these to the tree directly (don't parse)
       val vparamss_str = (variableMapping.values.toList map { case (param_name, param_type, _) => s"$param_name: $param_type" }).mkString(", ")
       val at_spec_params_str = typesToTypeTree.keys.map(_.toString.drop(13)).mkString(", ")
       val cast_back_str = if (typeOfR.contains(typeOfT.typeSymbol)) s".asInstanceOf[$typeOfR]" else ""
@@ -207,7 +206,7 @@ final object `package` {
         }
       }
 
-      //    c.echo(pos, "template: " + newTreeTemplate_str)
+      // c.echo(pos, "template: " + newTreeTemplate_str)
 
       // Reset all symbols from the tree
       clearAllSymbolsFromTree(c)(newBodyTree)
@@ -357,8 +356,10 @@ final object `package` {
       object findReturns extends Traverser {
         var found = false
         override def traverse(tree: Tree) = tree match {
-          case Return(_) => found = true
-          case _ if !found => super.traverse(tree)
+          case Return(_) =>
+            found = true
+            c.error(tree.pos, "specialized[T] {...} doesn't support 'return' statements")
+          case _ => super.traverse(tree)
         }
       }
       findReturns.traverse(tree)

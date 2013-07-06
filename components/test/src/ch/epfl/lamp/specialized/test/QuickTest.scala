@@ -9,7 +9,7 @@ class QuickTest[T, U](p: T)(implicit classTag: ClassTag[T]) {
   val times = 10
   val c = p
   var d = p
-  def testMethod = {
+  def testMethod: Int = {
     // FIXME: tup.swap is identified as a variable
     //    val tup = (p, p)
     //    specialized[T] {
@@ -17,14 +17,15 @@ class QuickTest[T, U](p: T)(implicit classTag: ClassTag[T]) {
     //    }
 
     val a = p
-    val e = specialized[T] {
+    specialized[T] {
       var b = a
       println(a)
       println(b)
       println(c)
       println(d)
-      d
+      p
     }
+    4
   }
 
 }
